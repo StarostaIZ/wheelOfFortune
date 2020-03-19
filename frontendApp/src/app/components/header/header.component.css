@@ -1,0 +1,22 @@
+.header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 20%;
+  width: 100vw;
+  padding: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header__nav{
+  width: 30%;
+  list-style-type: none;
+  font-weight: bold;
+}
+
+.header__nav__link{
+  padding-right: 10%;
+  display: inline-block;
+  float: right;
+}
