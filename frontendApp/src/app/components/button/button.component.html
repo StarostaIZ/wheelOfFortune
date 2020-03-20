@@ -1,2 +1,7 @@
-<button type="button" class="button" (click)="onButtonClick($event)" routerLink="/{{url}}">{{label}}</button>
-
+<div *ngIf="url; then link; else btn"></div>
+<ng-template #link>
+  <button type="button" class="button" (click)="onButtonClick($event)" routerLink={{url}}>{{label}}</button>
+</ng-template>
+<ng-template #btn>
+  <button type="button" class="button" (click)="onButtonClick($event)">{{label}}</button>
+</ng-template>

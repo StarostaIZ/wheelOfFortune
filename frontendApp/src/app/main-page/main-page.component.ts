@@ -14,10 +14,10 @@ export class MainPageComponent implements OnInit {
   createGame = 'Stwórz grę';
   yourProfile = 'Twój profil';
 
-  gameUrl  = 'game';
-  createGameUrl = 'createGame';
-  profileUrl  = 'profile';
-  logInLink = 'login';
+  gameUrl  = '/game';
+  createGameUrl = '/createGame';
+  profileUrl  = '/profile';
+  logInLink = '/login';
 
   callBack(event) {
     console.log('callBack', event);
