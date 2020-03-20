@@ -20,3 +20,9 @@
   display: inline-block;
   float: right;
 }
+
+.header__nav__link a{
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}

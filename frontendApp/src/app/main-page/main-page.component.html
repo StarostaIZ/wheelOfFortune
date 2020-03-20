@@ -1,0 +1,18 @@
+<img class="logo" src="../assets/img/logo.png" alt="Logo" />
+
+<div class="menu">
+  <div *ngIf="isLogged; then loggedUserBlock; else guestBlock"></div>
+  <ng-template #loggedUserBlock>
+    <app-button (onClick)="callBack($event)" [url]="gameUrl" [label]="startGame"></app-button>
+    <app-button
+      (onClick)="callBack($event)"
+      [label]="playWithFriends"
+    ></app-button>
+    <app-button (onClick)="callBack($event)" [url]="createGameUrl" [label]="createGame"></app-button>
+    <app-button (onClick)="callBack($event)" [url]="profileUrl" [label]="yourProfile"></app-button>
+  </ng-template>
+  <ng-template #guestBlock>
+    <app-button (onClick)="callBack($event)" [url]="gameUrl" [label]="startGame"></app-button>
+    <app-button (onClick)="callBack($event)" [url]="logInLink" [label]="logIn"></app-button>
+  </ng-template>
+</div>

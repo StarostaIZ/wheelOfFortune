@@ -1,0 +1,24 @@
+<img class="logo" src="../assets/img/logo.png" alt="Logo" />
+
+<div class="game">
+  <div class="game__board">
+    <div class="game__board__playground">
+      <h3 class="game__board__playground__category">
+        Category: {{ category }}
+      </h3>
+      <div class="game__board__playground__letters"></div>
+      <div *ngIf="isDivineTour; then wheel; else keyboard"></div>
+      <ng-template #wheel>
+        <div class="game__board__playground__wheel"></div>
+      </ng-template>
+      <ng-template #keyboard>
+        <img class="game__board__playground__wheel" src="../../assets/img/wheel.png">
+      </ng-template>
+    </div>
+  </div>
+  <div class="game__board__labels">
+
+
+  </div>
+  <app-button (onClick)="callBack($event)" [label]="divine"></app-button>
+</div>

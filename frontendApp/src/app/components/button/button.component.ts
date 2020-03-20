@@ -9,6 +9,7 @@ export class ButtonComponent implements OnInit {
   // tslint:disable-next-line:no-output-on-prefix
   @Output() onClick = new EventEmitter<any>();
   @Input() label: string;
+  @Input() url: string;
 
   constructor() {
   }
