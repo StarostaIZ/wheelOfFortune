@@ -1,0 +1,44 @@
+<img class="logo" src="../assets/img/logo.png" alt="Logo" />
+
+<div class="game">
+  <div class="left_panel"></div>
+  <div class="game__board">
+    <h3 class="game__board__category">Category: {{ category }}</h3>
+    <div class="game__board__letters">
+      <div *ngFor="let entry_letter of entry">
+        <div id="entry_letter">
+          {{entry_letter}}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
+    <ng-template #keyboard>
+      <div class="game__board__keyboard">
+        <div *ngFor="let letter of alphabet">
+          <div id="letter">
+            {{letter}}
+          </div>
+        </div>
+      </div>
+      <app-button (onClick)="callBack($event)" [label]="divine"></app-button>
+      <app-button (onClick)="callBack($event)" [label]="back"></app-button>
+    </ng-template>
+    <ng-template #wheel>
+      <div class="game__board__wheel">
+        <div id="arrow_down"></div>
+        <button id="wheel" (click)="rotateWheel($event)"></button>
+      </div>
+      <app-button (onClick)="callBack($event)" [label]="divine"></app-button>
+    </ng-template>
+
+  </div>
+  <div class="game__labels">
+    <div *ngFor="let player of players">
+      <p class="game__labels__player">
+        {{ player.name }}
+      </p>
+      <p>Wynik: {{ player.score }}</p>
+    </div>
+    <button class="game__labels__btn" routerLink="/">Wyjdź z gry</button>
+  </div>
+</div>

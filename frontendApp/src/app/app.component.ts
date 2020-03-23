@@ -6,11 +6,8 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  isLogged = false;
 
-  startGame = 'Szybka gra';
-  logIn = 'Zaloguj się';
-
-  callBack(event) {
-    console.log('callBack', event);
-  }
+  logInLink = 'login';
+  registerLink = 'register';
 }

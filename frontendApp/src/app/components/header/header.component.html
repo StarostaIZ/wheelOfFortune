@@ -1,6 +1,13 @@
 <div class="header">
   <ul class="header__nav">
-    <li class="header__nav__link">Zarejestruj się</li>
-    <li class="header__nav__link">Zaloguj się</li>
+    <div *ngIf="isLogged; then loggedUserBlock; else guestBlock"></div>
+    <ng-template #loggedUserBlock>
+      <li class="header__nav__link"><a routerLink="/">Wyloguj się</a></li>
+      <li class="header__nav__link"><a routerLink="/profile">Twój profil</a></li>
+    </ng-template>
+    <ng-template #guestBlock>
+      <li class="header__nav__link"><a routerLink="/register">Zarejestruj się</a></li>
+      <li class="header__nav__link"><a routerLink="/login">Zaloguj się</a></li>
+    </ng-template>
   </ul>
 </div>
