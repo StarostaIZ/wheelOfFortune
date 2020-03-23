@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoomRepository")
+ * @ORM\Table(name="Rooms")
  */
 class Room
 {
@@ -29,7 +32,7 @@ class Room
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isOffline;
+    private $isOffline = 0;
 
     /**
      * @ORM\Column(type="integer")
@@ -41,6 +44,22 @@ class Room
      * @ORM\JoinColumn(nullable=false)
      */
     private $game;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $admin;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="room")
+     */
+    private $usersInRoom;
+
+    public function __construct()
+    {
+        $this->usersInRoom = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +122,49 @@ class Room
     public function setGame(Game $game): self
     {
         $this->game = $game;
+
+        return $this;
+    }
+
+    public function getAdmin(): ?User
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(User $admin): self
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsersInRoom(): Collection
+    {
+        return $this->usersInRoom;
+    }
+
+    public function addUsersInRoom(User $usersInRoom): self
+    {
+        if (!$this->usersInRoom->contains($usersInRoom)) {
+            $this->usersInRoom[] = $usersInRoom;
+            $usersInRoom->setRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsersInRoom(User $usersInRoom): self
+    {
+        if ($this->usersInRoom->contains($usersInRoom)) {
+            $this->usersInRoom->removeElement($usersInRoom);
+            // set the owning side to null (unless already changed)
+            if ($usersInRoom->getRoom() === $this) {
+                $usersInRoom->setRoom(null);
+            }
+        }
 
         return $this;
     }

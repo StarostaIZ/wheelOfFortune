@@ -5,10 +5,13 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Table(name="Users")
  */
 class User implements UserInterface
 {
@@ -42,27 +45,38 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $email;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="friends")
-     */
-    private $friends;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="player1")
      */
     private $games;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="friendsWithMe")
+     * @JoinTable(name="friends",
+     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="friend_user_id", referencedColumnName="id")}
+     *      )
+     */
+    private $myFriends;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="myFriends")
+     */
+    private $friendsWithMe;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="usersInRoom")
+     */
+    private $room;
+
     public function __construct()
     {
-        $this->friends = new ArrayCollection();
         $this->games = new ArrayCollection();
+        $this->myFriends = new ArrayCollection();
+        $this->friendsWithMe = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,17 +151,6 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getEmail(): ?string
     {
@@ -157,32 +160,6 @@ class User implements UserInterface
     public function setEmail(?string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|self[]
-     */
-    public function getFriends(): Collection
-    {
-        return $this->friends;
-    }
-
-    public function addFriend(self $friend): self
-    {
-        if (!$this->friends->contains($friend)) {
-            $this->friends[] = $friend;
-        }
-
-        return $this;
-    }
-
-    public function removeFriend(self $friend): self
-    {
-        if ($this->friends->contains($friend)) {
-            $this->friends->removeElement($friend);
-        }
 
         return $this;
     }
@@ -214,6 +191,72 @@ class User implements UserInterface
                 $game->setPlayer1(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getMyFriends(): Collection
+    {
+        return $this->myFriends;
+    }
+
+    public function addMyFriend(self $myFriend): self
+    {
+        if (!$this->myFriends->contains($myFriend)) {
+            $this->myFriends[] = $myFriend;
+        }
+
+        return $this;
+    }
+
+    public function removeMyFriend(self $myFriend): self
+    {
+        if ($this->myFriends->contains($myFriend)) {
+            $this->myFriends->removeElement($myFriend);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getFriendsWithMe(): Collection
+    {
+        return $this->friendsWithMe;
+    }
+
+    public function addFriendsWithMe(self $friendsWithMe): self
+    {
+        if (!$this->friendsWithMe->contains($friendsWithMe)) {
+            $this->friendsWithMe[] = $friendsWithMe;
+            $friendsWithMe->addMyFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendsWithMe(self $friendsWithMe): self
+    {
+        if ($this->friendsWithMe->contains($friendsWithMe)) {
+            $this->friendsWithMe->removeElement($friendsWithMe);
+            $friendsWithMe->removeMyFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
 
         return $this;
     }
