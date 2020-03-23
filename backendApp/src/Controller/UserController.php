@@ -26,4 +26,11 @@ class UserController extends AbstractController
         return new JsonResponse($this->getUser()->getRoles());
     }
 
+    /**
+     * @Route("/getUser")
+     */
+    public function getCurrentUser(){
+        return new JsonResponse($this->getUser());
+    }
+
 }

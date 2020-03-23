@@ -30,8 +30,6 @@ class GuestService
         }while(!empty($tmp));
         $user->setUsername($name);
         $user->setPassword('default');
-        $this->em->persist($user);
-        $this->em->flush();
         return $user;
     }
 
