@@ -5,8 +5,10 @@ namespace App\Controller;
 
 
 use App\Entity\User;
+use App\Service\GuestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,26 +32,12 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/loginGuest")
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param GuestService $guestService
+     * @return RedirectResponse
      */
-    public function loginGuest(){
-        $user = new User();
-        $name = '';
-
-        $em = $this->getDoctrine()->getManager();
-
-        do{
-            for ($i =0; $i<4; $i++){
-                $name.=chr(rand(97,122));
-            }
-            $name.=rand(1,9).rand(1,9).rand(1,9);
-            $tmp = $em->getRepository(User::class)->findOneBy(['username' => $name]);
-        }while(!empty($tmp));
-        $user->setUsername($name);
-        $user->setPassword('default');
-        $em->persist($user);
-        $em->flush();
-        return $this->redirectToRoute("user_login", ['request' => new Request([], ['username' => $name, 'password' => 'default'])], 307);
+    public function loginGuest(GuestService $guestService){
+        $user = $guestService->createGuest();
+        return $this->redirectToRoute("user_login", ['request' => new Request([], ['username' => $user->getUsername(), 'password' => 'default'])], 307);
 
     }
 
