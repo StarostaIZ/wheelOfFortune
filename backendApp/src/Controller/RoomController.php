@@ -4,8 +4,11 @@
 namespace App\Controller;
 
 
+use App\Service\RoomService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class RoomController
@@ -14,8 +17,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class RoomController extends AbstractController
 {
-    public function roomList(){
+    /** @var RoomService $roomService */
+    private $roomService;
 
+    public function __construct(RoomService $roomService)
+    {
+        $this->roomService = $roomService;
+    }
+
+    /**
+     * @Route("/roomList")
+     */
+    public function roomList(){
+        return new JsonResponse($this->roomService->getRoomList());
     }
 
 }
