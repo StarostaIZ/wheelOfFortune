@@ -20,15 +20,15 @@
           </div>
         </div>
       </div>
-      <app-button (onClick)="callBack($event)" [label]="divine"></app-button>
-      <app-button (onClick)="callBack($event)" [label]="back"></app-button>
+      <button class="button" (click)="callBack($event)">Odgadnij hasło</button>
+      <button class="button" (click)="callBack($event)">Cofnij</button>
     </ng-template>
     <ng-template #wheel>
       <div class="game__board__wheel">
         <div id="arrow_down"></div>
         <button id="wheel" (click)="rotateWheel($event)"></button>
       </div>
-      <app-button (onClick)="callBack($event)" [label]="divine"></app-button>
+      <button class="button" (click)="callBack($event)">Odgadnij hasło</button>
     </ng-template>
 
   </div>

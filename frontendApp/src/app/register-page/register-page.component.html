@@ -1,9 +1,9 @@
 <img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
 
-<div class="menu">
+<form (submit)="onRegisterSubmit()" class="menu">
   <input class="menu__input" type="text" placeholder="Nazwa uzytkownika">
   <input class="menu__input" type="text" placeholder="Login (email)">
   <input class="menu__input" type="password" placeholder="Hasło">
   <input class="menu__input" type="password" placeholder="Powtórz hasło">
-  <app-button (onClick)="callBack($event)" [label]="register"></app-button>
-</div>
+  <input class="button" type="submit" value="Zarejestruj">
+</form>

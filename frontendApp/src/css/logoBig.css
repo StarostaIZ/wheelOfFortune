@@ -1,4 +1,4 @@
-.logo{
+.logo {
   display: block;
   width: 40%;
   height: auto;
@@ -7,6 +7,6 @@
   cursor: pointer;
 }
 
-.logo:focus{
+.logo:focus {
   outline: none;
 }
