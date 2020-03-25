@@ -7,10 +7,10 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const appRoutes: Routes = [
-  { path: '', component: MainPageComponent },
   { path: 'game', component: GameComponent },
   { path: 'login', component: LogInPageComponent },
   { path: 'register', component: RegisterPageComponent },
+  { path: '', component: MainPageComponent },
 ];
 
 @NgModule({

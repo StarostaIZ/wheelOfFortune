@@ -3,7 +3,7 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
-  styleUrls: ['./button.component.css']
+  styleUrls: ['../../../css/button.css']
 })
 export class ButtonComponent implements OnInit {
   // tslint:disable-next-line:no-output-on-prefix

@@ -1,7 +1,8 @@
 <img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
 
-<div class="menu">
-    <input class="menu__input" type="text" placeholder="Login (email)">
-    <input class="menu__input" type="password" placeholder="Hasło">
-    <app-button (onClick)="callBack($event)" [label]="logIn"></app-button>
-</div>
+<form (submit)="onLoginSubmit()" class="menu">
+    <div class="menu__error">Wypełnij wszystkie poniższe pola</div>
+    <input class="menu__input" type="text" [(ngModel)]="username" name="username" placeholder="Nazwa użytkownika">
+    <input class="menu__input" type="password" [(ngModel)]="password" name="password" placeholder="Hasło">
+    <input class="button" type='submit' value="Zaloguj się"/>
+</form>

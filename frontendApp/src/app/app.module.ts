@@ -10,6 +10,11 @@ import { GameComponent } from './game-page/game.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LogInPageComponent } from './log-in-page/log-in-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { FormsModule } from '@angular/forms';
+import { ValidateService } from './services/validate.service';
+import { AuthService } from './services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -24,9 +29,11 @@ import { RegisterPageComponent } from './register-page/register-page.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [ValidateService, AuthService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
