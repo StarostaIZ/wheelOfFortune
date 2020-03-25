@@ -9,4 +9,8 @@ export class ValidateService {
   validateLogin(user) {
     return !(user.username === undefined || user.password === undefined);
   }
+
+  validateRegister(user) {
+    return !(user.username === undefined || user.email === undefined || user.password === undefined || user.passwordRepeat === undefined);
+  }
 }

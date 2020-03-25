@@ -15,4 +15,11 @@ export class AuthService {
       .post('http://localhost:8000/login', user, { headers: header })
       .pipe(map(res => res.json()));
   }
+
+  register(user) {
+    const header = new HttpHeaders({'Content-Type':  'application/json', 'Access-Control-Allow-Origin': '*'});
+    return this.http
+      .post('http://localhost:8000/register', user, { headers: header })
+      .pipe(map(res => res.json()));
+  }
 }

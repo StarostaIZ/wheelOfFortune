@@ -1,9 +1,10 @@
 <img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
 
 <form (submit)="onRegisterSubmit()" class="menu">
-  <input class="menu__input" type="text" placeholder="Nazwa uzytkownika">
-  <input class="menu__input" type="text" placeholder="Login (email)">
-  <input class="menu__input" type="password" placeholder="Hasło">
-  <input class="menu__input" type="password" placeholder="Powtórz hasło">
+  <div class="menu__error">Wypełnij wszystkie poniższe pola</div>
+  <input class="menu__input" type="text" [(ngModel)]="username" name="username" placeholder="Nazwa uzytkownika">
+  <input class="menu__input" type="text" [(ngModel)]="email" name="email" placeholder="Login (email)">
+  <input class="menu__input" type="password" [(ngModel)]="password" name="password" placeholder="Hasło">
+  <input class="menu__input" type="password" [(ngModel)]="passwordRepeat" name="passwordRepeat" placeholder="Powtórz hasło">
   <input class="button" type="submit" value="Zarejestruj">
 </form>

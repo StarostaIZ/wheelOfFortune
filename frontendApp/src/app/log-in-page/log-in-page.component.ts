@@ -5,7 +5,11 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-log-in-page',
   templateUrl: './log-in-page.component.html',
-  styleUrls: ['./log-in-page.component.css', '../../css/logoBig.css', '../../css/button.css'],
+  styleUrls: [
+    './log-in-page.component.css',
+    '../../css/logoBig.css',
+    '../../css/button.css',
+  ],
 })
 export class LogInPageComponent implements OnInit {
   username: string;
@@ -15,6 +19,7 @@ export class LogInPageComponent implements OnInit {
     private validateService: ValidateService,
     private authService: AuthService
   ) {}
+
   onLoginSubmit() {
     const user = {
       username: this.username,
