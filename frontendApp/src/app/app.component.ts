@@ -7,7 +7,6 @@ import {Component} from '@angular/core';
 })
 export class AppComponent {
   isLogged = false;
-
   logInLink = 'login';
   registerLink = 'register';
 }

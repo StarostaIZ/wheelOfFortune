@@ -4,9 +4,11 @@
   height: auto;
   margin: 0 auto;
   padding-top: 2%;
+  cursor: pointer;
 }
 
 .game{
+  z-index: 100;
   width: 100%;
   margin: 1% auto;
   display: grid;
@@ -73,16 +75,24 @@
 .game__board__keyboard{
   margin: 60px 0;
   display: grid;
-  grid-template-columns: repeat(7, 20px);
+  grid-template-columns: repeat(7, 30px);
   grid-template-rows: repeat(5, 20px);
-  grid-gap: 30px 40px;
+  grid-gap: 30px 30px;
 }
 
 #letter{
   color: #1CBFBA;
+  padding: 5px;
+  text-align: center;
   font-weight: 800;
   font-size: 1.2em;
   cursor: pointer;
+  border: transparent 1px solid;
+  transition: border-color .3s ease-out;
+}
+
+#letter:hover{
+  border-color: white;
 }
 
 .game__labels{
