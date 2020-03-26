@@ -7,3 +7,37 @@
   justify-content: center;
 }
 
+.menu__title {
+  font-weight: bold;
+  font-size: 1.4em;
+}
+
+.menu__info{
+  margin: 100px 0;
+}
+
+.menu__friend{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  border-radius: 30px;
+  background-color: #fff;
+  color: #000;
+  padding: 12px 20px;
+  min-width: 300px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
+  font-size: 0.8em;
+  margin: 20px 0;
+}
+
+.menu__friend__btn{
+  border: none;
+  background: none;
+  font-weight: bold;
+  font-size: 1.4em;
+  color: red;
+  cursor: pointer;
+}
+

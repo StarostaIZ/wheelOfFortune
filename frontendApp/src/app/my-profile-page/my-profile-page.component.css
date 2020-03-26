@@ -34,4 +34,5 @@
   height: 20px;
   width: auto;
   transform: translate(-35px, 5px);
+  cursor: pointer;
 }

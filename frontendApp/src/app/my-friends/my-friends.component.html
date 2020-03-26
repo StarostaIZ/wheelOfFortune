@@ -3,12 +3,14 @@
 <div class="menu">
   <p class="menu__title">Znajomi</p>
   <div *ngIf="friends.length === 0; then noFirends; else haveFriends"></div>
-    <ng-template #noFirends>Nie masz jeszcze żadnych znajomych :(</ng-template>
-    <ng-template #haveFriends>
-      <div *ngFor="let friend of friends">
-        {{ friend.name }}
-        <button (click)="removeFriend()">Usuń</button>
-      </div>
-      <button class="button">Dodaj znajomego</button>
-    </ng-template>
+  <ng-template #noFirends>
+    <p class="menu__info">Nie masz jeszcze żadnych znajomych :(</p>
+  </ng-template>
+  <ng-template #haveFriends>
+    <div class="menu__friend" *ngFor="let friend of friends">
+      {{ friend.username }}
+      <button class="menu__friend__btn" (click)="removeFriend()">X</button>
+    </div>
+  </ng-template>
+  <button class="button">Dodaj znajomego</button>
 </div>
