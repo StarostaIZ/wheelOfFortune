@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../services/validate.service';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-log-in-page',
@@ -17,7 +18,8 @@ export class LogInPageComponent implements OnInit {
 
   constructor(
     private validateService: ValidateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   onLoginSubmit() {
@@ -26,12 +28,16 @@ export class LogInPageComponent implements OnInit {
       password: this.password,
     };
     const errorLabel = document.querySelector('.menu__error');
-    if (!this.validateService.validateLogin(user)) {
-      errorLabel.style.display = 'block';
-    } else {
-      errorLabel.style.display = 'none';
-    }
+
     this.authService.logIn(user).subscribe(data => {
+      const result = data.toString();
+      if (result === 'true') {
+        this.authService.storeUserData(this.username);
+        this.router.navigate(['/']);
+      } else {
+        errorLabel.style.display = 'block';
+        errorLabel.textContent = result;
+      }
       console.log(data);
     });
   }

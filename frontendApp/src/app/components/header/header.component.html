@@ -2,7 +2,7 @@
   <ul class="header__nav">
     <div *ngIf="isLogged; then loggedUserBlock; else guestBlock"></div>
     <ng-template #loggedUserBlock>
-      <li class="header__nav__link"><a routerLink="/">Wyloguj się</a></li>
+      <li class="header__nav__link"><a routerLink="/" (click)="onLogOutClick()">Wyloguj się</a></li>
       <li class="header__nav__link"><a routerLink="/profile">Twój profil</a></li>
     </ng-template>
     <ng-template #guestBlock>

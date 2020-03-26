@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-main-page',
@@ -6,9 +6,9 @@ import {Component, OnInit, Input} from '@angular/core';
   styleUrls: ['./main-page.component.css', '../../css/logoBig.css', '../../css/button.css']
 })
 export class MainPageComponent implements OnInit {
-
-  isLogged = true;
+  isLogged: boolean;
 
   ngOnInit(): void {
+    this.isLogged = localStorage.getItem('username') !== null;
   }
 }

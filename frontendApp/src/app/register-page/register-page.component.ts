@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../services/validate.service';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-page',
@@ -17,7 +18,11 @@ export class RegisterPageComponent implements OnInit {
   password: string;
   passwordRepeat: string;
 
-  constructor(private validateService: ValidateService, private authService: AuthService) {}
+  constructor(
+    private validateService: ValidateService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onRegisterSubmit() {
     const newUser = {
@@ -27,13 +32,15 @@ export class RegisterPageComponent implements OnInit {
       passwordRepeat: this.passwordRepeat,
     };
     const errorLabel = document.querySelector('.menu__error');
-    if (!this.validateService.validateRegister(newUser)) {
-      errorLabel.style.display = 'block';
-    } else {
-      errorLabel.style.display = 'none';
-    }
+
     this.authService.register(newUser).subscribe(data => {
-      console.log(data);
+      const result = data.toString();
+      if (result === 'true') {
+        this.router.navigate(['/']);
+      } else {
+        errorLabel.style.display = 'block';
+        errorLabel.textContent = result;
+      }
     });
   }
 

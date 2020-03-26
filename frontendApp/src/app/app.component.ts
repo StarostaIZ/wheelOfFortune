@@ -1,12 +1,16 @@
-import {Component} from '@angular/core';
+import { Component, DoCheck } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  isLogged = false;
-  logInLink = 'login';
-  registerLink = 'register';
+export class AppComponent implements DoCheck {
+  isLogged: boolean;
+
+  constructor() {}
+
+  ngDoCheck(): void {
+    this.isLogged = localStorage.getItem('username') !== null;
+  }
 }
