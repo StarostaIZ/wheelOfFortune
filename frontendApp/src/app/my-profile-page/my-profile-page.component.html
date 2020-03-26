@@ -1,0 +1,23 @@
+<img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
+
+<div class="menu">
+  <p class="menu__title">Twój profil</p>
+  <div class="menu__label">
+    <label for="username">Nazwa</label>
+    <input class="menu__label__input" type="text" id="username" name="username">
+    <img class="menu__label__btn" (click)="changeUsername()" src="../../assets/img/icon.png"/>
+  </div>
+  <div class="menu__label">
+    <label for="emial">Email</label>
+    <input class="menu__label__input" type="text" id="emial" name="emial">
+    <img class="menu__label__btn" (click)="changeEmail()" src="../../assets/img/icon.png"/>
+  </div>
+  <div class="menu__label">
+    <label for="password">Hasło</label>
+    <input class="menu__label__input" type="text" id="password" name="password">
+    <img class="menu__label__btn" (click)="changePassword()" src="../../assets/img/icon.png"/>
+  </div>
+  <button class="button" routerLink="/friends">Znajomi</button>
+  <button class="button" routerLink="/statistics">Moje statystyki</button>
+  <button class="button" routerLink="/">Powrót</button>
+</div>

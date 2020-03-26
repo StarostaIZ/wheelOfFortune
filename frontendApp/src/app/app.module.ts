@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
+import { MyProfileStatisticsComponent } from './my-profile-statistics/my-profile-statistics.component';
+import { MyFriendsComponent } from './my-friends/my-friends.component';
 
 
 @NgModule({
@@ -24,6 +27,9 @@ import { HttpClientModule } from '@angular/common/http';
     MainPageComponent,
     LogInPageComponent,
     RegisterPageComponent,
+    MyProfilePageComponent,
+    MyProfileStatisticsComponent,
+    MyFriendsComponent,
   ],
   imports: [
     BrowserModule,
