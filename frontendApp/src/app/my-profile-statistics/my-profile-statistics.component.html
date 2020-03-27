@@ -1,3 +1,24 @@
 <img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
 
-<div class="menu"></div>
+<div class="menu">
+  <p class="menu__title">Moje statystyki</p>
+  <div class="menu__statistics">
+    <div class="menu__statistics__results">
+      <p class="menu__statistics__results__label">
+        Ilość gier: {{ numberOfGames }}
+      </p>
+      <p class="menu__statistics__results__label">Wygrane: {{ wins }}</p>
+      <p class="menu__statistics__results__label">Przegrane: {{ losts }}</p>
+      <p class="menu__statistics__results__label">
+        Suma punktów: {{ sumOfPoints }}
+      </p>
+      <p class="menu__statistics__results__label">
+        Średnia punktów w grze: {{ pointsAvg }}
+      </p>
+    </div>
+    <div class="menu__statistics__charts">
+      <div id="chartContainer"></div>
+    </div>
+  </div>
+  <button class="button" routerLink="/profile">Powrót</button>
+</div>
