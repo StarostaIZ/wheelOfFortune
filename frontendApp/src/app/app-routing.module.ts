@@ -7,6 +7,8 @@ import { MyFriendsComponent } from './my-friends/my-friends.component';
 import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
 import { MyProfileStatisticsComponent } from './my-profile-statistics/my-profile-statistics.component';
 import { CreateGamePageComponent } from './create-game-page/create-game-page.component';
+import { PlayFriendsPageComponent } from './play-friends-page/play-friends-page.component';
+import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const appRoutes: Routes = [
@@ -17,6 +19,8 @@ const appRoutes: Routes = [
   { path: 'friends', component: MyFriendsComponent },
   { path: 'statistics', component: MyProfileStatisticsComponent },
   { path: 'createGame', component: CreateGamePageComponent },
+  { path: 'playWithFriends', component: PlayFriendsPageComponent },
+  { path: 'gameWithFriends', component: GameFriendsPageComponent },
   { path: '', component: MainPageComponent },
 ];
 

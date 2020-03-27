@@ -2,4 +2,34 @@
 
 <div class="menu">
   <p class="menu__title">Stwórz grę</p>
+  <div class="menu__error"></div>
+  <input
+    class="menu__input"
+    type="text"
+    [(ngModel)]="roomName"
+    name="roomName"
+    placeholder="Nazwa pokoju"
+  />
+  <input
+    class="menu__input"
+    list="maxPlayers"
+    [(ngModel)]="maxPlayers"
+    name="maxPlayers"
+    placeholder="Maksymalna liczba graczy"
+  />
+  <datalist id="maxPlayers">
+    <option value="1"> </option>
+    <option value="2"> </option>
+    <option value="3"> </option>
+    <option value="4"> </option>
+  </datalist>
+  <input
+    class="menu__input"
+    type="password"
+    [(ngModel)]="password"
+    name="password"
+    placeholder="Hasło (opcjonalnie)"
+  />
+  <input class="button" type="submit" value="Stwórz grę" />
+  <input class="button" type="submit" routerLink="/" value="Powrót" />
 </div>

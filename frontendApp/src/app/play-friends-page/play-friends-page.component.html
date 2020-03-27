@@ -1,0 +1,13 @@
+<img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
+
+<div class="menu">
+  <p class="menu__title">Zagraj ze znajomymi</p>
+  <h5 class="menu__subtitle">Wybierz pokój:</h5>
+  <div *ngFor="let room of roomsList">
+    <div class="menu__list__room" (click)="tooglRoom($event)">{{ room.roomName }}</div>
+  </div>
+  <button class="button" routerLink="/gameWithFriends">Graj</button>
+  <h5>lub stwórz własny</h5>
+  <button class="button" routerLink="/createGame">Stwórz grę</button>
+  <button class="button" routerLink="/">Powrót</button>
+</div>
