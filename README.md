@@ -1,6 +1,6 @@
 # wheelOfFortune
 
-To satrt Angular ```npm start```
+To start Angular ```npm start``` or ```ng serve --open --proxy-config proxy.conf.json```
 
 ```php bin/console doctrine:migrations:migrate```
 
