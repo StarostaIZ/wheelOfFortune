@@ -1,5 +1,6 @@
 # wheelOfFortune
 
+To satrt Angular ```npm start```
 
 ```php bin/console doctrine:migrations:migrate```
 

@@ -17,7 +17,20 @@
       </p>
     </div>
     <div class="menu__statistics__charts">
-      <div id="chartContainer"></div>
+      <ngx-charts-bar-vertical
+        style="fill: white;"
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="single"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel">
+      </ngx-charts-bar-vertical>
     </div>
   </div>
   <button class="button" routerLink="/profile">Powrót</button>

@@ -18,34 +18,39 @@ export class MyProfileStatisticsComponent implements OnInit {
   pointsAvg = 100;
   constructor() {}
 
-  ngOnInit(): void {
-    // const chart = new CanvasJS.Chart('chartContainer', {
-    //   animationEnabled: true,
-    //   exportEnabled: true,
-    //   title: {
-    //     text: 'Wygrane w ciągu roku:',
-    //   },
-    //   data: [
-    //     {
-    //       type: 'column',
-    //       dataPoints: [
-    //         { y: 1, label: 'Styczeń' },
-    //         { y: 3, label: 'Luty' },
-    //         { y: 4, label: 'Marzec' },
-    //         { y: 6, label: 'Kwiecień' },
-    //         { y: 0, label: 'Maj' },
-    //         { y: 12, label: 'Czerwiec' },
-    //         { y: 3, label: 'Lipiec' },
-    //         { y: 2, label: 'Sierpień' },
-    //         { y: 1, label: 'Wrzesień' },
-    //         { y: 3, label: 'Październik' },
-    //         { y: 0, label: 'Listopad' },
-    //         { y: 0, label: 'Grudzień' },
-    //       ],
-    //     },
-    //   ],
-    // });
-    //
-    // chart.render();
-  }
+  view: any[] = [600, 400];
+  // options for the chart
+  mainColor = '#fff';
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Miesiące';
+  showYAxisLabel = true;
+  yAxisLabel = 'Liczba gier';
+  colorScheme = {
+    domain: ['#9370DB', '#87CEFA', '#FA8072', '#FF7F50', '#90EE90', '#9370DB'],
+  };
+  // data
+  public single = [
+    {
+      name: 'Styczeń',
+      value: 12,
+    },
+    {
+      name: 'Luty',
+      value: 14,
+    },
+    {
+      name: 'Marzec',
+      value: 12,
+    },
+    {
+      name: 'Kwiecień',
+      value: 0,
+    },
+  ];
+
+  ngOnInit(): void {}
 }

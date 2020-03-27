@@ -31,7 +31,11 @@ export class RegisterPageComponent implements OnInit {
       password: this.password,
       passwordRepeat: this.passwordRepeat,
     };
-    const errorLabel = document.querySelector('.menu__error');
+
+    // @ts-ignore
+    const errorLabel: HTMLElement = document.getElementsByClassName(
+      'menu__error'
+    ) as HTMLElement;
 
     this.authService.register(newUser).subscribe(data => {
       const result = data.toString();

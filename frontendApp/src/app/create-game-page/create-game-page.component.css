@@ -11,13 +11,3 @@
   font-weight: bold;
   font-size: 1.4em;
 }
-
-.menu__statistics {
-  display: flex;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.menu__statistics__charts {
-  margin-left: 50px;
-}

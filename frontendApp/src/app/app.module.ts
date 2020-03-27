@@ -16,6 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
 import { MyProfileStatisticsComponent } from './my-profile-statistics/my-profile-statistics.component';
 import { MyFriendsComponent } from './my-friends/my-friends.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CreateGamePageComponent } from './create-game-page/create-game-page.component';
 
 
 @NgModule({
@@ -30,12 +32,14 @@ import { MyFriendsComponent } from './my-friends/my-friends.component';
     MyProfilePageComponent,
     MyProfileStatisticsComponent,
     MyFriendsComponent,
+    CreateGamePageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    NgxChartsModule
   ],
   providers: [ValidateService, AuthService],
   bootstrap: [AppComponent],

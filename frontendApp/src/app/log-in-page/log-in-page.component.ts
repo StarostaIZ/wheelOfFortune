@@ -27,7 +27,10 @@ export class LogInPageComponent implements OnInit {
       username: this.username,
       password: this.password,
     };
-    const errorLabel = document.querySelector('.menu__error');
+    // @ts-ignore
+    const errorLabel: HTMLElement = document.getElementsByClassName(
+      'menu__error'
+    ) as HTMLElement;
 
     this.authService.logIn(user).subscribe(data => {
       const result = data.toString();
