@@ -11,11 +11,11 @@
     </div>
     <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
     <ng-template #keyboard>
+      <p>Kwota: {{prize}}</p>
       <div class="game__board__keyboard">
-        <p>Kwota: {{prize}}</p>
         <div *ngFor="let letter of alphabet">
           <div id="letter">
-            {{ letter }}
+            {{letter}}
           </div>
         </div>
       </div>

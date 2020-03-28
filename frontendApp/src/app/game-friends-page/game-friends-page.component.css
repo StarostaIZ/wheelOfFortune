@@ -71,7 +71,6 @@
   grid-gap: 30px 30px;
 }
 
-
 #letter{
   color: #1CBFBA;
   padding: 5px;
@@ -119,6 +118,7 @@
   height: 300px;
   background-color: white;
   border-radius: 5px 5px 0 0;
+  z-index: 2;
 }
 
 .chatBox__header{
