@@ -1,11 +1,3 @@
-<img
-  routerLink="/"
-  class="logo"
-  src="../assets/img/logo.png"
-  alt="Logo"
-  routerlink="/"
-/>
-
 <div class="game">
   <div class="left_panel"></div>
   <div class="game__board">
@@ -20,6 +12,7 @@
     <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
     <ng-template #keyboard>
       <div class="game__board__keyboard">
+        <p>Kwota: {{prize}}</p>
         <div *ngFor="let letter of alphabet">
           <div id="letter">
             {{ letter }}

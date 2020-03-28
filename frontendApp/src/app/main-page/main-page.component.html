@@ -1,11 +1,11 @@
 <img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
-
 <div class="menu">
-<!--  <div *ngIf="this.roueter.url ==-"></div>-->
   <div *ngIf="isLogged; then loggedUserBlock; else guestBlock"></div>
   <ng-template #loggedUserBlock>
     <button class="button" routerLink="/game">Szybka gra</button>
-    <button class="button" routerLink="/playWithFriends">Zagraj ze znajomymi</button>
+    <button class="button" routerLink="/playWithFriends">
+      Zagraj ze znajomymi
+    </button>
     <button class="button" routerLink="/createGame">Stwórz grę</button>
     <button class="button" routerLink="/profile">Twój profil</button>
   </ng-template>

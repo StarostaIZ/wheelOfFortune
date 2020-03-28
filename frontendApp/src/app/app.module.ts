@@ -20,7 +20,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CreateGamePageComponent } from './create-game-page/create-game-page.component';
 import { PlayFriendsPageComponent } from './play-friends-page/play-friends-page.component';
 import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.component';
-import { ModalComponent } from './components/modalView/modal.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,6 @@ import { ModalComponent } from './components/modalView/modal.component';
     CreateGamePageComponent,
     PlayFriendsPageComponent,
     GameFriendsPageComponent,
-    ModalComponent,
   ],
   imports: [
     BrowserModule,

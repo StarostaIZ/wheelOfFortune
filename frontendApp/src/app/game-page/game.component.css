@@ -1,16 +1,16 @@
-.game{
+.game {
   z-index: 100;
   width: 100%;
-  margin: 1% auto;
+  margin: 5% auto 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.game__board__wheel{
+.game__board__wheel {
   margin: 40px 0;
 }
 
-#arrow_down{
+#arrow_down {
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
@@ -21,8 +21,8 @@
   z-index: 10000;
 }
 
-#wheel{
-  background: url("../../assets/img/wheel.png") no-repeat center;
+#wheel {
+  background: url('../../assets/img/wheel.png') no-repeat center;
   border: none;
   height: 300px;
   width: 300px;
@@ -31,29 +31,31 @@
   z-index: -1;
 }
 
-#wheel:focus, #wheel:active, #wheel:hover{
+#wheel:focus,
+#wheel:active,
+#wheel:hover {
   outline: none;
   z-index: -1;
 }
 
-.game__board{
+.game__board {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.game__board__category{
-  color: #1CBFBA;
+.game__board__category {
+  color: #1cbfba;
   text-align: center;
 }
 
-.game__board__letters{
+.game__board__letters {
   display: flex;
   justify-content: center;
 }
 
-#entry_letter{
+#entry_letter {
   padding: 10px;
   color: #000;
   background-color: #fff;
@@ -63,41 +65,41 @@
   margin: 0 5px;
 }
 
-.game__board__keyboard{
-  margin: 60px 0;
+.game__board__keyboard {
+  margin: 20px 0 60px 0;
   display: grid;
   grid-template-columns: repeat(7, 30px);
   grid-template-rows: repeat(5, 20px);
   grid-gap: 30px 30px;
 }
 
-#letter{
-  color: #1CBFBA;
+#letter {
+  color: #1cbfba;
   padding: 5px;
   text-align: center;
   font-weight: 800;
   font-size: 1.2em;
   cursor: pointer;
   border: transparent 1px solid;
-  transition: border-color .3s ease-out;
+  transition: border-color 0.3s ease-out;
 }
 
-#letter:hover{
+#letter:hover {
   border-color: white;
 }
 
-.game__labels{
+.game__labels {
   margin-top: 20%;
   text-align: center;
   font-weight: bolder;
 }
 
-.game__labels__player{
-  color: #1CBFBA;
+.game__labels__player {
+  color: #1cbfba;
 }
 
-.game__labels__btn{
-  border:none;
+.game__labels__btn {
+  border: none;
   border-radius: 30px;
   background-color: #000;
   color: #fff;

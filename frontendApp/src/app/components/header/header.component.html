@@ -1,12 +1,28 @@
 <div class="header">
+  <div *ngIf="link === '/' || link ==='/login' || link === '/register' ; then noLogo else logo"></div>
+  <ng-template #noLogo></ng-template>
+  <ng-template #logo>
+    <img
+      routerLink="/"
+      class="header__logo"
+      src="../assets/img/logo.png"
+      alt="Logo"
+    />
+  </ng-template>
   <ul class="header__nav">
     <div *ngIf="isLogged; then loggedUserBlock; else guestBlock"></div>
     <ng-template #loggedUserBlock>
-      <li class="header__nav__link"><a routerLink="/" (click)="onLogOutClick()">Wyloguj się</a></li>
-      <li class="header__nav__link"><a routerLink="/profile">Twój profil</a></li>
+      <li class="header__nav__link">
+        <a routerLink="/" (click)="onLogOutClick()">Wyloguj się</a>
+      </li>
+      <li class="header__nav__link">
+        <a routerLink="/profile">Twój profil</a>
+      </li>
     </ng-template>
     <ng-template #guestBlock>
-      <li class="header__nav__link"><a routerLink="/register">Zarejestruj się</a></li>
+      <li class="header__nav__link">
+        <a routerLink="/register">Zarejestruj się</a>
+      </li>
       <li class="header__nav__link"><a routerLink="/login">Zaloguj się</a></li>
     </ng-template>
   </ul>

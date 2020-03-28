@@ -71,6 +71,7 @@ export class GameFriendsPageComponent implements OnInit {
     { name: 'Michał', score: 1200 },
     { name: 'Maciek', score: 1300 },
   ];
+  prize = '2500';
 
   callBack(event) {
     this.isDivineTour = !this.isDivineTour;
@@ -89,7 +90,7 @@ export class GameFriendsPageComponent implements OnInit {
       let actualDeg = deg % 360;
       wheel.style.transform = `rotate(${actualDeg}deg`;
       actualDeg = actualDeg + 15;
-      const prize = this.prizes[Math.floor(actualDeg / 30)];
+      this.prize = this.prizes[Math.floor(actualDeg / 30)];
     });
   }
 
