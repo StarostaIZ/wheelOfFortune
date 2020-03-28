@@ -10,11 +10,32 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class MyProfilePageComponent implements OnInit {
+  user = {
+    username: 'Michał',
+    email: 'michal@gmail.com',
+    password: '12345',
+  };
+  disableUsername = true;
+  disableEmail = true;
+  disablePassword = true;
+
   constructor() {}
 
   ngOnInit(): void {}
 
-  changeUsername() {}
-  changeEmail() {}
-  changePassword() {}
+  changeUsername() {
+    this.disableUsername = !this.disableUsername;
+  }
+
+  changeEmail() {
+    this.disableEmail = !this.disableEmail;
+  }
+
+  changePassword() {
+    this.disablePassword = !this.disablePassword;
+  }
+
+  onUserSubmit() {
+    alert('Zapisano');
+  }
 }
