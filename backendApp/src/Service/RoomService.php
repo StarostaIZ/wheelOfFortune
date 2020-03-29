@@ -6,6 +6,8 @@ namespace App\Service;
 
 use App\Entity\Room;
 use App\Entity\User;
+use App\Utils\Struct\RoomResponseStruct;
+use App\Utils\Struct\UserResponseStruct;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RoomService
@@ -44,9 +46,7 @@ class RoomService
     public function getUsersInRoom(Room $room){
         $usersData['users'] = [];
         foreach ($room->getUsersInRoom() as $user) {
-            $user_array['username'] = $user->getUsername();
-            $user_array['id'] = $user->getId();
-            $usersData[] = $user_array;
+            $usersData['users'][] = UserResponseStruct::mapFromUser($user);
         }
         return $usersData;
     }
@@ -54,11 +54,7 @@ class RoomService
     public function getRoomList(){
         $roomList['rooms'] = [];
         foreach ($this->em->getRepository(Room::class)->findAll() as $room){
-            $singleRoom['id'] = $room->getId();
-            $singleRoom['name'] = $room->getName();
-            $singleRoom['maxPeople'] = $room->getMaxPeople();
-            $singleRoom['peopleInRoom'] = count($room->getUsersInRoom());
-            $roomList[] = $room;
+            $roomList['rooms'] = RoomResponseStruct::mapFromRoom($room);
         }
         return $roomList;
     }

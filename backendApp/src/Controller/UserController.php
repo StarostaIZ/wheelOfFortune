@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Service\UserService;
+use App\Utils\Response\CustomResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,22 +17,40 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 /**
  * Class UserController
  * @package App\Controller
- * @IsGranted("ROLE_GUEST")
+ * @IsGranted("ROLE_USER")
  */
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/", name="index")
-     */
-    public function index(){
-        return new JsonResponse($this->getUser()->getRoles());
+
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
     }
 
     /**
-     * @Route("/getUser")
+     * @Route("/getUser", methods={"GET"})
      */
     public function getCurrentUser(){
-        return new JsonResponse($this->getUser());
+        $response = new CustomResponse();
+        $response->data = $this->userService->getCurrentUserData();
+        return new JsonResponse($response);
     }
+
+    /**
+     * @Route("/updateUser", methods={"PUT"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateUser(Request $request){
+        $response = new CustomResponse();
+        $this->userService->updateCurrentUser($request);
+        $this->getDoctrine()->getManager()->flush();
+        $response->data = true;
+        return new JsonResponse($response);
+    }
+
+
 
 }
