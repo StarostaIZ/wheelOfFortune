@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-my-profile-page',
@@ -10,25 +11,24 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class MyProfilePageComponent implements OnInit {
-  user = {
-    username: 'Michał',
-    email: 'michal@gmail.com',
-    password: '12345',
-  };
-  disableUsername = true;
+  username: '';
+  email: '';
+  password: '';
+  newPassword: '';
+  passwordRepeat: '';
+
   disableEmail = true;
   disablePassword = true;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    if(localStorage.getItem('username') === null){
-      alert('Brak dostępu');
-    }
-  }
-
-  changeUsername() {
-    this.disableUsername = !this.disableUsername;
+    this.userService.getUser().subscribe(data => {
+      // @ts-ignore
+      this.username = data.data.username;
+      // @ts-ignore
+      this.email = data.data.email;
+    });
   }
 
   changeEmail() {

@@ -12,6 +12,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { FormsModule } from '@angular/forms';
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
 import { MyProfileStatisticsComponent } from './my-profile-statistics/my-profile-statistics.component';
@@ -44,7 +45,7 @@ import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.
     HttpClientModule,
     NgxChartsModule
   ],
-  providers: [ValidateService, AuthService],
+  providers: [ValidateService, AuthService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

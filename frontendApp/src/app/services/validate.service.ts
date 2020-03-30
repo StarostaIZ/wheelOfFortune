@@ -26,6 +26,9 @@ export class ValidateService {
     if (!emialValidator.test(String(user.email).toLowerCase())) {
       return { isValid: false, msg: 'Podaj poprawny adres email' };
     }
+    if (user.password.length < 5) {
+      return { isValid: false, msg: 'Hasło musi posiadać co najmniej 5 znaków' };
+    }
     if (user.password !== passwordRepeat) {
       return { isValid: false, msg: 'Hasła muszą się zgadzać' };
     }
