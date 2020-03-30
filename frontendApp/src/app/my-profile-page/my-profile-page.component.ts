@@ -21,7 +21,11 @@ export class MyProfilePageComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if(localStorage.getItem('username') === null){
+      alert('Brak dostępu');
+    }
+  }
 
   changeUsername() {
     this.disableUsername = !this.disableUsername;

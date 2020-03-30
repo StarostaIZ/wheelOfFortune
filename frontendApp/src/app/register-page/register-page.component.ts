@@ -29,23 +29,30 @@ export class RegisterPageComponent implements OnInit {
       username: this.username,
       email: this.email,
       password: this.password,
-      passwordRepeat: this.passwordRepeat,
     };
 
-    // @ts-ignore
-    const errorLabel: HTMLElement = document.getElementsByClassName(
-      'menu__error'
+    const errorLabel: HTMLElement = document.querySelector(
+      '.menu__error'
     ) as HTMLElement;
 
-    this.authService.register(newUser).subscribe(data => {
-      const result = data.toString();
-      if (result === 'true') {
-        this.router.navigate(['/']);
-      } else {
-        errorLabel.style.display = 'block';
-        errorLabel.textContent = result;
-      }
-    });
+    const validateResponse = this.validateService.validateRegister(newUser, this.passwordRepeat);
+
+    if (validateResponse.isValid) {
+      this.authService.register(newUser).subscribe(data => {
+        // @ts-ignore
+        if (data.data === true) {
+          this.authService.storeUserData(this.username);
+          this.router.navigate(['/']);
+        } else {
+          errorLabel.style.display = 'block';
+          // @ts-ignore
+          errorLabel.textContent = data.error;
+        }
+      });
+    } else {
+      errorLabel.style.display = 'block';
+      errorLabel.textContent = validateResponse.msg;
+    }
   }
 
   ngOnInit(): void {}
