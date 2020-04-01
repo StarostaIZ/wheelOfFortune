@@ -21,6 +21,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CreateGamePageComponent } from './create-game-page/create-game-page.component';
 import { PlayFriendsPageComponent } from './play-friends-page/play-friends-page.component';
 import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.component';
+import { Page404Component } from './page404/page404.component';
+import {AuthGuardService} from "./services/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.
     CreateGamePageComponent,
     PlayFriendsPageComponent,
     GameFriendsPageComponent,
+    Page404Component,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,7 @@ import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.
     HttpClientModule,
     NgxChartsModule
   ],
-  providers: [ValidateService, AuthService, UserService],
+  providers: [ValidateService, AuthService, UserService, AuthGuardService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

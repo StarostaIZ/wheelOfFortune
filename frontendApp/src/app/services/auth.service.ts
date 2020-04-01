@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   username = null;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router:Router) {}
 
   register(user) {
     const header = new HttpHeaders({
@@ -29,6 +30,7 @@ export class AuthService {
 
   logOut() {
     localStorage.clear();
+    this.router.navigate(['login']);
     this.username = null;
   }
 }

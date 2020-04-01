@@ -13,4 +13,11 @@ export class UserService {
     });
     return this.http.get('./getUser', { headers: header }).pipe();
   }
+
+  updateUser(user){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.put('./updateUser', user, { headers: header }).pipe();
+  }
 }

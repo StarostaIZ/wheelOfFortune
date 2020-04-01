@@ -1,11 +1,11 @@
 <div class="menu">
   <p class="menu__title">Twój profil</p>
   <p class="menu__subtitle">Użytkownik: {{ username }}</p>
-
+  <div class="menu__error"></div>
   <form class="menu__form" (submit)="onUserSubmit()">
     <div class="menu__form__inputs">
       <div class="menu__form__label">
-        <label for="emial">Email</label>
+        <label class="menu__form__label__text" for="emial">Email</label>
         <input
           class="menu__form__label__input"
           type="text"
@@ -21,14 +21,14 @@
         />
       </div>
       <div class="menu__form__label">
-        <label for="username">Stare hasło</label>
+        <label class="menu__form__label__text" for="old_password">Stare hasło</label>
         <input
           class="menu__form__label__input"
           type="text"
-          id="username"
+          id="old_password"
           name="username"
           placeholder="Wpisz stare hasło..."
-          [(ngModel)]="password"
+          [(ngModel)]="passwordOld"
           [disabled]="disablePassword"
         />
         <img
@@ -38,14 +38,14 @@
         />
       </div>
       <div class="menu__form__label">
-        <label for="password">Nowe hasło</label>
+        <label class="menu__form__label__text" for="new_password">Nowe hasło</label>
         <input
           class="menu__form__label__input"
           type="password"
-          id="password"
+          id="new_password"
           name="password"
           placeholder="Wpisz nowe hasło..."
-          [(ngModel)]="password"
+          [(ngModel)]="passwordNew"
           [disabled]="disablePassword"
         />
         <img
@@ -55,14 +55,14 @@
         />
       </div>
       <div class="menu__form__label">
-        <label for="password">Powtórz hasło</label>
+        <label class="menu__form__label__text" for="repeat_password">Powtórz hasło</label>
         <input
           class="menu__form__label__input"
           type="password"
-          id="passwordRepeat"
+          id="repeat_password"
           name="passwordRepeat"
           placeholder="Powtórz hasło..."
-          [(ngModel)]="passwordRepeat"
+          [(ngModel)]="passwordNewRepeat"
           [disabled]="disablePassword"
         />
         <img
@@ -72,7 +72,7 @@
         />
       </div>
     </div>
-    <input type="submit" class="button" value="Zapisz" />
+    <input type="submit" class="button" value="Edytuj i zapisz" />
   </form>
   <button class="button" routerLink="/friends">Znajomi</button>
   <button class="button" routerLink="/statistics">Moje statystyki</button>
