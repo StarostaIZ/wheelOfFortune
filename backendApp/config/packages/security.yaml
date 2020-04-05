@@ -20,6 +20,8 @@ security:
             guard:
                 authenticators:
                     - App\Security\UserAuthenticator
+                    - App\Security\GuestAuthenticator
+                entry_point: App\Security\UserAuthenticator
             logout:
                 path: /logout
             # activate different ways to authenticate
@@ -28,6 +30,7 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
     role_hierarchy:
+        ROLE_GUEST: ROLE_GUEST
         ROLE_USER: ROLE_GUEST
         ROLE_ADMIN: ROLE_USER
     # Easy way to control access for large sections of your site

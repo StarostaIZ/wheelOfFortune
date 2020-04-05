@@ -43,15 +43,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/loginGuest")
-     * @param GuestService $guestService
-     * @return RedirectResponse
+     * @Route("/loginGuest", name="guest_login")
      */
-    public function loginGuest(GuestService $guestService){
-        $user = $guestService->createGuest();
-        $this->em->persist($user);
-        $this->em->flush();
-        return $this->redirectToRoute("user_login", ['request' => new Request([], ['username' => $user->getUsername(), 'password' => 'default'])], 307);
+    public function loginGuest(){
 
     }
 
