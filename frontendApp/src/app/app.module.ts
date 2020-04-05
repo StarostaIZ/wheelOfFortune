@@ -12,6 +12,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { FormsModule } from '@angular/forms';
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
 import { MyProfileStatisticsComponent } from './my-profile-statistics/my-profile-statistics.component';
@@ -20,6 +21,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CreateGamePageComponent } from './create-game-page/create-game-page.component';
 import { PlayFriendsPageComponent } from './play-friends-page/play-friends-page.component';
 import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.component';
+import { Page404Component } from './page404/page404.component';
+import {AuthGuardService} from "./services/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -36,6 +39,7 @@ import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.
     CreateGamePageComponent,
     PlayFriendsPageComponent,
     GameFriendsPageComponent,
+    Page404Component,
   ],
   imports: [
     BrowserModule,
@@ -44,7 +48,7 @@ import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.
     HttpClientModule,
     NgxChartsModule
   ],
-  providers: [ValidateService, AuthService],
+  providers: [ValidateService, AuthService, UserService, AuthGuardService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

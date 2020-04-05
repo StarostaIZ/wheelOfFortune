@@ -28,21 +28,28 @@ export class LogInPageComponent implements OnInit {
       password: this.password,
     };
     // @ts-ignore
-    const errorLabel: HTMLElement = document.getElementsByClassName(
-      'menu__error'
+    const errorLabel: HTMLElement = document.querySelector(
+      '.menu__error'
     ) as HTMLElement;
 
-    this.authService.logIn(user).subscribe(data => {
-      const result = data.toString();
-      if (result === 'true') {
-        this.authService.storeUserData(this.username);
-        this.router.navigate(['/']);
-      } else {
-        errorLabel.style.display = 'block';
-        errorLabel.textContent = result;
-      }
-      console.log(data);
-    });
+    const validateResponse = this.validateService.validateLogin(user);
+
+    if (validateResponse.isValid) {
+      this.authService.logIn(user).subscribe(data => {
+        const result = data.toString();
+        if (result === 'true') {
+          this.authService.storeUserData(this.username);
+          this.router.navigate(['/']);
+        } else {
+          errorLabel.style.display = 'block';
+          errorLabel.textContent = result;
+        }
+      });
+    }
+    else{
+      errorLabel.style.display = 'block';
+      errorLabel.textContent = validateResponse.msg;
+    }
   }
 
   ngOnInit(): void {}

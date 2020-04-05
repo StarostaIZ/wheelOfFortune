@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../services/user.service';
+import {ValidateService} from "../services/validate.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-my-profile-page',
@@ -10,21 +13,24 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class MyProfilePageComponent implements OnInit {
-  user = {
-    username: 'Michał',
-    email: 'michal@gmail.com',
-    password: '12345',
-  };
-  disableUsername = true;
+  username: '';
+  email: '';
+  passwordOld: null;
+  passwordNew: null;
+  passwordNewRepeat: null;
+
   disableEmail = true;
   disablePassword = true;
 
-  constructor() {}
+  constructor(private userService: UserService, private validateService: ValidateService, private router: Router) {}
 
-  ngOnInit(): void {}
-
-  changeUsername() {
-    this.disableUsername = !this.disableUsername;
+  ngOnInit(): void {
+    this.userService.getUser().subscribe(data => {
+      // @ts-ignore
+      this.username = data.data.username;
+      // @ts-ignore
+      this.email = data.data.email;
+    });
   }
 
   changeEmail() {
@@ -36,6 +42,33 @@ export class MyProfilePageComponent implements OnInit {
   }
 
   onUserSubmit() {
-    alert('Zapisano');
+    const userUpdateData = {
+      email: this.email,
+      passwordOld: this.passwordOld,
+      passwordNew: this.passwordNew,
+    };
+    const errorLabel: HTMLElement = document.querySelector(
+      '.menu__error'
+    ) as HTMLElement;
+
+    const validateResponse = this.validateService.validateUserUpdate(userUpdateData, this.passwordNewRepeat);
+
+    if (validateResponse.isValid) {
+      this.userService.updateUser(userUpdateData).subscribe(data => {
+        // @ts-ignore
+        if (data.data === true) {
+          errorLabel.style.backgroundColor = 'green';
+          errorLabel.style.display = 'block';
+          errorLabel.textContent = 'Zaktualizowano dane';
+        } else {
+          errorLabel.style.display = 'block';
+          // @ts-ignore
+          errorLabel.textContent = data.error;
+        }
+      });
+    } else {
+      errorLabel.style.display = 'block';
+      errorLabel.textContent = validateResponse.msg;
+    }
   }
 }
