@@ -23,6 +23,7 @@ import { PlayFriendsPageComponent } from './play-friends-page/play-friends-page.
 import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.component';
 import { Page404Component } from './page404/page404.component';
 import {AuthGuardService} from "./services/auth-guard.service";
+import { GameService} from "./services/game.service";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import {AuthGuardService} from "./services/auth-guard.service";
     HttpClientModule,
     NgxChartsModule
   ],
-  providers: [ValidateService, AuthService, UserService, AuthGuardService],
+  providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

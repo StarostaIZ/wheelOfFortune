@@ -29,6 +29,7 @@ export class AuthService {
   }
 
   logOut() {
+    this.http.post('./logout', {});
     localStorage.clear();
     this.router.navigate(['login']);
     this.username = null;

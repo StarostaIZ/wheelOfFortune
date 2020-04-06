@@ -7,7 +7,7 @@
 }
 
 .game__board__wheel {
-  margin: 40px 0;
+  margin: 0 0 10px 0;
 }
 
 #arrow_down {
@@ -53,16 +53,24 @@
 .game__board__letters {
   display: flex;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 #entry_letter {
-  padding: 10px;
+  min-width: 40px;
+  min-height: 50px;
+  text-align: center;
+  padding: 10px 5px;
   color: #000;
   background-color: #fff;
   border: #707070 2px solid;
   font-weight: 800;
   font-size: 1.2em;
   margin: 0 5px;
+}
+
+#entry_space{
+  padding: 10px;
 }
 
 .game__board__keyboard {
@@ -73,8 +81,19 @@
   grid-gap: 30px 30px;
 }
 
-#letter {
+#letter--notcliked {
   color: #1cbfba;
+  padding: 5px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.2em;
+  cursor: pointer;
+  border: transparent 1px solid;
+  transition: border-color 0.3s ease-out;
+}
+
+#letter--cliked {
+  color: #111;
   padding: 5px;
   text-align: center;
   font-weight: 800;
@@ -89,6 +108,9 @@
 }
 
 .game__labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 20%;
   text-align: center;
   font-weight: bolder;
@@ -104,10 +126,34 @@
   background-color: #000;
   color: #fff;
   padding: 8px 0px;
-  min-width: 140px;
+  width: 40%;
   margin: 20px;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
   font-size: 1em;
   cursor: pointer;
 }
+
+.guess_input{
+  display: flex;
+  align-items: baseline;
+}
+
+.menu__input{
+  border:none;
+  border-radius: 30px;
+  background-color: #fff;
+  color: #000;
+  padding: 16px 14px;
+  min-width: 300px;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
+  font-size: .8em;
+}
+
+.button_guess{
+  background-color: #131313;
+  min-width: 100px;
+}
+
