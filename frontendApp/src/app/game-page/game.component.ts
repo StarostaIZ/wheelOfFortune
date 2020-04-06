@@ -130,15 +130,16 @@ export class GameComponent implements OnInit {
         this.infoKeyboard = `Samogłoska kosztuje 200. Nie masz wystarczającej liczby punktów.`;
       }
       else {
-        this.player.score -= 200;
         let isClicked = true;
+        console.log(this.alphabet)
         for (const letter of this.alphabet) {
-          if (letter.value === divineLetter) {
+          if (letter.value === divineLetter && letter.clicked === false) {
             letter.clicked = true;
             isClicked = false;
           }
         }
         if (!isClicked) {
+          this.player.score -= 200;
           let counter = 0;
           this.entry.forEach(letter => {
             console.log(letter.value);
@@ -150,8 +151,6 @@ export class GameComponent implements OnInit {
           });
           if (counter > 0) {
             this.infoKeyboard = `Litera ${divineLetter} występuje ${counter} raz/razy.`;
-            this.player.score =
-              this.player.score + counter * parseInt(this.prize);
           } else {
             this.infoWheel = `Brak litery ${divineLetter}.`;
             this.isDivineTour = false;
@@ -161,7 +160,7 @@ export class GameComponent implements OnInit {
     } else {
       let isClicked = true;
       for (const letter of this.alphabet) {
-        if (letter.value === divineLetter) {
+        if (letter.value === divineLetter && letter.clicked === false) {
           letter.clicked = true;
           isClicked = false;
         }
@@ -266,6 +265,7 @@ export class GameComponent implements OnInit {
     });
 
     this.prize = '0';
+    this.player.score = 0
     this.divineLetterClicked = false;
     this.divinePasswordTour = false;
     this.infoWheel = 'Zakreć kołem';
