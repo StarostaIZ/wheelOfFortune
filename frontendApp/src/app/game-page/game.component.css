@@ -134,6 +134,10 @@
   cursor: pointer;
 }
 
+#info_keyboard, #info_wheel{
+  text-align: center;
+}
+
 .guess_input{
   display: flex;
   align-items: baseline;
