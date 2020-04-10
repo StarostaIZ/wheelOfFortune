@@ -12,7 +12,23 @@
   font-size: 1.4em;
 }
 
-.menu__input{
+.menu__error{
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 30px;
+  margin-bottom: 40px;
+  display: none;
+}
+
+.menu__form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu__form__input{
   border:none;
   border-radius: 30px;
   background-color: #fff;
@@ -25,3 +41,6 @@
   font-size: .8em;
 }
 
+select:invalid {
+  color: gray;
+}

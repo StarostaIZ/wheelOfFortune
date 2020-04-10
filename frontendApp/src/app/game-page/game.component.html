@@ -6,7 +6,7 @@
       <div *ngFor="let entry_letter of entry">
         <div *ngIf="entry_letter.value === ' '; then space; else letter"></div>
         <ng-template #letter>
-          <div id="entry_letter">
+          <div class="entry_box entry_letter">
             <div
               *ngIf="
                 entry_letter.visible === true;
@@ -19,14 +19,14 @@
           </div>
         </ng-template>
         <ng-template #space>
-          <div id="entry_space"></div>
+          <div class="entry_box" id="entry_space"></div>
         </ng-template>
       </div>
     </div>
     <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
     <ng-template #keyboard>
       <p>Kwota: {{ prize }}</p>
-      <p id="info_keyboard">{{ this.infoKeyboard }}</p>
+      <p class="info_keyboard">{{ this.infoKeyboard }}</p>
       <div class="game__board__keyboard">
         <div *ngFor="let letter of alphabet">
           <div
@@ -44,29 +44,33 @@
           </ng-template>
         </div>
       </div>
+      <div
+        *ngIf="
+          divinePasswordTour === true;
+          then divinePassword;
+          else notDivinePassword
+        "
+      ></div>
+      <ng-template #notDivinePassword>
+        <button class="button" (click)="divinePasswordListener()">
+          Odgadnij hasło
+        </button>
+      </ng-template>
+      <ng-template #divinePassword>
+        <button class="button" (click)="resetGuess()" [disabled]="gameEnd">
+          Cofnij
+        </button>
+        <button class="button" (click)="saveGuess()"  [disabled]="gameEnd">
+          Zapisz
+        </button>
+      </ng-template>
     </ng-template>
     <ng-template #wheel>
-      <p id="info_wheel">{{ this.infoWheel }}</p>
+      <p class="info_wheel">{{ this.infoWheel }}</p>
       <div class="game__board__wheel">
         <div id="arrow_down"></div>
         <button id="wheel" (click)="rotateWheel($event)"></button>
       </div>
-      <div *ngIf="divinePasswordTour === true; then divine; else notDivine"></div>
-      <ng-template #notDivine>
-        <button class="button" (click)="divinePassword()">Odgadnij hasło</button>
-      </ng-template>
-      <ng-template #divine>
-        <form class="guess_input">
-          <input
-            class="menu__input"
-            type="text"
-            [(ngModel)]="guess"
-            name="guess"
-            placeholder="Hasło..."
-          />
-          <input type="submit" class="button button_guess" value="Zapisz" (click)="saveGuess()"/>
-        </form>
-      </ng-template>
     </ng-template>
   </div>
   <div class="game__labels">

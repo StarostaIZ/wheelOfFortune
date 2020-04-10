@@ -10,9 +10,13 @@ import { MainPageComponent } from './main-page/main-page.component';
 import { LogInPageComponent } from './log-in-page/log-in-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { FormsModule } from '@angular/forms';
+
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
+import { RoomsService} from "./services/rooms.service";
+import { FriendsService} from "./services/friends.service";
+
 import { HttpClientModule } from '@angular/common/http';
 import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
 import { MyProfileStatisticsComponent } from './my-profile-statistics/my-profile-statistics.component';
@@ -49,7 +53,7 @@ import { GameService} from "./services/game.service";
     HttpClientModule,
     NgxChartsModule
   ],
-  providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService],
+  providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService, RoomsService, FriendsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

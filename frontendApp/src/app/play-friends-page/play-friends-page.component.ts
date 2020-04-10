@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RoomsService } from '../services/rooms.service';
+import { log } from 'util';
 
 @Component({
   selector: 'app-play-friends-page',
@@ -11,9 +13,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlayFriendsPageComponent implements OnInit {
   roomsList = [{ roomName: 'Pokój1' }, { roomName: 'Pokój2' }];
-  constructor() {}
+  friendsRoomsList = [
+    { roomName: 'PokójZnajomego1' },
+    { roomName: 'PokójZnajomego2' },
+  ];
+  constructor(private roomsService: RoomsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.roomsService.getAllRooms().subscribe(data => {
+      // @ts-ignore
+      this.roomsList = data.rooms;
+    });
+  }
 
   tooglRoom(event) {
     const rooms = document.querySelectorAll('.menu__list__room');
