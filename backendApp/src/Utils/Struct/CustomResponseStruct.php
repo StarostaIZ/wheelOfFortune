@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Utils\Response;
+namespace App\Utils\Struct;
 
 
-class CustomResponse
+class CustomResponseStruct
 {
     public $data = null;
     public $error = null;

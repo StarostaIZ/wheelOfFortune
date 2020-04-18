@@ -3,7 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
-use App\Utils\Response\CustomResponse;
+use App\Utils\Response\MyJsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,9 +77,7 @@ class UserAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $response = new CustomResponse();
-        $response->error = 'Auth required';
-        return new JsonResponse($response, 401);
+        return new MyJsonResponse(null, 'Auth required', 401);
     }
 
 

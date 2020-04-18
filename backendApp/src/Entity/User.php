@@ -18,7 +18,6 @@ class User implements UserInterface
 
     const ROLE_ADMIN = "ROLE_ADMIN";
     const ROLE_USER = "ROLE_USER";
-    const ROLE_GUEST = "ROLE_GUEST";
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -49,11 +48,6 @@ class User implements UserInterface
 
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="player1")
-     */
-    private $games;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="friendsWithMe")
      * @JoinTable(name="friends",
      *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
@@ -68,15 +62,26 @@ class User implements UserInterface
     private $friendsWithMe;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="usersInRoom")
+     * @ORM\OneToMany(targetEntity="App\Entity\Player", mappedBy="userId", orphanRemoval=true)
+     */
+    private $gamesPlayed;
+
+    /**
+     * @var Room|null
      */
     private $room;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FriendRequest", mappedBy="friendId")
+     */
+    private $friendRequests;
+
     public function __construct()
     {
-        $this->games = new ArrayCollection();
         $this->myFriends = new ArrayCollection();
         $this->friendsWithMe = new ArrayCollection();
+        $this->gamesPlayed = new ArrayCollection();
+        $this->friendRequests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,7 +112,7 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = self::ROLE_GUEST;
+        $roles[] = self::ROLE_USER;
 
         return array_unique($roles);
     }
@@ -169,36 +174,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Game[]
-     */
-    public function getGames(): Collection
-    {
-        return $this->games;
-    }
-
-    public function addGame(Game $game): self
-    {
-        if (!$this->games->contains($game)) {
-            $this->games[] = $game;
-            $game->setPlayer1($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): self
-    {
-        if ($this->games->contains($game)) {
-            $this->games->removeElement($game);
-            // set the owning side to null (unless already changed)
-            if ($game->getPlayer1() === $this) {
-                $game->setPlayer1(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|self[]
@@ -262,6 +237,68 @@ class User implements UserInterface
     public function setRoom(?Room $room): self
     {
         $this->room = $room;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Player[]
+     */
+    public function getGamesPlayed(): Collection
+    {
+        return $this->gamesPlayed;
+    }
+
+    public function addGamesPlayed(Player $gamesPlayed): self
+    {
+        if (!$this->gamesPlayed->contains($gamesPlayed)) {
+            $this->gamesPlayed[] = $gamesPlayed;
+            $gamesPlayed->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamesPlayed(Player $gamesPlayed): self
+    {
+        if ($this->gamesPlayed->contains($gamesPlayed)) {
+            $this->gamesPlayed->removeElement($gamesPlayed);
+            // set the owning side to null (unless already changed)
+            if ($gamesPlayed->getUser() === $this) {
+                $gamesPlayed->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FriendRequest[]
+     */
+    public function getFriendRequests(): Collection
+    {
+        return $this->friendRequests;
+    }
+
+    public function addFriendRequest(FriendRequest $friendRequest): self
+    {
+        if (!$this->friendRequests->contains($friendRequest)) {
+            $this->friendRequests[] = $friendRequest;
+            $friendRequest->setFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendRequest(FriendRequest $friendRequest): self
+    {
+        if ($this->friendRequests->contains($friendRequest)) {
+            $this->friendRequests->removeElement($friendRequest);
+            // set the owning side to null (unless already changed)
+            if ($friendRequest->getFriend() === $this) {
+                $friendRequest->setFriend(null);
+            }
+        }
 
         return $this;
     }

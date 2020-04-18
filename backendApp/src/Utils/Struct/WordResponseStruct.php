@@ -15,7 +15,7 @@ class WordResponseStruct
     public static function mapFromWord(Word $word)
     {
         $wordStruct = new WordResponseStruct();
-        $wordStruct->category = strtoupper($word->getCategory()->getName());
+        $wordStruct->category = $word->getCategory()->getName();
         $wordStruct->word = strtoupper($word->getWord());
         return $wordStruct;
     }

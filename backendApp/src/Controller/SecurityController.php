@@ -5,9 +5,8 @@ namespace App\Controller;
 
 
 use App\Entity\User;
-use App\Service\GuestService;
 use App\Service\UserService;
-use App\Utils\Response\CustomResponse;
+use App\Utils\Response\MyJsonResponse;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,37 +42,27 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/loginGuest", name="guest_login")
-     */
-    public function loginGuest(){
-
-    }
-
-    /**
      * @Route("/register", methods={"POST"})
      * @param Request $request
      * @param UserService $userService
      * @return JsonResponse
      */
     public function register(Request $request, UserService $userService){
-        $response = new CustomResponse();
 
         try {
             $user = $userService->registerUser($request);
         }catch (MissingMandatoryParametersException $exception){
-            $response->error=$exception->getMessage();
-            return new JsonResponse($response);
+            return new JsonResponse(null, $exception->getMessage());
         }
 
         try {
             $this->em->persist($user);
             $this->em->flush();
         }catch (UniqueConstraintViolationException $exception){
-            $response->error = 'Użytkownik o takiej nazwie już istnieje';
-            return new JsonResponse($response);
+            return new MyJsonResponse(null, 'Użytkownik o takiej nazwie już istnieje');
         }
-        $response->data = true;
-        return new JsonResponse($response);
+
+        return new MyJsonResponse(true);
 
     }
 

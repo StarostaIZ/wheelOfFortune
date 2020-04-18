@@ -3,20 +3,14 @@
 
 namespace App\Controller;
 
+
 use App\Service\GameService;
 use App\Utils\Response\MyJsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Class GameController
- * @package App\Controller
- * @IsGranted("ROLE_USER")
- */
-class GameController
+class OfflineGameController
 {
-
     /**
      * @var GameService
      */
@@ -28,13 +22,10 @@ class GameController
     }
 
     /**
-     * @Route("/startGame/{id}")
-     * @param $id
+     * @Route("/drawWord", methods={"GET"})
      */
-    public function startGame($id){
-        //$this->gameService->createGame();
+    public function drawWord(){
+        return new MyJsonResponse($this->gameService->drawWord());
     }
-
-
 
 }

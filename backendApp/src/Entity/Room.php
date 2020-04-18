@@ -30,11 +30,6 @@ class Room
     private $password;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isOffline = 0;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $maxPeople;
@@ -90,17 +85,6 @@ class Room
         return $this;
     }
 
-    public function getIsOffline(): ?bool
-    {
-        return $this->isOffline;
-    }
-
-    public function setIsOffline(bool $isOffline): self
-    {
-        $this->isOffline = $isOffline;
-
-        return $this;
-    }
 
     public function getMaxPeople(): ?int
     {

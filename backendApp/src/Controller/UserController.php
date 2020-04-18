@@ -4,8 +4,10 @@
 namespace App\Controller;
 
 
+use App\Entity\FriendRequest;
+use App\Entity\User;
 use App\Service\UserService;
-use App\Utils\Response\CustomResponse;
+use App\Utils\Response\MyJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,12 +32,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/admin")
+     */
+    public function admin(){
+        return new JsonResponse("It's ok");
+    }
+
+    /**
      * @Route("/getUser", methods={"GET"})
      */
     public function getCurrentUser(){
-        $response = new CustomResponse();
-        $response->data = $this->userService->getCurrentUserData();
-        return new JsonResponse($response);
+        return new MyJsonResponse($this->userService->getCurrentUserData());
     }
 
     /**
@@ -44,12 +51,58 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     public function updateUser(Request $request){
-        $response = new CustomResponse();
         $this->userService->updateCurrentUser($request);
         $this->getDoctrine()->getManager()->flush();
-        $response->data = true;
-        return new JsonResponse($response);
+        return new MyJsonResponse(true);
     }
+
+    /**
+     * @Route("/addFriend", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFriend(Request $request){
+        $this->userService->addFriendToCurrentUser($request);
+        $this->getDoctrine()->getManager()->flush();
+        return new MyJsonResponse(true);
+
+    }
+
+    /**
+     * @Route("/removeFriend", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function removeFriend(Request $request){
+        $this->userService->removeFriendFromCurrentUser($request);
+        $this->getDoctrine()->getManager()->flush();
+        return new JsonResponse(true);
+    }
+
+    /**
+     * @Route("/sendFriendRequest", methods={"POST"})
+     * @param Request $request
+     * @return MyJsonResponse
+     */
+    public function sendFriendRequest(Request $request){
+        $friendRequest = $this->userService->createFriendRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($friendRequest);
+        $em->flush();
+        return new MyJsonResponse(true);
+    }
+
+    /**
+     * @Route("/rejectFriendRequest", methods={"POST"})
+     * @param Request $request
+     * @return MyJsonResponse
+     */
+    public function rejectFriendRequest(Request $request){
+        $this->userService->rejectFriendRequest($request);
+        $this->getDoctrine()->getManager()->flush();
+        return new MyJsonResponse(true);
+    }
+
 
 
 
