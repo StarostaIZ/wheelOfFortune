@@ -26,7 +26,10 @@ export class ValidateService {
       return { isValid: false, msg: 'Podaj poprawny adres email' };
     }
     if (user.password.length < 5) {
-      return { isValid: false, msg: 'Hasło musi posiadać co najmniej 5 znaków' };
+      return {
+        isValid: false,
+        msg: 'Hasło musi posiadać co najmniej 5 znaków',
+      };
     }
     if (user.password !== passwordRepeat) {
       return { isValid: false, msg: 'Hasła muszą się zgadzać' };
@@ -39,12 +42,21 @@ export class ValidateService {
     if (!emialValidator.test(String(user.email).toLowerCase())) {
       return { isValid: false, msg: 'Podaj poprawny adres email' };
     }
-    if((user.passwordOld === undefined && user.passwordNew !== undefined) || (user.passwordOld !== undefined && user.passwordNew === undefined)) {
-      return { isValid: false, msg: 'Podaj stare i nowe hasło aby zmienić hasło' };
+    if (
+      (user.passwordOld === undefined && user.passwordNew !== undefined) ||
+      (user.passwordOld !== undefined && user.passwordNew === undefined)
+    ) {
+      return {
+        isValid: false,
+        msg: 'Podaj stare i nowe hasło aby zmienić hasło',
+      };
     }
-    if(user.passwordNew !== undefined){
+    if (user.passwordNew !== undefined) {
       if (user.passwordNew.length < 5) {
-        return { isValid: false, msg: 'Nowe hasło musi posiadać co najmniej 5 znaków' };
+        return {
+          isValid: false,
+          msg: 'Nowe hasło musi posiadać co najmniej 5 znaków',
+        };
       }
       if (user.passwordNew !== passwordNewRepeat) {
         return { isValid: false, msg: 'Nowe hasła muszą się zgadzać' };
@@ -53,4 +65,14 @@ export class ValidateService {
     return { isValid: true, msg: '' };
   }
 
+  validateRoom(newRoom) {
+    const { roomName, maxPlayers } = newRoom;
+    if (
+      roomName === undefined ||
+      roomName.trim().length === 0 ||
+      maxPlayers === ''
+    )
+      return { isValid: false, msg: 'Podaj nazwę i max liczbę osób' };
+    else return { isValid: true, msg: '' };
+  }
 }

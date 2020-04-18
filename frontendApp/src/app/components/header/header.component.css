@@ -2,12 +2,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 12%;
+  height: 9%;
   width: 100vw;
-  padding: 25px 0;
+  padding: 1% 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  background-color: #031263;
 }
 
 .header__logo{

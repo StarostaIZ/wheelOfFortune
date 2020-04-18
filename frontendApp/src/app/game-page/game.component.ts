@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../services/game.service';
-import {isNull, log} from 'util';
-import { falseIfMissing } from 'protractor/built/util';
 
 @Component({
   selector: 'app-game-component',
@@ -14,8 +12,9 @@ import { falseIfMissing } from 'protractor/built/util';
 })
 export class GameComponent implements OnInit {
   entry = [];
-  vowels = ['A', 'Ą', 'E', 'Ę', 'I', 'O', 'Ó', 'U', 'Y'];
-  alphabet = [
+  entry_copy = [];
+  VOWELS = ['A', 'Ą', 'E', 'Ę', 'I', 'O', 'Ó', 'U', 'Y'];
+  ALPHABET = [
     { value: 'A', clicked: false },
     { value: 'Ą', clicked: false },
     { value: 'B', clicked: false },
@@ -52,7 +51,8 @@ export class GameComponent implements OnInit {
     { value: 'Ź', clicked: false },
     { value: 'Ż', clicked: false },
   ];
-  prizes = [
+  alphabet = this.ALPHABET;
+  PRIZES = [
     '2500',
     '800',
     '200',
@@ -70,13 +70,11 @@ export class GameComponent implements OnInit {
   category = 'SPORT';
   player = { name: '', score: 0 };
   prize = '0';
-  divineLetterClicked = false;
   divinePasswordTour = false;
-  infoWheel = 'Zakreć kołem';
+  infoWheel = 'Zakręć kołem';
   infoKeyboard = 'Wybierz literę';
   password = '';
-  guess = '';
-  emptySpaceIndexes = [];
+  gameEnd = false;
 
   constructor(private gameService: GameService) {}
 
@@ -94,13 +92,10 @@ export class GameComponent implements OnInit {
           ? localStorage.getItem('username')
           : 'Player';
     });
-    console.log(this.entry);
   }
 
   rotateWheel(event) {
     this.infoKeyboard = 'Wybierz literę';
-    this.divinePasswordTour = false;
-    this.divineLetterClicked = false;
     const wheel = event.target;
     wheel.style.pointerEvents = 'none';
     const deg = 720 + Math.floor(Math.random() * 270);
@@ -112,7 +107,7 @@ export class GameComponent implements OnInit {
       let actualDeg = deg % 360;
       wheel.style.transform = `rotate(${actualDeg}deg`;
       actualDeg = actualDeg + 15;
-      this.prize = this.prizes[Math.floor(actualDeg / 30)];
+      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
       if (this.prize === 'BANKRUT') {
         this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
         this.player.score = 0;
@@ -122,138 +117,134 @@ export class GameComponent implements OnInit {
     });
   }
 
-  divine(event) {
-    this.divineLetterClicked = true;
-    const divineLetter = event.target.textContent.trim();
-    if (this.vowels.includes(divineLetter)) {
-      if(this.player.score < 200){
-        this.infoKeyboard = `Samogłoska kosztuje 200. Nie masz wystarczającej liczby punktów.`;
-      }
-      else {
-        let isClicked = true;
-        console.log(this.alphabet)
-        for (const letter of this.alphabet) {
-          if (letter.value === divineLetter && letter.clicked === false) {
-            letter.clicked = true;
-            isClicked = false;
-          }
-        }
-        if (!isClicked) {
-          this.player.score -= 200;
-          let counter = 0;
-          this.entry.forEach(letter => {
-            console.log(letter.value);
-            console.log(divineLetter);
-            if (letter.value === divineLetter) {
-              letter.visible = true;
-              counter++;
-            }
-          });
-          if (counter > 0) {
-            this.infoKeyboard = `Litera ${divineLetter} występuje ${counter} raz/razy.`;
-          } else {
-            this.infoWheel = `Brak litery ${divineLetter}.`;
-            this.isDivineTour = false;
-          }
-        }
-      }
-    } else {
-      let isClicked = true;
-      for (const letter of this.alphabet) {
-        if (letter.value === divineLetter && letter.clicked === false) {
-          letter.clicked = true;
-          isClicked = false;
-        }
-      }
-      if (!isClicked) {
-        let counter = 0;
-        this.entry.forEach(letter => {
-          console.log(letter.value);
-          console.log(divineLetter);
-          if (letter.value === divineLetter) {
-            letter.visible = true;
-            counter++;
-          }
-        });
-        if (counter > 0) {
-          this.infoWheel = `Litera ${divineLetter} występuje ${counter} raz/razy.`;
-          this.player.score =
-            this.player.score + counter * parseInt(this.prize);
-        } else {
-          this.infoWheel = `Brak litery ${divineLetter}.`;
-        }
-        this.isDivineTour = false;
+  isLetterAlreadyClicked(divinedLetter) {
+    for (const letter of this.alphabet) {
+      if (letter.value === divinedLetter && letter.clicked === false) {
+        letter.clicked = true;
+        return false;
       }
     }
-    let isDone = true;
+    return true;
+  }
 
-    this.entry.forEach(letter => {
-      if (letter.visible === false && letter.value !== ' ') {
-        isDone = false;
+  countLetterInEntry(divinedLetter) {
+    let counter = 0;
+    const indexes = [];
+    const letterBoxes = document.body.querySelectorAll('.entry_box');
+    this.entry.forEach((letter, index) => {
+      if (letter.value === divinedLetter) {
+        letterBoxes[index].classList.add('entry_letter--active');
+        indexes.push(index);
+        counter++;
       }
     });
-    console.log(this.entry);
-    console.log(isDone);
-    if(isDone){
-      this.infoWheel = `Gratulację! Twój wynik to ${this.player.score}`;
+
+    indexes.forEach((value, index) => {
+      setTimeout(() => {
+        letterBoxes[value].classList.remove('entry_letter--active');
+        letterBoxes[value].classList.add('flip');
+        setTimeout(() => {
+          this.entry[value].visible = true;
+        }, 400);
+      }, 600 + index * 800);
+    });
+    return counter;
+  }
+
+  isCompleted() {
+    for (const letter of this.entry) {
+      if (letter.visible === false && letter.value !== ' ') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  divine(event) {
+    if (this.gameEnd) return;
+    const divinedLetter = event.target.textContent.trim();
+    if (this.divinePasswordTour) {
+      const empty_letter = this.entry.find(letter => {
+        return letter.visible === false && letter.value !== ' ';
+      });
+      if (empty_letter) {
+        empty_letter.value = divinedLetter;
+        empty_letter.visible = true;
+      }
+    } else {
+      let isVowel = false;
+      if (this.VOWELS.includes(divinedLetter)) {
+        isVowel = true;
+      }
+      if (isVowel) {
+        if (this.player.score < 200) {
+          this.infoKeyboard = `Samogłoska kosztuje 200. Nie masz wystarczającej liczby punktów.`;
+          return;
+        } else {
+          this.player.score -= 200;
+        }
+      }
+
+      if (!this.isLetterAlreadyClicked(divinedLetter)) {
+        const counter = this.countLetterInEntry(divinedLetter);
+        if (counter > 0) {
+          if (!isVowel) {
+            this.player.score += counter * parseInt(this.prize);
+            this.isDivineTour = false;
+          }
+          this.infoWheel =
+            counter > 1
+              ? `Litera ${divinedLetter} występuje ${counter} razy.`
+              : `Litera ${divinedLetter} występuje ${counter} raz.`;
+        } else {
+          this.infoWheel = `Brak litery ${divinedLetter}.`;
+          this.isDivineTour = false;
+        }
+      }
+      if (this.isCompleted()) {
+        this.infoWheel = `Gratulację! Twój wynik to ${this.player.score}`;
+      }
     }
   }
 
-  divinePassword() {
+  divinePasswordListener() {
     this.divinePasswordTour = true;
+    this.infoKeyboard = `Uzupełnij hasło. Podaj kolejne litery.`;
+    this.entry_copy = JSON.parse(JSON.stringify(this.entry));
   }
 
   saveGuess() {
-    console.log(this.guess);
-    if (this.guess.toUpperCase() === this.password) {
-      this.infoWheel = `Gratulację! Twój wynik to ${this.player.score}`;
-      this.entry.forEach(letter => {
-        letter.visible = true;
-      });
+    let guess = '';
+    console.log(this.entry);
+    this.entry.forEach(letter => {
+      if (letter.visible === true) {
+        guess += letter.value;
+      }
+      if (letter.value === ' ') {
+        guess += ' ';
+      }
+    });
+    console.log(guess);
+    if (guess.toUpperCase() === this.password) {
+      this.infoKeyboard = `Gratulację! Twój wynik to ${this.player.score}`;
+      document.body
+        .querySelector('.info_keyboard')
+        .classList.add('info_keyboard--win');
+      this.gameEnd = true;
     } else {
       this.infoWheel = `Niestety hasło nie jest prawidłowe. Próbuj dalej.`;
+      this.resetGuess();
+      this.isDivineTour = false;
     }
+  }
+
+  resetGuess() {
+    this.entry = JSON.parse(JSON.stringify(this.entry_copy));
   }
 
   newGame() {
     this.entry = [];
-    this.alphabet = [
-      { value: 'A', clicked: false },
-      { value: 'Ą', clicked: false },
-      { value: 'B', clicked: false },
-      { value: 'C', clicked: false },
-      { value: 'Ć', clicked: false },
-      { value: 'D', clicked: false },
-      { value: 'E', clicked: false },
-      { value: 'Ę', clicked: false },
-      { value: 'F', clicked: false },
-      { value: 'G', clicked: false },
-      { value: 'H', clicked: false },
-      { value: 'I', clicked: false },
-      { value: 'J', clicked: false },
-      { value: 'K', clicked: false },
-      { value: 'L', clicked: false },
-      { value: 'Ł', clicked: false },
-      { value: 'M', clicked: false },
-      { value: 'N', clicked: false },
-      { value: 'Ń', clicked: false },
-      { value: 'O', clicked: false },
-      { value: 'Ó', clicked: false },
-      { value: 'P', clicked: false },
-      { value: 'Q', clicked: false },
-      { value: 'R', clicked: false },
-      { value: 'S', clicked: false },
-      { value: 'Ś', clicked: false },
-      { value: 'T', clicked: false },
-      { value: 'U', clicked: false },
-      { value: 'V', clicked: false },
-      { value: 'W', clicked: false },
-      { value: 'X', clicked: false },
-      { value: 'Y', clicked: false },
-      { value: 'Z', clicked: false },
-      { value: 'Ź', clicked: false },
-      { value: 'Ż', clicked: false },
-    ];
+    this.alphabet = this.ALPHABET;
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word.toUpperCase();
@@ -263,12 +254,15 @@ export class GameComponent implements OnInit {
       // @ts-ignore
       this.category = data.data.category;
     });
-
     this.prize = '0';
-    this.player.score = 0
-    this.divineLetterClicked = false;
+    this.player.score = 0;
     this.divinePasswordTour = false;
-    this.infoWheel = 'Zakreć kołem';
+    this.isDivineTour = false;
+    this.infoWheel = 'Zakręć kołem';
     this.infoKeyboard = 'Wybierz literę';
+    this.gameEnd = false;
+    document.body
+      .querySelector('.info_keyboard')
+      .classList.remove('info_keyboard--win');
   }
 }
