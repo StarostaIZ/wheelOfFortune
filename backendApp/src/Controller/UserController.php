@@ -103,6 +103,20 @@ class UserController extends AbstractController
         return new MyJsonResponse(true);
     }
 
+    /**
+     * @Route("/friendList")
+     */
+    public function getFriendList(){
+        return new MyJsonResponse($this->userService->getFriendList());
+    }
+
+    /**
+     * @Route("/friendRequestList")
+     */
+    public function getFriendRequestList(){
+        return new MyJsonResponse($this->userService->getFriendRequestList());
+    }
+
 
 
 

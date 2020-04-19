@@ -6,6 +6,8 @@ namespace App\Service;
 
 use App\Entity\FriendRequest;
 use App\Entity\User;
+use App\Utils\Struct\FriendRequestResponseStruct;
+use App\Utils\Struct\FriendResponseStruct;
 use App\Utils\Struct\UserResponseStruct;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,8 +106,30 @@ class UserService
         $content = json_decode($request->getContent(), true);
         $friendRequestId = $content->friendRequestId;
         $friendRequest = $this->em->getRepository(FriendRequest::class)->find($friendRequestId);
-        $friend = $friendRequest->getFriend();
         $this->em->remove($friendRequest);
+    }
+
+    public function getFriendList(){
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $friendList = $user->getMyFriends();
+        $responseList = [];
+        foreach ($friendList as $friend){
+            $responseList[] = FriendResponseStruct::mapFromFriend($friend);
+        }
+        return $responseList;
+    }
+
+    public function getFriendRequestList(){
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $requests = $user->getFriendRequests();
+        $responseList = [];
+        foreach ($requests as $request){
+            $responseList[] = FriendRequestResponseStruct::mapFromFriendRequest($request);
+        }
+        return $responseList;
+
     }
 
 
@@ -116,4 +140,5 @@ class UserService
         return $this->em->getRepository(User::class)->find($friendId);
 
     }
+
 }
