@@ -57,11 +57,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/addFriend", methods={"POST"})
+     * @Route("/acceptFriendRequest", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function addFriend(Request $request){
+    public function acceptFriendRequest(Request $request){
         $this->userService->addFriendToCurrentUser($request);
         $this->getDoctrine()->getManager()->flush();
         return new MyJsonResponse(true);

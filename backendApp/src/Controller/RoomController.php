@@ -62,8 +62,8 @@ class RoomController extends AbstractController
      */
     public function enterRoom(Request $request)
     {
-        $this->roomService->enterRoom($request);
-        return new MyJsonResponse(true);
+        $response = $this->roomService->enterRoom($request);
+        return new MyJsonResponse($response);
     }
 
     /**

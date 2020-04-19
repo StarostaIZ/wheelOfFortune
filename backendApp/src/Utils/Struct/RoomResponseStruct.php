@@ -23,6 +23,9 @@ class RoomResponseStruct
     /** @var string */
     public $password;
 
+    /** @var int */
+    public $adminId;
+
 
     public static function mapFromRoom(Room $room)
     {
@@ -32,6 +35,7 @@ class RoomResponseStruct
         $struct->maxPeople = $room->getMaxPeople();
         $struct->peopleInRoom = count($room->getUsersInRoom());
         $struct->password = $room->getPassword();
+        $struct->adminId = $room->getAdmin()->getId();
         return $struct;
     }
 
