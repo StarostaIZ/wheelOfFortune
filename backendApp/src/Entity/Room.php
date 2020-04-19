@@ -36,7 +36,7 @@ class Room
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Game", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $game;
 
