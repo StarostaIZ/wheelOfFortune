@@ -66,13 +66,24 @@ export class ValidateService {
   }
 
   validateRoom(newRoom) {
-    const { roomName, maxPlayers } = newRoom;
+    const { name, maxPeople } = newRoom;
     if (
-      roomName === undefined ||
-      roomName.trim().length === 0 ||
-      maxPlayers === ''
+      name === undefined ||
+      name.trim().length === 0 ||
+      maxPeople === ''
     )
       return { isValid: false, msg: 'Podaj nazwę i max liczbę osób' };
+    else return { isValid: true, msg: '' };
+  }
+
+  validateFriendName(friendName){
+    console.log(friendName)
+    if (
+      friendName === null ||
+      friendName.trim() === ''
+    ) {
+      return {isValid: false, msg: 'Podaj nazwę użytkownika'};
+    }
     else return { isValid: true, msg: '' };
   }
 }

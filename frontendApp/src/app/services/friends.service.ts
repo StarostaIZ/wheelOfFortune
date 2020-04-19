@@ -9,7 +9,7 @@ export class FriendsService {
   constructor(private http: HttpClient) { }
 
   getFriends() {
-    return this.http.get('./friendsList').pipe();
+    return this.http.get('./friendList').pipe();
   }
 
   addFriend(friend) {
@@ -23,6 +23,31 @@ export class FriendsService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post('./deleteFriend', friend, { headers: header }).pipe();
+    return this.http.post('./removeFriend', friend, { headers: header }).pipe();
+  }
+
+  getFriendRequest(){
+    return this.http.get('./friendRequestList').pipe();
+  }
+
+  acceptFriendRequest(friend){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post('./acceptFriendRequest', friend, { headers: header }).pipe();
+  }
+
+  sendFriendRequest(friend){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post('./sendFriendRequest', friend, { headers: header }).pipe();
+  }
+
+  rejectFriendRequest(friend){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post('./rejectFriendRequest', friend, { headers: header }).pipe();
   }
 }

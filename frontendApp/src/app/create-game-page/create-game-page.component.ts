@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RoomsService} from "../services/rooms.service";
-import {ValidateService} from "../services/validate.service";
+import { RoomsService } from '../services/rooms.service';
+import { ValidateService } from '../services/validate.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-game-page',
@@ -13,33 +14,43 @@ import {ValidateService} from "../services/validate.service";
 })
 export class CreateGamePageComponent implements OnInit {
   roomName: string;
-  maxPlayers = [1,2,3,4];
+  maxPlayers = [1, 2, 3, 4];
   selectedNumber = '';
-  password: string;
-  constructor(private roomsService: RoomsService, private validateService: ValidateService) {}
+  password = null;
+  constructor(
+    private roomsService: RoomsService,
+    private validateService: ValidateService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
 
-  createRoomSubmit(){
-
+  createRoomSubmit() {
     const newRoom = {
-      roomName : this.roomName,
-      maxPlayers : this.selectedNumber,
-      password : this.password,
+      name: this.roomName,
+      maxPeople: this.selectedNumber,
+      password: this.password,
     };
     const errorLabel: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
     const validateResponse = this.validateService.validateRoom(newRoom);
-    if(validateResponse.isValid){
-      this.roomsService.createRoom(newRoom);
+    if (validateResponse.isValid) {
+      this.roomsService.createRoom(newRoom).subscribe(data => {
+        // @ts-ignore
+        if (data.error === null) {
+          this.router.navigate(['/playWithFriends']);
+        } else {
+          errorLabel.style.display = 'block';
+          // @ts-ignore
+          errorLabel.textContent = data.error;
+        }
+      });
       errorLabel.style.display = 'none';
-    }
-    else{
+    } else {
       errorLabel.textContent = validateResponse.msg;
       errorLabel.style.display = 'block';
     }
-    console.log(newRoom)
+    console.log(newRoom);
   }
-
 }

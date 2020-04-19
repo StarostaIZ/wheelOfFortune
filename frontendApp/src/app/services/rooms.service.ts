@@ -12,14 +12,14 @@ export class RoomsService {
     return this.http.get('./roomList').pipe();
   }
 
-  getFriendsRooms() {
-    return this.http.get('./roomList').pipe();
-  }
+  // getFriendsRooms() {
+  //   return this.http.get('./roomList').pipe();
+  // }
 
   createRoom(room){
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    // return this.http.post('./createRoomOffline', room, { headers: header }).pipe();
+    return this.http.post('./createRoom', room, { headers: header }).pipe();
   }
 }

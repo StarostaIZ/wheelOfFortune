@@ -12,15 +12,16 @@ import { log } from 'util';
   ],
 })
 export class PlayFriendsPageComponent implements OnInit {
-  roomsList = [{ roomName: 'Pokój1' }, { roomName: 'Pokój2' }];
-  friendsRoomsList = [
-    { roomName: 'PokójZnajomego1' },
-    { roomName: 'PokójZnajomego2' },
-  ];
+  roomsList = [];
+  // friendsRoomsList = [
+  //   { roomName: 'PokójZnajomego1' },
+  //   { roomName: 'PokójZnajomego2' },
+  // ];
   constructor(private roomsService: RoomsService) {}
 
   ngOnInit(): void {
     this.roomsService.getAllRooms().subscribe(data => {
+      console.log(data);
       // @ts-ignore
       this.roomsList = data.rooms;
     });

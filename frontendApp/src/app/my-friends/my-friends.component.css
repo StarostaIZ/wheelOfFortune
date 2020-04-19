@@ -1,6 +1,22 @@
 .menu {
-  width: 60%;
+  width: 90%;
   margin: 7% auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu_friends{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.menu_friends_box{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +37,7 @@
   justify-content: space-between;
   align-items: center;
   border: none;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: #fff;
   color: #000;
   padding: 12px 20px;
@@ -29,7 +45,8 @@
   font-family: 'Montserrat', sans-serif;
   font-weight: bolder;
   font-size: 0.8em;
-  margin: 20px 0;
+  margin: 5px 0;
+  min-height: 50px;
 }
 
 .menu__friend__btn {
@@ -40,3 +57,50 @@
   color: red;
   cursor: pointer;
 }
+
+.menu__friend__buttons{
+  display: flex;
+  justify-content: end;
+}
+
+.menu__friend__request_btn{
+  border: none;
+  background-color: #1fbf27;
+  color: white;
+  padding: 2px 3px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.menu__friend__request_btn--reject{
+  margin-right: 5px;
+  background-color: red;
+}
+
+.menu__friend__name{
+  margin: 0;
+  padding: 0;
+}
+
+.menu__input{
+  border:none;
+  border-radius: 30px;
+  background-color: #fff;
+  color: #000;
+  padding: 16px 14px;
+  min-width: 400px;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
+  font-size: .8em;
+}
+
+.menu__error{
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 30px;
+  margin-bottom: 40px;
+  display: none;
+}
+
