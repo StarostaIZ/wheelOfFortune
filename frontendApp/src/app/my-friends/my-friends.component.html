@@ -52,10 +52,10 @@
     Dodaj znajomego
   </button>
   <form
-    class="menu__friend_request_box"
     [hidden]="!isSendFriendRequestBoxVisible"
     (ngSubmit)="sendFriendRequest()"
   >
+    <div class="menu__friend_request_box">
     <input
       class="menu__input"
       type="text"
@@ -68,6 +68,7 @@
       type="submit"
       class="button"
     />
+    </div>
   </form>
   <div class="menu__error"></div>
   <button class="button" routerLink="/profile">Powrót</button>

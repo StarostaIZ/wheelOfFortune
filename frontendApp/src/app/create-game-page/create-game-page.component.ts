@@ -39,7 +39,7 @@ export class CreateGamePageComponent implements OnInit {
       this.roomsService.createRoom(newRoom).subscribe(data => {
         // @ts-ignore
         if (data.error === null) {
-          this.router.navigate(['/playWithFriends']);
+          this.router.navigate(['/gameWithFriends']);
         } else {
           errorLabel.style.display = 'block';
           // @ts-ignore

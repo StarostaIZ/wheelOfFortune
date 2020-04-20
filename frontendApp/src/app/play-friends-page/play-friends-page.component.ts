@@ -45,7 +45,7 @@ export class PlayFriendsPageComponent implements OnInit {
     this.roomsService.getAllRooms().subscribe(data => {
       console.log(data);
       // @ts-ignore
-      this.roomsList = data.rooms;
+      this.roomsList = data.data.rooms;
     });
     this.errorLabel = document.querySelector('.menu__error') as HTMLElement;
   }
@@ -66,7 +66,7 @@ export class PlayFriendsPageComponent implements OnInit {
       .subscribe(data => {
         console.log(data)
         // @ts-ignore
-        if (data.error !== true) {
+        if (data.data !== true) {
           this.errorLabel.style.display = 'block';
           // @ts-ignore
           this.errorLabel.textContent = data.data;

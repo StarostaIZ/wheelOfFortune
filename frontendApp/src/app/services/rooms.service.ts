@@ -27,6 +27,6 @@ export class RoomsService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post('./enterRooom', room, { headers: header }).pipe();
+    return this.http.post('./enterRoom', room, { headers: header }).pipe();
   }
 }

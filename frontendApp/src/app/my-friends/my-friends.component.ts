@@ -47,6 +47,7 @@ export class MyFriendsComponent implements OnInit {
     console.log(id)
     this.friendsService.deleteFriend({ friendId: id }).subscribe(data => {
     });
+    this.getLists();
   }
 
   acceptFriendRequest(id) {
@@ -61,6 +62,7 @@ export class MyFriendsComponent implements OnInit {
     console.log(id)
     this.friendsService.rejectFriendRequest({ friendRequestId: id }).subscribe(data => {
     });
+    this.getLists();
   }
 
   sendFriendRequest() {
