@@ -76,14 +76,33 @@ export class ValidateService {
     else return { isValid: true, msg: '' };
   }
 
-  validateFriendName(friendName){
-    console.log(friendName)
+  validateFriendName(friendName, actualFriends){
     if (
       friendName === null ||
       friendName.trim() === ''
     ) {
+      if(actualFriends.forEach(friend => {
+        if(friend.name === friendName){
+          return {isValid: false, msg: 'Masz już tego użytkownika w znajomych'};
+        }
+      }))
       return {isValid: false, msg: 'Podaj nazwę użytkownika'};
     }
     else return { isValid: true, msg: '' };
+  }
+
+  validateRoomPassword(roomPassword, currentRoom) {
+    if (currentRoom.password != null) {
+      if (
+        roomPassword === null ||
+        roomPassword.trim() === ''
+      ) {
+        if(currentRoom.password !== roomPassword){
+          return {isValid: false, msg: 'Niepoprawne hasło'};
+        }
+        return {isValid: false, msg: 'Podaj hasło'};
+      }
+    }
+    return {isValid: true, msg: ''};
   }
 }

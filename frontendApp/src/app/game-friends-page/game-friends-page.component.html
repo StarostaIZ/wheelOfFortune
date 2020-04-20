@@ -1,43 +1,85 @@
 <div class="game">
   <div class="left_panel"></div>
   <div class="game__board">
-    <h3 class="game__board__category">Category: {{ category }}</h3>
+    <h3 class="game__board__category">Kategoria: {{ category }}</h3>
     <div class="game__board__letters">
       <div *ngFor="let entry_letter of entry">
-        <div id="entry_letter">
-          {{ entry_letter }}
-        </div>
+        <div *ngIf="entry_letter.value === ' '; then space; else letter"></div>
+        <ng-template #letter>
+          <div class="entry_box entry_letter">
+            <div
+              *ngIf="
+                entry_letter.visible === true;
+                then visible;
+                else notVisible
+              "
+            ></div>
+            <ng-template #visible>{{ entry_letter.value }}</ng-template>
+            <ng-template #notVisible>{{ ' ' }}</ng-template>
+          </div>
+        </ng-template>
+        <ng-template #space>
+          <div class="entry_box" id="entry_space"></div>
+        </ng-template>
       </div>
     </div>
     <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
     <ng-template #keyboard>
-      <p>Kwota: {{prize}}</p>
+      <p>Kwota: {{ prize }}</p>
+      <p class="info_keyboard">{{ this.infoKeyboard }}</p>
       <div class="game__board__keyboard">
         <div *ngFor="let letter of alphabet">
-          <div id="letter">
-            {{letter}}
-          </div>
+          <div
+            *ngIf="letter.clicked === true; then clicked; else notClicked"
+          ></div>
+          <ng-template #notClicked>
+            <div id="letter--notcliked" (click)="divine($event)">
+              {{ letter.value }}
+            </div>
+          </ng-template>
+          <ng-template #clicked>
+            <div id="letter--cliked" (click)="divine($event)">
+              {{ letter.value }}
+            </div>
+          </ng-template>
         </div>
       </div>
-      <button class="button" (click)="callBack($event)">Odgadnij hasło</button>
-      <button class="button" (click)="callBack($event)">Cofnij</button>
+      <div
+        *ngIf="
+          divinePasswordTour === true;
+          then divinePassword;
+          else notDivinePassword
+        "
+      ></div>
+      <ng-template #notDivinePassword>
+        <button class="button" (click)="divinePasswordListener()">
+          Odgadnij hasło
+        </button>
+      </ng-template>
+      <ng-template #divinePassword>
+        <button class="button" (click)="resetGuess()" [disabled]="gameEnd">
+          Cofnij
+        </button>
+        <button class="button" (click)="saveGuess()"  [disabled]="gameEnd">
+          Zapisz
+        </button>
+      </ng-template>
     </ng-template>
     <ng-template #wheel>
+      <p class="info_wheel">{{ this.infoWheel }}</p>
       <div class="game__board__wheel">
         <div id="arrow_down"></div>
         <button id="wheel" (click)="rotateWheel($event)"></button>
       </div>
-      <button class="button" (click)="callBack($event)">Odgadnij hasło</button>
     </ng-template>
   </div>
   <div class="game__labels">
-    <div *ngFor="let player of players">
-      <p class="game__labels__player">
-        {{ player.name }}
-      </p>
-      <p>Wynik: {{ player.score }}</p>
-    </div>
+    <p class="game__labels__player">
+      {{ player.name }}
+    </p>
+    <p>Wynik: {{ player.score }}</p>
     <button class="game__labels__btn" routerLink="/">Wyjdź z gry</button>
+    <button class="game__labels__btn" (click)="newGame()">Nowe hasło</button>
   </div>
 </div>
 

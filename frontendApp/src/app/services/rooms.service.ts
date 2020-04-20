@@ -22,4 +22,11 @@ export class RoomsService {
     });
     return this.http.post('./createRoom', room, { headers: header }).pipe();
   }
+
+  enterRooom(room){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post('./enterRooom', room, { headers: header }).pipe();
+  }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RoomsService } from '../services/rooms.service';
 import { ValidateService } from '../services/validate.service';
 import { FriendsService } from '../services/friends.service';
 
@@ -14,12 +13,12 @@ import { FriendsService } from '../services/friends.service';
 })
 export class MyFriendsComponent implements OnInit {
   friends = [
-    { name: 'ja', id: 1 },
-    { name: 'ty', id: 2 },
+    // { name: 'ja', id: 1 },
+    // { name: 'ty', id: 2 },
   ];
   friendRequests = [
-    { senderName: 'ja', id: 1 },
-    { senderName: 'ty', id: 2 },
+    // { senderName: 'ja', id: 1 },
+    // { senderName: 'ty', id: 2 },
   ];
   isSendFriendRequestBoxVisible = false;
   friendName = null
@@ -34,14 +33,14 @@ export class MyFriendsComponent implements OnInit {
   }
 
   getLists(){
-    // this.friendsService.getFriends().subscribe(data => {
-    //   // @ts-ignore
-    //   this.friends = data.data;
-    // });
-    // this.friendsService.getFriendRequest().subscribe(data => {
-    //   // @ts-ignore
-    //   this.friendRequests = data.data;
-    // });
+    this.friendsService.getFriends().subscribe(data => {
+      // @ts-ignore
+      this.friends = data.data;
+    });
+    this.friendsService.getFriendRequest().subscribe(data => {
+      // @ts-ignore
+      this.friendRequests = data.data;
+    });
   }
 
   removeFriend(id) {
@@ -66,11 +65,10 @@ export class MyFriendsComponent implements OnInit {
 
   sendFriendRequest() {
     console.log(this.friendName);
-    console.log('ok');
     const errorLabel: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
-    const validator = this.validateService.validateFriendName(this.friendName);
+    const validator = this.validateService.validateFriendName(this.friendName, this.friends);
     if (validator.isValid) {
       errorLabel.style.display = 'none';
       this.friendsService.sendFriendRequest({friendName: this.friendName}).subscribe(data => {
