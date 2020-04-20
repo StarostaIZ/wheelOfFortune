@@ -54,6 +54,13 @@ class RoomService
         $user = $this->security->getUser();
         $room = $user->getRoom();
         $room->removeUsersInRoom($user);
+        if($room->getAdmin()->getId()==$user->getId()){
+            if(count($room->getUsersInRoom())>0){
+                $room->setAdmin($room->getUsersInRoom()[0]);
+            }else{
+                $this->em->remove($room);
+            }
+        }
         $user->setRoom(null);
     }
 
@@ -70,7 +77,7 @@ class RoomService
     public function getRoomList(){
         $roomList['rooms'] = [];
         foreach ($this->em->getRepository(Room::class)->findAll() as $room){
-            $roomList['rooms'] = RoomResponseStruct::mapFromRoom($room);
+            $roomList['rooms'][] = RoomResponseStruct::mapFromRoom($room);
         }
         return $roomList;
     }

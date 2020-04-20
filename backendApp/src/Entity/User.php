@@ -67,14 +67,14 @@ class User implements UserInterface
     private $gamesPlayed;
 
     /**
-     * @var Room|null
-     */
-    private $room;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FriendRequest", mappedBy="friendId")
+     * @ORM\OneToMany(targetEntity="App\Entity\FriendRequest", mappedBy="friend")
      */
     private $friendRequests;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Room")
+     */
+    private $room;
 
     public function __construct()
     {
@@ -229,17 +229,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRoom(): ?Room
-    {
-        return $this->room;
-    }
-
-    public function setRoom(?Room $room): self
-    {
-        $this->room = $room;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Player[]
@@ -299,6 +288,18 @@ class User implements UserInterface
                 $friendRequest->setFriend(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
 
         return $this;
     }

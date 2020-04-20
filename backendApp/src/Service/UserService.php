@@ -68,7 +68,7 @@ class UserService
     }
 
     public function addFriendToCurrentUser(Request $request){
-        $content = json_decode($request->getContent(), true);
+        $content = json_decode($request->getContent());
         $friendRequestId = $content->friendRequestId;
         $friendRequest = $this->em->getRepository(FriendRequest::class)->find($friendRequestId);
         $friend = $friendRequest->getFriend();
@@ -89,10 +89,13 @@ class UserService
 
     public function createFriendRequest(Request $request)
     {
-        $friend = $this->getFriendFromRequest($request);
+        $content = json_decode($request->getContent());
+        $friendName = $content->friendName;
+        $friend = $this->em->getRepository(User::class)->findOneBy(['username' => $friendName]);
         $friendRequest = new FriendRequest();
         /** @noinspection PhpParamsInspection */
         $friendRequest->setUser($this->security->getUser());
+        /** @noinspection PhpParamsInspection */
         $friendRequest->setFriend($friend);
         $friendRequest->setDate(new \DateTime());
         return $friendRequest;
@@ -103,7 +106,7 @@ class UserService
 
     public function rejectFriendRequest(Request $request)
     {
-        $content = json_decode($request->getContent(), true);
+        $content = json_decode($request->getContent());
         $friendRequestId = $content->friendRequestId;
         $friendRequest = $this->em->getRepository(FriendRequest::class)->find($friendRequestId);
         $this->em->remove($friendRequest);
@@ -134,7 +137,7 @@ class UserService
 
 
     private function getFriendFromRequest(Request $request): User{
-        $content = json_decode($request->getContent(), true);
+        $content = json_decode($request->getContent());
         $friendId = $content->friendId;
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->em->getRepository(User::class)->find($friendId);
