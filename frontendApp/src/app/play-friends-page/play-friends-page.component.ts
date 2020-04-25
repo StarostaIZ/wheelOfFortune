@@ -35,6 +35,7 @@ export class PlayFriendsPageComponent implements OnInit {
     //   peopleInRoom: '2',
     // },
   ];
+  isLoading = true;
   constructor(
     private roomsService: RoomsService,
     private validateService: ValidateService,
@@ -46,6 +47,7 @@ export class PlayFriendsPageComponent implements OnInit {
       console.log(data);
       // @ts-ignore
       this.roomsList = data.data.rooms;
+      this.isLoading = false;
     });
     this.errorLabel = document.querySelector('.menu__error') as HTMLElement;
   }

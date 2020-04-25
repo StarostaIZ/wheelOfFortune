@@ -78,3 +78,6 @@
   <button class="button" routerLink="/statistics">Moje statystyki</button>
   <button class="button" routerLink="/">Powrót</button>
 </div>
+
+<div *ngIf="isLoading === true"><app-loading-spinner></app-loading-spinner></div>
+

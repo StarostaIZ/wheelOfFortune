@@ -82,3 +82,5 @@
     <button class="game__labels__btn" (click)="newGame()">Nowe hasło</button>
   </div>
 </div>
+
+<div *ngIf="isLoading === true"><app-loading-spinner></app-loading-spinner></div>

@@ -77,6 +77,7 @@ export class GameFriendsPageComponent implements OnInit {
   infoKeyboard = 'Wybierz literę';
   password = '';
   gameEnd = false;
+  isLoading = true;
 
   constructor(private gameService: GameService) {}
 
@@ -95,6 +96,7 @@ export class GameFriendsPageComponent implements OnInit {
           : 'Player';
     });
     console.log(this.entry)
+    this.isLoading = false;
   }
 
   rotateWheel(event) {

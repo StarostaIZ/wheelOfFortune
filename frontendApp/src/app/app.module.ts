@@ -9,7 +9,10 @@ import { GameComponent } from './game-page/game.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LogInPageComponent } from './log-in-page/log-in-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { LoadingSpinnerComponent} from "./components/loading-spinner/loading-spinner.component";
 import { FormsModule } from '@angular/forms';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
@@ -45,13 +48,16 @@ import { GameService} from "./services/game.service";
     PlayFriendsPageComponent,
     GameFriendsPageComponent,
     Page404Component,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgxChartsModule
+    NgxChartsModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule
   ],
   providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService, RoomsService, FriendsService],
   bootstrap: [AppComponent],

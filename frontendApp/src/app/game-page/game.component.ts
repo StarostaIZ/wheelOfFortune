@@ -75,6 +75,7 @@ export class GameComponent implements OnInit {
   infoKeyboard = 'Wybierz literę';
   password = '';
   gameEnd = false;
+  isLoading = true;
 
   constructor(private gameService: GameService) {}
 
@@ -91,6 +92,7 @@ export class GameComponent implements OnInit {
         localStorage.getItem('username') !== null
           ? localStorage.getItem('username')
           : 'Player';
+      this.isLoading = false;
     });
   }
 
