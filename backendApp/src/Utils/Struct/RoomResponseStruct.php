@@ -35,7 +35,11 @@ class RoomResponseStruct
         $struct->maxPeople = $room->getMaxPeople();
         $struct->peopleInRoom = count($room->getUsersInRoom());
         $struct->password = $room->getPassword();
-        $struct->adminId = $room->getAdmin()->getId();
+        foreach ($room->getUsersInRoom() as $user){
+            if ($user->getIsRoomAdmin()){
+                $struct->adminId = $user->getId();
+            }
+        }
         return $struct;
     }
 
