@@ -38,6 +38,11 @@ class Player
      */
     private $game;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isNow = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Player
     public function setGame(?Game $game): self
     {
         $this->game = $game;
+
+        return $this;
+    }
+
+    public function getIsNow(): ?bool
+    {
+        return $this->isNow;
+    }
+
+    public function setIsNow(bool $isNow): self
+    {
+        $this->isNow = $isNow;
 
         return $this;
     }

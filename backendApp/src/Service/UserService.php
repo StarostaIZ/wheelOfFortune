@@ -29,16 +29,15 @@ class UserService
         $this->em = $em;
     }
 
-    public function registerUser(Request $request){
+    public function registerUser($username, $email, $password){
         $user = new User();
-        $content = json_decode($request->getContent(), true);
 
-        if (!isset($content['username']) || !isset($content['email']) || !isset($content['password'])){
+        if ($username || $email || $password){
             throw new MissingMandatoryParametersException('Nie zostały podane wszystkie parametry');
         }
-        $user->setUsername($content['username'])
-            ->setEmail($content['email'])
-            ->setPassword($this->passwordEncoder->encodePassword($user, $content['password']))
+        $user->setUsername($username)
+            ->setEmail($email)
+            ->setPassword($this->passwordEncoder->encodePassword($user, $password))
             ->addRole(User::ROLE_USER);
         return $user;
     }
@@ -53,24 +52,22 @@ class UserService
     }
 
     /**
-     * @param Request $request
+     * @param $email
+     * @param $password
      */
-    public function updateCurrentUser(Request $request){
+    public function updateCurrentUser($email, $password){
         /** @var User $user */
         $user = $this->security->getUser();
-        $content = json_decode($request->getContent(), true);
-        if(isset($content['email'])){
-            $user->setEmail($content['email']);
+
+        if(!empty($email)){
+            $user->setEmail($email);
         }
-        if (isset($content['password'])){
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $content['password']));
+        if (!empty($password)){
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
         }
     }
 
-    public function addFriendToCurrentUser(Request $request){
-        $content = json_decode($request->getContent());
-        $friendRequestId = $content->friendRequestId;
-        $friendRequest = $this->em->getRepository(FriendRequest::class)->find($friendRequestId);
+    public function addFriendToCurrentUser(FriendRequest $friendRequest){
         $friend = $friendRequest->getFriend();
         $this->em->remove($friendRequest);
         /** @var User $user */
@@ -79,23 +76,29 @@ class UserService
         $friend->addMyFriend($user);
     }
 
-    public function removeFriendFromCurrentUser(Request $request){
-        $friend = $this->getFriendFromRequest($request);
+    public function removeFriendFromCurrentUser(User $friend){
         /** @var User $user */
         $user = $this->security->getUser();
         $user->removeMyFriend($friend);
         $friend->removeMyFriend($user);
     }
 
-    public function createFriendRequest(Request $request)
+    /**
+     * @param string $friendName
+     * @return FriendRequest
+     */
+    public function createFriendRequest(string $friendName)
     {
-        $content = json_decode($request->getContent());
-        $friendName = $content->friendName;
+
+        /** @var User $friend */
         $friend = $this->em->getRepository(User::class)->findOneBy(['username' => $friendName]);
+        /** @var User $user */
+        $user = $this->security->getUser();
+        if($friend->getId()==$user->getId()){
+            throw new \InvalidArgumentException("Nie możesz wysłać zaproszenia do samego siebie");
+        }
         $friendRequest = new FriendRequest();
-        /** @noinspection PhpParamsInspection */
-        $friendRequest->setUser($this->security->getUser());
-        /** @noinspection PhpParamsInspection */
+        $friendRequest->setUser($user);
         $friendRequest->setFriend($friend);
         $friendRequest->setDate(new \DateTime());
         return $friendRequest;
@@ -104,11 +107,8 @@ class UserService
     }
 
 
-    public function rejectFriendRequest(Request $request)
+    public function rejectFriendRequest(FriendRequest $friendRequest)
     {
-        $content = json_decode($request->getContent());
-        $friendRequestId = $content->friendRequestId;
-        $friendRequest = $this->em->getRepository(FriendRequest::class)->find($friendRequestId);
         $this->em->remove($friendRequest);
     }
 

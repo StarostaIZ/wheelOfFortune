@@ -3,10 +3,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Player;
+use App\Entity\Room;
 use App\Service\GameService;
+use App\Service\PublisherService;
 use App\Utils\Response\MyJsonResponse;
+use App\Utils\Struct\WordResponseStruct;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -14,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @package App\Controller
  * @IsGranted("ROLE_USER")
  */
-class GameController
+class GameController extends AbstractController
 {
 
     /**
@@ -22,18 +27,115 @@ class GameController
      */
     private $gameService;
 
-    public function __construct(GameService $gameService)
+    /**
+     * @var PublisherService
+     */
+    private $publisherService;
+
+    public function __construct(GameService $gameService, PublisherService $publisherService)
     {
         $this->gameService = $gameService;
+        $this->publisherService = $publisherService;
+    }
+
+    private function getRoom($id): Room {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getDoctrine()->getManager()->getRepository(Room::class)->find($id);
     }
 
     /**
-     * @Route("/startGame/{id}")
+     * @Route("/room/{id}/startGame")
+     * @param Request $request
      * @param $id
      */
-    public function startGame($id){
-        //$this->gameService->createGame();
+    public function startGame(Request $request, $id){
+        $content = json_decode($request->getContent());
+        $game = $this->gameService->createGameAndStart($content->maxPoints);
+        $em = $this->getDoctrine()->getManager();
+        /** @var Room $room */
+        $room = $em->getRepository(Room::class)->find($id);
+        $em->persist($game);
+        $room->setGame($game);
+        $em->flush();
     }
+
+    /**
+     * @Route("/room/{id}/spin")
+     * @param Request $request
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function spinTheWheel(Request $request, $id){
+        $content = json_decode($request->getContent());
+        $angle = $content->angle;
+        $room = $this->getRoom($id);
+        $this->publisherService->updateWheel($room, $angle);
+        return new MyJsonResponse(true);
+    }
+
+    /**
+     * @Route("/room/{id}/letter")
+     * @param Request $request
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function takeLetter(Request $request, $id){
+        $content = json_decode($request->getContent());
+        $letter = $content->letter;
+        $room = $this->getRoom($id);
+        $game = $room->getGame();
+        $this->publisherService->updateLetter($room, $letter);
+        $game->addLetter($letter);
+        $this->getDoctrine()->getManager()->flush();
+        return new MyJsonResponse(true);
+    }
+
+    /**
+     * @Route("/room/{id}/points")
+     * @param Request $request
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function updatePoints(Request $request, $id){
+        $content = json_decode($request->getContent());
+        $playerId = $content->playerId;
+        $points = $content->points;
+        /** @var Player $player */
+        $player = $this->getDoctrine()->getManager()->getRepository(Player::class)->find($playerId);
+        $player->setPoints($points);
+        $this->publisherService->updatePoints($points);
+        $this->getDoctrine()->getManager()->flush();
+        return new MyJsonResponse(true);
+    }
+
+    /**
+     * @Route("/room/{id}/guess")
+     * @param Request $request
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function guessingWord(Request $request, $id){
+        $content = json_decode($request->getContent());
+        $room = $this->getRoom($id);
+        $guessed = $content->guessed;
+        $this->publisherService->isWordGuessed($room, $guessed);
+        return new MyJsonResponse(true);
+    }
+
+    /**
+     * @Route("/room/{id}/newWord")
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function newWord($id){
+        $room = $this->getRoom($id);
+        $word = $this->gameService->drawWord();
+        $room->getGame()->setWord($word);
+        $this->getDoctrine()->getManager()->flush();
+        $this->publisherService->updateWord($room, WordResponseStruct::mapFromWord($word));
+        return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
+    }
+
 
 
 

@@ -40,6 +40,11 @@ class Game
      */
     private $players;
 
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $letters = [];
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
@@ -115,5 +120,21 @@ class Game
         }
 
         return $this;
+    }
+
+    public function getLetters(): ?array
+    {
+        return $this->letters;
+    }
+
+    public function setLetters(array $letters): self
+    {
+        $this->letters = $letters;
+
+        return $this;
+    }
+
+    public function addLetter(string $letter){
+        $this->letters[] = $letter;
     }
 }

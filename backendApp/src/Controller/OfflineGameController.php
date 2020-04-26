@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Service\GameService;
 use App\Utils\Response\MyJsonResponse;
+use App\Utils\Struct\WordResponseStruct;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,7 +26,8 @@ class OfflineGameController
      * @Route("/drawWord", methods={"GET"})
      */
     public function drawWord(){
-        return new MyJsonResponse($this->gameService->drawWord());
+
+        return new MyJsonResponse(WordResponseStruct::mapFromWord($this->gameService->drawWord()));
     }
 
 }

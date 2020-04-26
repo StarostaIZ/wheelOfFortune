@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Room;
 use App\Entity\User;
+use App\Service\PublisherService;
 use App\Service\RoomService;
 use App\Utils\Response\MyJsonResponse;
 use App\Utils\Struct\RoomResponseStruct;
@@ -27,11 +28,13 @@ class RoomController extends AbstractController
     private $roomService;
 
     private $em;
+    private $publisherService;
 
-    public function __construct(RoomService $roomService, EntityManagerInterface $em)
+    public function __construct(RoomService $roomService, EntityManagerInterface $em, PublisherService $publisherService)
     {
         $this->roomService = $roomService;
         $this->em = $em;
+        $this->publisherService = $publisherService;
     }
 
     /**
@@ -47,8 +50,8 @@ class RoomController extends AbstractController
      * @return MyJsonResponse
      */
     public function createRoom(Request $request){
-
-        $room = $this->roomService->createRoom($request);
+        $content = json_decode($request->getContent());
+        $room = $this->roomService->createRoom($content->password, $content->name, $content->maxPeople);
         $em = $this->getDoctrine()->getManager();
         $em->persist($room);
         $em->flush();
@@ -62,7 +65,11 @@ class RoomController extends AbstractController
      */
     public function enterRoom(Request $request)
     {
-        $response = $this->roomService->enterRoom($request);
+        $content = json_decode($request->getContent());
+        /** @var Room $room */
+        $room = $this->em->getRepository(Room::class)->find($content->roomId);
+        $this->publisherService->updatePeopleInRoom($room);
+        $response = $this->roomService->enterRoom($room);
         return new MyJsonResponse($response);
     }
 
@@ -83,6 +90,7 @@ class RoomController extends AbstractController
      */
     public function exitRoom(){
         $this->roomService->exitRoom();
+        $this->publisherService->updatePeopleInRoom($room);
         return new MyJsonResponse(true);
     }
 

@@ -76,6 +76,11 @@ class User implements UserInterface
      */
     private $room;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isRoomAdmin = false;
+
     public function __construct()
     {
         $this->myFriends = new ArrayCollection();
@@ -300,6 +305,18 @@ class User implements UserInterface
     public function setRoom(?Room $room): self
     {
         $this->room = $room;
+
+        return $this;
+    }
+
+    public function getIsRoomAdmin(): ?bool
+    {
+        return $this->isRoomAdmin;
+    }
+
+    public function setIsRoomAdmin(bool $isRoomAdmin): self
+    {
+        $this->isRoomAdmin = $isRoomAdmin;
 
         return $this;
     }

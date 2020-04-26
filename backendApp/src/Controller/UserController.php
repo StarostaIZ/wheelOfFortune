@@ -51,7 +51,8 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     public function updateUser(Request $request){
-        $this->userService->updateCurrentUser($request);
+        $content = json_decode($request->getContent());
+        $this->userService->updateCurrentUser($content->email, $content->password);
         $this->getDoctrine()->getManager()->flush();
         return new MyJsonResponse(true);
     }
@@ -62,7 +63,11 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     public function acceptFriendRequest(Request $request){
-        $this->userService->addFriendToCurrentUser($request);
+        $content = json_decode($request->getContent());
+        $friendRequestId = $content->friendRequestId;
+        /** @var FriendRequest $friendRequest */
+        $friendRequest = $this->getDoctrine()->getManager()->getRepository(FriendRequest::class)->find($friendRequestId);
+        $this->userService->addFriendToCurrentUser($friendRequest);
         $this->getDoctrine()->getManager()->flush();
         return new MyJsonResponse(true);
 
@@ -74,7 +79,8 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     public function removeFriend(Request $request){
-        $this->userService->removeFriendFromCurrentUser($request);
+        $friend = $friend = $this->getFriendFromRequest($request);
+        $this->userService->removeFriendFromCurrentUser($friend);
         $this->getDoctrine()->getManager()->flush();
         return new JsonResponse(true);
     }
@@ -85,10 +91,17 @@ class UserController extends AbstractController
      * @return MyJsonResponse
      */
     public function sendFriendRequest(Request $request){
-        $friendRequest = $this->userService->createFriendRequest($request);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($friendRequest);
-        $em->flush();
+        try {
+            $content = json_decode($request->getContent());
+            $friendName = $content->friendName;
+            $friendRequest = $this->userService->createFriendRequest($friendName);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($friendRequest);
+            $em->flush();
+        }catch (\InvalidArgumentException $argumentException){
+            return new MyJsonResponse(null, $argumentException->getMessage());
+        }
+
         return new MyJsonResponse(true);
     }
 
@@ -98,7 +111,11 @@ class UserController extends AbstractController
      * @return MyJsonResponse
      */
     public function rejectFriendRequest(Request $request){
-        $this->userService->rejectFriendRequest($request);
+        $content = json_decode($request->getContent());
+        $friendRequestId = $content->friendRequestId;
+        /** @var FriendRequest $friendRequest */
+        $friendRequest = $this->getDoctrine()->getManager()->getRepository(FriendRequest::class)->find($friendRequestId);
+        $this->userService->rejectFriendRequest($friendRequest);
         $this->getDoctrine()->getManager()->flush();
         return new MyJsonResponse(true);
     }
@@ -117,6 +134,13 @@ class UserController extends AbstractController
         return new MyJsonResponse($this->userService->getFriendRequestList());
     }
 
+    private function getFriendFromRequest(Request $request): User{
+        $content = json_decode($request->getContent());
+        $friendId = $content->friendId;
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getDoctrine()->getManager()->getRepository(User::class)->find($friendId);
+
+    }
 
 
 

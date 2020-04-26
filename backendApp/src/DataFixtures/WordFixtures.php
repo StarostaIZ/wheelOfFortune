@@ -63,8 +63,6 @@ class WordFixtures extends Fixture
         $manager->persist($word);
 
 
-
-
         $manager->flush();
 
     }

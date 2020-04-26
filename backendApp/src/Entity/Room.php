@@ -41,12 +41,6 @@ class Room
     private $game;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $admin;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="room")
      */
     private $usersInRoom;
@@ -110,17 +104,6 @@ class Room
         return $this;
     }
 
-    public function getAdmin(): ?User
-    {
-        return $this->admin;
-    }
-
-    public function setAdmin(User $admin): self
-    {
-        $this->admin = $admin;
-
-        return $this;
-    }
 
     /**
      * @return Collection|User[]

@@ -21,26 +21,23 @@ class GameService
 
     }
 
-    public function createGame(User $user){
+    public function createGameAndStart($maxPoints){
         $game = new Game();
-        $game->setPlayer1($user)
-            ->setPlayer1points(0)
-            ->setIsRunning(false);
+        $game
+            ->setIsRunning(true)
+            ->setMaxPoints($maxPoints)
+            ->setWord($this->drawWord());
 
         return $game;
 
     }
 
-    public function startGame(Game $game){
-        $game->setIsRunning(true);
-        return $this->drawWord();
-
-    }
-
-    public function drawWord(): WordResponseStruct{
+    public function drawWord(): Word
+    {
+        /** @var Word[] $words */
         $words = $this->em->getRepository(Word::class)->findAll();
         $rand = rand(0, count($words)-1);
-        return WordResponseStruct::mapFromWord($words[$rand]);
+        return $words[$rand];
     }
 
 }

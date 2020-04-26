@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\User;
+use App\Security\UserAuthenticator;
 use App\Service\UserService;
 use App\Utils\Response\MyJsonResponse;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class SecurityController extends AbstractController
 {
@@ -45,12 +47,16 @@ class SecurityController extends AbstractController
      * @Route("/register", methods={"POST"})
      * @param Request $request
      * @param UserService $userService
+     * @param GuardAuthenticatorHandler $guardAuthenticatorHandler
+     * @param UserAuthenticator $authenticator
      * @return JsonResponse
      */
-    public function register(Request $request, UserService $userService){
+    public function register(Request $request, UserService $userService, GuardAuthenticatorHandler $guardAuthenticatorHandler, UserAuthenticator $authenticator){
+
+        $content = json_decode($request->getContent());
 
         try {
-            $user = $userService->registerUser($request);
+            $user = $userService->registerUser($content->username, $content->email, $content->password);
         }catch (MissingMandatoryParametersException $exception){
             return new JsonResponse(null, $exception->getMessage());
         }
@@ -61,6 +67,13 @@ class SecurityController extends AbstractController
         }catch (UniqueConstraintViolationException $exception){
             return new MyJsonResponse(null, 'Użytkownik o takiej nazwie już istnieje');
         }
+        $guardAuthenticatorHandler
+            ->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $authenticator,
+                'main'
+                );
 
         return new MyJsonResponse(true);
 

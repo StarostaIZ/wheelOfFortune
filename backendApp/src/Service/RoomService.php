@@ -23,22 +23,20 @@ class RoomService
         $this->security = $security;
     }
 
-    public function createRoom(Request $request): Room {
-        $content = json_decode($request->getContent(), true);
+    public function createRoom($password, $name, $maxPeople): Room {
         $room = new Room();
         /** @var User $user */
         $user = $this->security->getUser();
-        $room->setAdmin($user);
-        $room->setPassword($content['password']);
-        $room->setName($content['name']);
-        $room->setMaxPeople($content['maxPeople']);
+        $user->setIsRoomAdmin(true);
+        $room->setPassword($password);
+        $room->setName($name);
+        $room->setMaxPeople($maxPeople);
+        $room->addUsersInRoom($user);
         return $room;
     }
 
-    public function enterRoom(Request $request): bool {
-        $content = json_decode($request->getContent(), true);
+    public function enterRoom(Room $room): bool {
 
-        $room = $this->em->getRepository(Room::class)->find($content['roomId']);
         /** @var User $user */
         $user = $this->security->getUser();
         if(count($room->getUsersInRoom())<$room->getMaxPeople()){
@@ -54,9 +52,10 @@ class RoomService
         $user = $this->security->getUser();
         $room = $user->getRoom();
         $room->removeUsersInRoom($user);
-        if($room->getAdmin()->getId()==$user->getId()){
+        if($user->getIsRoomAdmin()){
+            $user->setIsRoomAdmin(false);
             if(count($room->getUsersInRoom())>0){
-                $room->setAdmin($room->getUsersInRoom()[0]);
+                $room->getUsersInRoom()[0]->setIsRoomAdmin(true);
             }else{
                 $this->em->remove($room);
             }
