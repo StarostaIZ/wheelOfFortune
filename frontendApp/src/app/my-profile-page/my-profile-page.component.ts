@@ -18,7 +18,7 @@ export class MyProfilePageComponent implements OnInit {
   passwordOld: null;
   passwordNew: null;
   passwordNewRepeat: null;
-
+  isLoading = true;
   disableEmail = true;
   disablePassword = true;
 
@@ -30,6 +30,7 @@ export class MyProfilePageComponent implements OnInit {
       this.username = data.data.username;
       // @ts-ignore
       this.email = data.data.email;
+      this.isLoading = false;
     });
   }
 

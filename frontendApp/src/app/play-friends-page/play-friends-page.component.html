@@ -50,3 +50,5 @@
   <button class="button" routerLink="/createGame">Stwórz grę</button>
   <button class="button" routerLink="/">Powrót</button>
 </div>
+
+<div *ngIf="isLoading === true"><app-loading-spinner></app-loading-spinner></div>

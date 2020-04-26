@@ -21,7 +21,8 @@ export class MyFriendsComponent implements OnInit {
     // { senderName: 'ty', id: 2 },
   ];
   isSendFriendRequestBoxVisible = false;
-  friendName = null
+  friendName = null;
+  isLoading = true;
 
   constructor(
     private friendsService: FriendsService,
@@ -40,22 +41,25 @@ export class MyFriendsComponent implements OnInit {
     this.friendsService.getFriendRequest().subscribe(data => {
       // @ts-ignore
       this.friendRequests = data.data;
+      this.isLoading = false;
     });
+
   }
 
   removeFriend(id) {
-    console.log(id)
+    this.isLoading = true;
+    console.log(id);
     this.friendsService.deleteFriend({ friendId: id }).subscribe(data => {
     });
     this.getLists();
   }
 
   acceptFriendRequest(id) {
-    console.log(id)
+    this.isLoading = true;
+    console.log(id);
     this.friendsService.acceptFriendRequest({ friendRequestId: id }).subscribe(data => {
     });
     this.getLists();
-    // window.location.reload();
   }
 
   rejectFriendRequest(id) {
@@ -71,6 +75,7 @@ export class MyFriendsComponent implements OnInit {
       '.menu__error'
     ) as HTMLElement;
     const validator = this.validateService.validateFriendName(this.friendName, this.friends);
+    console.log(validator)
     if (validator.isValid) {
       errorLabel.style.display = 'none';
       this.friendsService.sendFriendRequest({friendName: this.friendName}).subscribe(data => {

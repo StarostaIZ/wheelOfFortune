@@ -81,14 +81,14 @@ export class ValidateService {
       friendName === null ||
       friendName.trim() === ''
     ) {
-      if(actualFriends.forEach(friend => {
+      actualFriends.forEach(friend => {
         if(friend.name === friendName){
           return {isValid: false, msg: 'Masz już tego użytkownika w znajomych'};
         }
-      }))
+      });
       return {isValid: false, msg: 'Podaj nazwę użytkownika'};
     }
-    else return { isValid: true, msg: '' };
+    return { isValid: true, msg: '' };
   }
 
   validateRoomPassword(roomPassword, currentRoom) {
