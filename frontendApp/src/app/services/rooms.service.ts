@@ -20,7 +20,7 @@ export class RoomsService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post('./createRoom', room, { headers: header }).pipe();
+    return  this.http.post('./createRoom', room, { headers: header }).pipe();
   }
 
   enterRooom(room){
@@ -28,5 +28,12 @@ export class RoomsService {
       'Content-Type': 'application/json',
     });
     return this.http.post('./enterRoom', room, { headers: header }).pipe();
+  }
+
+  exitRoom(){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post('./exitRoom', {},{ headers: header }).pipe();
   }
 }

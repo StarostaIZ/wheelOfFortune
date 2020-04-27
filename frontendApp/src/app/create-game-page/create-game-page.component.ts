@@ -39,6 +39,8 @@ export class CreateGamePageComponent implements OnInit {
       this.roomsService.createRoom(newRoom).subscribe(data => {
         // @ts-ignore
         if (data.error === null) {
+          // @ts-ignore
+          localStorage.setItem('roomID', data.data.id);
           this.router.navigate(['/gameWithFriends']);
         } else {
           errorLabel.style.display = 'block';
@@ -51,6 +53,5 @@ export class CreateGamePageComponent implements OnInit {
       errorLabel.textContent = validateResponse.msg;
       errorLabel.style.display = 'block';
     }
-    console.log(newRoom);
   }
 }

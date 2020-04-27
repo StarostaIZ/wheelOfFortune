@@ -1,6 +1,6 @@
 {
-  "context": ["/login", "/logout", "/register", "/getUser", "/drawWord", "/roomList", "/createRoom", "/enterRoom", "/exitRoom",
-  "/friendList", "/friendRequestList", "/rejectFriendRequest", "/sendFriendRequest", "/removeFriend", "/acceptFriendRequest"],
+
+  "context": ["**"],
   "target": "http://localhost:8000",
   "secure": false,
   "logLevel": "debug",

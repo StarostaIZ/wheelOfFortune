@@ -78,7 +78,7 @@
       {{ player.name }}
     </p>
     <p>Wynik: {{ player.score }}</p>
-    <button class="game__labels__btn" routerLink="/">Wyjdź z gry</button>
+    <button class="game__labels__btn" (click)="exitGame()">Wyjdź z gry</button>
     <button class="game__labels__btn" (click)="newGame()">Nowe hasło</button>
   </div>
 </div>
