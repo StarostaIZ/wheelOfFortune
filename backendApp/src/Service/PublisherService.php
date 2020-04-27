@@ -44,7 +44,7 @@ class PublisherService
     public function startGame(Room $room){
         $topic = self::ROOM_TOPIC. $room->getId();
         $data = ['word' => WordResponseStruct::mapFromWord($room->getGame()->getWord())];
-        $this->publish($topic, $data);
+        $this->publish($topic, json_encode($data));
     }
 
     public function updateWheel(Room $room, $angle)

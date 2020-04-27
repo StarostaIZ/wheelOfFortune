@@ -58,7 +58,7 @@ class GameController extends AbstractController
         $em->persist($game);
         $room->setGame($game);
         $em->flush();
-        $this->publisherService->startGame($room);
+        //$this->publisherService->startGame($room);
         return new MyJsonResponse(WordResponseStruct::mapFromWord($room->getGame()->getWord()));
     }
 
