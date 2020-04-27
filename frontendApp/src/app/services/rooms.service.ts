@@ -30,6 +30,13 @@ export class RoomsService {
     return this.http.post('./enterRoom', room, { headers: header }).pipe();
   }
 
+  getRoomData(roomId){
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`./room/${roomId}`, { headers: header }).pipe();
+  }
+
   exitRoom(){
     const header = new HttpHeaders({
       'Content-Type': 'application/json',

@@ -11,4 +11,5 @@
   font-size: 1em;
   cursor: pointer;
   text-align: center;
+  z-index: 1000;
 }

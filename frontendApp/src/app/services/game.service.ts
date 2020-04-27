@@ -57,6 +57,7 @@ export class GameService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
     });
+    console.log('poszło')
     return this.http.post(`./room/${roomID}/letter`, body,{ headers: header }).pipe();
   }
 

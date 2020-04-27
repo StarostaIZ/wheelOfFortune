@@ -101,4 +101,5 @@
   </form>
 </div>
 
-<div *ngIf="isLoading === true"><app-loading-spinner></app-loading-spinner></div>
+<!--<div *ngIf="isLoading === true"><app-loading-spinner></app-loading-spinner></div>-->
+<div *ngIf="waitingForStart === true"><app-loading-spinner-game (messageEvent)="startGame()" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>

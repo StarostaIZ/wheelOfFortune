@@ -32,6 +32,7 @@ import { Page404Component } from './page404/page404.component';
 import {AuthGuardService} from "./services/auth-guard.service";
 import { GameService} from "./services/game.service";
 import {SseService} from "./services/sse-service.service";
+import { LoadingSpinnerGameComponent } from './components/loading-spinner-game/loading-spinner-game.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import {SseService} from "./services/sse-service.service";
     GameFriendsPageComponent,
     Page404Component,
     LoadingSpinnerComponent,
+    LoadingSpinnerGameComponent,
   ],
   imports: [
     BrowserModule,

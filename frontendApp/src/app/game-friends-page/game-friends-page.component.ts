@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { RoomsService } from '../services/rooms.service';
 import {log} from "util";
+import {UserService} from "../services/user.service";
 
 @Component({
   selector: 'app-game-friends-page',
@@ -81,38 +82,48 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
   gameEnd = false;
   isLoading = true;
   roomID;
-  eventSource;
   wheel;
+  waitingForStart = true;
+  isGameAdmin = false;
+  message;
 
   constructor(
     private gameService: GameService,
-    private roomsService: RoomsService
+    private roomsService: RoomsService,
+    private userService: UserService
   ) {}
 
-  ngOnInit(): void {
-
-    console.log(this.wheel)
+  ngOnInit(): void{
     this.roomID = localStorage.getItem('roomID');
-    this.gameService.getServerSendEvent(`http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`).subscribe(data => {
+    let adminId;
+    this.roomsService.getRoomData(this.roomID).subscribe(data => {
       // @ts-ignore
-      console.log(data.data);
-      // @ts-ignore
-      const angle = JSON.parse(data.data).angle;
-      console.log(angle);
-      // @ts-ignore
-      this.rotate(angle)
+      adminId = data.data.adminId
     })
-    // const url = new URL('http://localhost:3000/.well-known/mercure');
-    // url.searchParams.append('topic', `/roomInfo/${this.roomID}`);
-    // url.searchParams.append('topic', `/gameInfo/${this.roomID}`);
-    //
-    // // @ts-ignore
-    // this.eventSource = new EventSource(url);
-    // this.eventSource.onmessage = event => {
-    //   console.log(JSON.parse(event.data));
-    // };
-    // console.log(this.eventSource)
-
+    let userId;
+    this.userService.getUser().subscribe(data=> {
+      // @ts-ignore
+      userId = data.data.id;
+      this.isGameAdmin = (adminId === userId);
+      this.isLoading = false;
+    })
+    this.gameService.getServerSendEvent(`http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`).subscribe(data => {
+      console.log(data)
+    });
+    this.gameService.getServerSendEvent(`http://localhost:3000/.well-known/mercure?topic=roomInfo/${this.roomID}`).subscribe(data => {
+      // @ts-ignore
+      const incomingData = JSON.parse(data.data);
+      // @ts-ignore
+      if(incomingData.angle !== undefined){
+        // @ts-ignore
+        this.incomingRotate(incomingData.angle)
+      }
+      // @ts-ignore
+      else if(incomingData.letter !== undefined){
+        // @ts-ignore
+        this.incomingLetter(incomingData.letter)
+      }
+    });
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word.toUpperCase();
@@ -127,14 +138,20 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
           : 'Player';
     });
     this.isLoading = false;
-
   }
+
 
   ngAfterViewChecked():void{
     this.wheel = document.querySelector('#wheel');
   }
 
-  rotate(deg){
+  startGame() {
+    this.waitingForStart = false;
+    console.log('startGame');
+    this.gameService.startGame().subscribe()
+  }
+
+  incomingRotate(deg){
     this.wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
     this.wheel.style.transform = `rotate(${deg}deg)`;
     this.wheel.addEventListener('transitionend', () => {
@@ -149,6 +166,10 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
         this.player.score = 0;
       } else {}
     });
+  }
+
+  incomingLetter(letter){
+
   }
 
   rotateWheel(event) {
@@ -221,7 +242,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
   divine(event) {
     if (this.gameEnd) return;
     const divinedLetter = event.target.textContent.trim();
-    this.gameService.divineLetter(divinedLetter)
+    this.gameService.divineLetter(divinedLetter).subscribe();
     if (this.divinePasswordTour) {
       const empty_letter = this.entry.find(letter => {
         return letter.visible === false && letter.value !== ' ';
