@@ -31,6 +31,7 @@ import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.
 import { Page404Component } from './page404/page404.component';
 import {AuthGuardService} from "./services/auth-guard.service";
 import { GameService} from "./services/game.service";
+import {SseService} from "./services/sse-service.service";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,7 @@ import { GameService} from "./services/game.service";
     BrowserAnimationsModule,
     MatProgressSpinnerModule
   ],
-  providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService, RoomsService, FriendsService],
+  providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService, RoomsService, FriendsService, SseService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {GameService} from "../services/game.service";
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { GameService } from '../services/game.service';
+import { RoomsService } from '../services/rooms.service';
+import {log} from "util";
 
 @Component({
   selector: 'app-game-friends-page',
@@ -10,7 +12,7 @@ import {GameService} from "../services/game.service";
     '../../css/logoSmall.css',
   ],
 })
-export class GameFriendsPageComponent implements OnInit {
+export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
   chatMessage: string;
   messages = [];
   entry = [];
@@ -78,10 +80,39 @@ export class GameFriendsPageComponent implements OnInit {
   password = '';
   gameEnd = false;
   isLoading = true;
+  roomID;
+  eventSource;
+  wheel;
 
-  constructor(private gameService: GameService) {}
+  constructor(
+    private gameService: GameService,
+    private roomsService: RoomsService
+  ) {}
 
   ngOnInit(): void {
+
+    console.log(this.wheel)
+    this.roomID = localStorage.getItem('roomID');
+    this.gameService.getServerSendEvent(`http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`).subscribe(data => {
+      // @ts-ignore
+      console.log(data.data);
+      // @ts-ignore
+      const angle = JSON.parse(data.data).angle;
+      console.log(angle);
+      // @ts-ignore
+      this.rotate(angle)
+    })
+    // const url = new URL('http://localhost:3000/.well-known/mercure');
+    // url.searchParams.append('topic', `/roomInfo/${this.roomID}`);
+    // url.searchParams.append('topic', `/gameInfo/${this.roomID}`);
+    //
+    // // @ts-ignore
+    // this.eventSource = new EventSource(url);
+    // this.eventSource.onmessage = event => {
+    //   console.log(JSON.parse(event.data));
+    // };
+    // console.log(this.eventSource)
+
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word.toUpperCase();
@@ -95,8 +126,29 @@ export class GameFriendsPageComponent implements OnInit {
           ? localStorage.getItem('username')
           : 'Player';
     });
-    console.log(this.entry)
     this.isLoading = false;
+
+  }
+
+  ngAfterViewChecked():void{
+    this.wheel = document.querySelector('#wheel');
+  }
+
+  rotate(deg){
+    this.wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
+    this.wheel.style.transform = `rotate(${deg}deg)`;
+    this.wheel.addEventListener('transitionend', () => {
+      this.wheel.style.pointerEvents = 'auto';
+      this.wheel.style.transition = 'none';
+      let actualDeg = deg % 360;
+      this.wheel.style.transform = `rotate(${actualDeg}deg`;
+      actualDeg = actualDeg + 15;
+      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+      if (this.prize === 'BANKRUT') {
+        this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
+        this.player.score = 0;
+      } else {}
+    });
   }
 
   rotateWheel(event) {
@@ -104,6 +156,7 @@ export class GameFriendsPageComponent implements OnInit {
     const wheel = event.target;
     wheel.style.pointerEvents = 'none';
     const deg = 720 + Math.floor(Math.random() * 270);
+    this.gameService.spin(deg).subscribe();
     wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
     wheel.style.transform = `rotate(${deg}deg)`;
     wheel.addEventListener('transitionend', () => {
@@ -168,6 +221,7 @@ export class GameFriendsPageComponent implements OnInit {
   divine(event) {
     if (this.gameEnd) return;
     const divinedLetter = event.target.textContent.trim();
+    this.gameService.divineLetter(divinedLetter)
     if (this.divinePasswordTour) {
       const empty_letter = this.entry.find(letter => {
         return letter.visible === false && letter.value !== ' ';
@@ -245,6 +299,10 @@ export class GameFriendsPageComponent implements OnInit {
 
   resetGuess() {
     this.entry = JSON.parse(JSON.stringify(this.entry_copy));
+  }
+
+  exitGame() {
+    this.roomsService.exitRoom().subscribe(data => {});
   }
 
   newGame() {

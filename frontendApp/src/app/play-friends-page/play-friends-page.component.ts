@@ -44,7 +44,6 @@ export class PlayFriendsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.roomsService.getAllRooms().subscribe(data => {
-      console.log(data);
       // @ts-ignore
       this.roomsList = data.data.rooms;
       this.isLoading = false;
@@ -62,17 +61,18 @@ export class PlayFriendsPageComponent implements OnInit {
   }
 
   enterRooom() {
-    console.log('ok');
     this.roomsService
       .enterRooom({ roomId: this.currentRoomId })
       .subscribe(data => {
-        console.log(data)
         // @ts-ignore
         if (data.data !== true) {
           this.errorLabel.style.display = 'block';
           // @ts-ignore
           this.errorLabel.textContent = data.data;
         } else{
+          console.log(this.currentRoomId);
+          // @ts-ignore
+          localStorage.setItem('roomID', this.currentRoomId);
           this.router.navigate(['gameWithFriends']);
           this.errorLabel.style.display = 'none';
         }
@@ -94,8 +94,6 @@ export class PlayFriendsPageComponent implements OnInit {
   }
 
   checkRoomPassword() {
-    console.log(this.currentRoomId)
-    console.log(this.currentRoom)
     if (this.currentRoomId !== null) {
       this.errorLabel.style.display = 'none';
       if (this.currentRoom.password !== null) {
