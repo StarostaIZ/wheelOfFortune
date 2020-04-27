@@ -47,6 +47,7 @@ class GameController extends AbstractController
      * @Route("/room/{id}/startGame")
      * @param Request $request
      * @param $id
+     * @return MyJsonResponse
      */
     public function startGame(Request $request, $id){
         $content = json_decode($request->getContent());
@@ -57,6 +58,8 @@ class GameController extends AbstractController
         $em->persist($game);
         $room->setGame($game);
         $em->flush();
+        $this->publisherService->startGame($room);
+        return new MyJsonResponse(WordResponseStruct::mapFromWord($room->getGame()->getWord()));
     }
 
     /**

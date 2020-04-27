@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Room;
 use App\Utils\Struct\PlayerResponseStruct;
 use App\Utils\Struct\UserResponseStruct;
+use App\Utils\Struct\WordResponseStruct;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 
@@ -21,6 +22,14 @@ class PublisherService
         $this->publisher = $publisher;
     }
 
+
+    private function publish($topic, $json)
+    {
+        $publisher = $this->publisher;
+        $publisher(new Update($topic, $json));
+
+    }
+
     public function updatePeopleInRoom(Room $room)
     {
         $topic = self::ROOM_TOPIC . $room->getId();
@@ -32,11 +41,10 @@ class PublisherService
 
     }
 
-    private function publish($topic, $json)
-    {
-        $publisher = $this->publisher;
-        $publisher(new Update($topic, $json));
-
+    public function startGame(Room $room){
+        $topic = self::ROOM_TOPIC. $room->getId();
+        $data = ['word' => WordResponseStruct::mapFromWord($room->getGame()->getWord())];
+        $this->publish($topic, $data);
     }
 
     public function updateWheel(Room $room, $angle)
