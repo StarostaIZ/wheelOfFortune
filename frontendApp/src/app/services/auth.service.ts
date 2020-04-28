@@ -7,20 +7,17 @@ import {Router} from "@angular/router";
 })
 export class AuthService {
   username = null;
+  header = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
   constructor(private http: HttpClient, private router:Router) {}
 
   register(user) {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./register', user, { headers: header }).pipe();
+    return this.http.post('http://localhost:8000/register', user, { headers: this.header }).pipe();
   }
 
   logIn(user) {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./login', user, { headers: header }).pipe();
+    return this.http.post('http://localhost:8000/login', user, { headers: this.header }).pipe();
   }
 
   storeUserData(username) {
@@ -29,7 +26,7 @@ export class AuthService {
   }
 
   logOut() {
-    this.http.post('./logout', {});
+    this.http.post('http://localhost:8000/logout', {});
     localStorage.clear();
     this.router.navigate(['login']);
     this.username = null;

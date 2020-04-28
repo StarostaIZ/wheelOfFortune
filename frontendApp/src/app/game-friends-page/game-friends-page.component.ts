@@ -1,8 +1,7 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { RoomsService } from '../services/rooms.service';
-import {log} from "util";
-import {UserService} from "../services/user.service";
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-game-friends-page',
@@ -13,7 +12,7 @@ import {UserService} from "../services/user.service";
     '../../css/logoSmall.css',
   ],
 })
-export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
+export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   chatMessage: string;
   messages = [];
   entry = [];
@@ -73,19 +72,25 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
   ];
   isDivineTour = false;
   category = 'SPORT';
-  player = { name: '', score: 0 };
+  players = [
+    { name: 'xxxxxxxxxxxxxx', score: 0 },
+    { name: 'xxxxxxxxxxxxxx', score: 0 },
+    { name: 'xxxxxxxxxxxxxx', score: 0 },
+    { name: 'xxxxxxxxxxxxxx', score: 0 },
+  ];
+  player = { name: 'xxxxxxxxxxxxxx', score: 0 };
   prize = '0';
   divinePasswordTour = false;
   infoWheel = 'Zakręć kołem';
   infoKeyboard = 'Wybierz literę';
   password = '';
   gameEnd = false;
-  isLoading = true;
   roomID;
   wheel;
+  chatBox;
+  entryWords = [];
   waitingForStart = true;
-  isGameAdmin = false;
-  message;
+  isGameAdmin = null;
 
   constructor(
     private gameService: GameService,
@@ -93,65 +98,96 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
     private userService: UserService
   ) {}
 
-  ngOnInit(): void{
+  ngOnInit(): void {
+    this.incomingWord('Sport', 'TEST TEST TEST TEST TEST');
     this.roomID = localStorage.getItem('roomID');
-    let adminId;
     this.roomsService.getRoomData(this.roomID).subscribe(data => {
+      let adminId;
+      let userId;
       // @ts-ignore
-      adminId = data.data.adminId
-    })
-    let userId;
-    this.userService.getUser().subscribe(data=> {
-      // @ts-ignore
-      userId = data.data.id;
-      this.isGameAdmin = (adminId === userId);
-      this.isLoading = false;
-    })
-    this.gameService.getServerSendEvent(`http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`).subscribe(data => {
-      console.log(data)
-    });
-    this.gameService.getServerSendEvent(`http://localhost:3000/.well-known/mercure?topic=roomInfo/${this.roomID}`).subscribe(data => {
-      // @ts-ignore
-      const incomingData = JSON.parse(data.data);
-      // @ts-ignore
-      if(incomingData.angle !== undefined){
+      adminId = data.data.adminId;
+      this.userService.getUser().subscribe(data => {
         // @ts-ignore
-        this.incomingRotate(incomingData.angle)
-      }
-      // @ts-ignore
-      else if(incomingData.letter !== undefined){
+        userId = data.data.id;
+        this.isGameAdmin = adminId === userId;
+      });
+    });
+    this.gameService
+      .getServerSendEvent(
+        `http://localhost:3000/.well-known/mercure?topic=roomInfo/${this.roomID}`
+      )
+      .subscribe(data => {
         // @ts-ignore
-        this.incomingLetter(incomingData.letter)
-      }
-    });
-    this.gameService.drawWord().subscribe(data => {
-      // @ts-ignore
-      this.password = data.data.word.toUpperCase();
-      for (const letter of this.password) {
-        this.entry.push({ value: letter, visible: false });
-      }
-      // @ts-ignore
-      this.category = data.data.category;
-      this.player.name =
-        localStorage.getItem('username') !== null
-          ? localStorage.getItem('username')
-          : 'Player';
-    });
-    this.isLoading = false;
+        const incomingData = JSON.parse(data.data);
+        if (this.isGameAdmin === false && this.waitingForStart === true) {
+          this.waitingForStart = false;
+          if (incomingData.word !== undefined) {
+            const { category, word } = incomingData.word;
+            // this.incomingWord(category, word);
+          }
+        }
+      });
+    this.gameService
+      .getServerSendEvent(
+        `http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`
+      )
+      .subscribe(data => {
+        // @ts-ignore
+        const incomingData = JSON.parse(data.data);
+        // @ts-ignore
+        if (incomingData.angle !== undefined) {
+          // @ts-ignore
+          this.incomingRotate(incomingData.angle);
+        }
+        // @ts-ignore
+        else if (incomingData.letter !== undefined) {
+          // @ts-ignore
+          this.incomingLetter(incomingData.letter);
+        }
+      });
   }
 
-
-  ngAfterViewChecked():void{
+  ngAfterViewChecked(): void {
     this.wheel = document.querySelector('#wheel');
+    this.chatBox = document.querySelector('.chatBox');
+  }
+
+  openChatBox() {
+    this.chatBox.style.transform = `translateX(${this.chatBox.offsetWidth}px)`;
+  }
+
+  closeChatBox() {
+    this.chatBox.style.transform = `translateX(-${this.chatBox.offsetWidth}px)`;
   }
 
   startGame() {
     this.waitingForStart = false;
-    console.log('startGame');
-    this.gameService.startGame().subscribe()
+    this.gameService.startGame().subscribe(data => {
+      // @ts-ignore
+      const { word, category } = data.data;
+      // this.incomingWord(category, word)
+    });
   }
 
-  incomingRotate(deg){
+  incomingWord(category, word) {
+    this.password = word.toUpperCase();
+    for (const letter of this.password) {
+      this.entry.push({ value: letter, visible: false });
+    }
+    const wordsArray = this.password.split(' ');
+    let index = 0;
+    for (let i = 0; i < wordsArray.length; i++) {
+      this.entryWords.push([]);
+      for (let j = 0; j < wordsArray[i].length+1; j++) {
+        this.entryWords[i].push(this.entry[index]);
+        index++;
+      }
+    }
+    this.entryWords[this.entryWords.length-1].splice(-1,1)
+    console.log(this.entryWords);
+  }
+
+  incomingRotate(deg) {
     this.wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
     this.wheel.style.transform = `rotate(${deg}deg)`;
     this.wheel.addEventListener('transitionend', () => {
@@ -164,13 +200,12 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked  {
       if (this.prize === 'BANKRUT') {
         this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
         this.player.score = 0;
-      } else {}
+      } else {
+      }
     });
   }
 
-  incomingLetter(letter){
-
-  }
+  incomingLetter(letter) {}
 
   rotateWheel(event) {
     this.infoKeyboard = 'Wybierz literę';

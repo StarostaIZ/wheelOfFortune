@@ -5,42 +5,28 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
   providedIn: 'root'
 })
 export class RoomsService {
-
+  header = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
   constructor(private http: HttpClient) { }
 
   getAllRooms() {
-    return this.http.get('./roomList').pipe();
+    return this.http.get('http://localhost:8000/roomList', { headers: this.header }).pipe();
   }
 
-  // getFriendsRooms() {
-  //   return this.http.get('./roomList').pipe();
-  // }
-
   createRoom(room){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return  this.http.post('./createRoom', room, { headers: header }).pipe();
+    return  this.http.post('http://localhost:8000/createRoom', room, { headers: this.header }).pipe();
   }
 
   enterRooom(room){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./enterRoom', room, { headers: header }).pipe();
+    return this.http.post('http://localhost:8000/enterRoom', room, { headers: this.header }).pipe();
   }
 
   getRoomData(roomId){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.get(`./room/${roomId}`, { headers: header }).pipe();
+    return this.http.get(`http://localhost:8000/room/${roomId}`, { headers: this.header }).pipe();
   }
 
   exitRoom(){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./exitRoom', {},{ headers: header }).pipe();
+    return this.http.post('http://localhost:8000/exitRoom', {},{ headers: this.header }).pipe();
   }
 }

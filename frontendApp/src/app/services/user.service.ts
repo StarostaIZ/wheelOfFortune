@@ -5,19 +5,23 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class UserService {
+  header = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
   constructor(private http: HttpClient) {}
 
   getUser() {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.get('./getUser', { headers: header }).pipe();
+    return this.http
+      .get('http://localhost:8000/getUser', { headers: this.header })
+      .pipe();
   }
 
-  updateUser(user){
+  updateUser(user) {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.put('./updateUser', user, { headers: header }).pipe();
+    return this.http
+      .put('http://localhost:8000/updateUser', user, { headers: this.header })
+      .pipe();
   }
 }
