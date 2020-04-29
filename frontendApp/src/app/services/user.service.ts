@@ -12,7 +12,7 @@ export class UserService {
 
   getUser() {
     return this.http
-      .get('http://localhost:8000/getUser', { headers: this.header })
+      .get('/getUser', { headers: this.header })
       .pipe();
   }
 
@@ -21,7 +21,7 @@ export class UserService {
       'Content-Type': 'application/json',
     });
     return this.http
-      .put('http://localhost:8000/updateUser', user, { headers: this.header })
+      .put('/updateUser', user, { headers: this.header })
       .pipe();
   }
 }

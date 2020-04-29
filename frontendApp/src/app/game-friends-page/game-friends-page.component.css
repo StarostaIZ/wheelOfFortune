@@ -1,7 +1,7 @@
 .game {
-  z-index: 100;
+  z-index: 1;
   width: 100%;
-  margin: 7% auto 0 auto;
+  margin: 0 auto;
 }
 
 .game__password {
@@ -102,7 +102,7 @@
   font-weight: bold;
 }
 
-.game__board__labels__player p:first-child{
+.game__board__labels__player p:first-child {
   color: #1cbfba;
 }
 
@@ -118,7 +118,7 @@
   border-top: 20px solid #fff;
   margin: 0 auto;
   transform: translateY(10px);
-  z-index: 10;
+  z-index: 3;
 }
 
 #wheel {
@@ -128,14 +128,13 @@
   width: 300px;
   cursor: pointer;
   margin: 0 auto;
-  z-index: -1;
+  z-index: 2;
 }
 
 #wheel:focus,
 #wheel:active,
 #wheel:hover {
   outline: none;
-  z-index: -1;
 }
 
 .game__board__keyboard {
@@ -209,7 +208,7 @@
   width: 30vw;
   background-color: white;
   border-radius: 5px 5px 0 0;
-  z-index: 2;
+  z-index: 5;
   transition: transform 0.5s ease-in-out;
 }
 
@@ -263,7 +262,7 @@
 .chatBox__input {
   height: 5%;
   width: 100%;
-  z-index: 1;
+  z-index: 6;
   border: none;
   border-top: #707070 1px solid;
   padding-left: 5px;
@@ -314,12 +313,12 @@
   }
 
   .game__board__labels {
-    font-size: .9em;
+    font-size: 0.9em;
   }
 
   .game__labels__btn {
     margin: 10px 0;
-    font-size: .9em;
+    font-size: 0.9em;
     width: 50%;
   }
 }
@@ -338,12 +337,12 @@
   }
 
   .game__board__labels {
-    font-size: .8em;
+    font-size: 0.8em;
   }
 
   .game__labels__btn {
     margin: 5px 0;
-    font-size: .8em;
+    font-size: 0.8em;
   }
 
   .chatBox {

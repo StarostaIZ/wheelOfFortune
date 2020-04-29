@@ -77,7 +77,7 @@
         <p class="info_wheel">{{ this.infoWheel }}</p>
         <div class="game__board__wheel">
           <div id="arrow_down"></div>
-          <button id="wheel" (click)="rotateWheel($event)"></button>
+          <button id="wheel" [ngStyle]="{'transform': 'rotate('+wheelAngle+'deg)'}" (click)="rotateWheel()"></button>
         </div>
       </ng-template>
     </div>
@@ -127,5 +127,5 @@
     />
   </div>
 
-  <!--<div *ngIf="waitingForStart === true"><app-loading-spinner-game (messageEvent)="startGame()" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>-->
+  <div *ngIf="waitingForStart === true"><app-loading-spinner-game (messageEvent)="startGame($event)" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>
 </div>

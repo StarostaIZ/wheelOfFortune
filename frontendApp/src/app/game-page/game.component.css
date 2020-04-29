@@ -1,62 +1,36 @@
 .game {
-  z-index: 100;
+  z-index: 1;
   width: 100%;
-  margin: 7% auto 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  margin: 8% auto 0 auto;
 }
 
-.game__board__wheel {
-  margin: 0 0 10px 0;
+.game__password {
+  width: 100%;
+  height: 30%;
 }
 
-#arrow_down {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 20px solid #fff;
-  margin: 0 auto;
-  transform: translateY(10px);
-  z-index: 10000;
-}
-
-#wheel {
-  background: url('../../assets/img/wheel.png') no-repeat center;
-  border: none;
-  height: 300px;
-  width: 300px;
-  cursor: pointer;
-  margin: 0 auto;
-  z-index: -1;
-}
-
-#wheel:focus,
-#wheel:active,
-#wheel:hover {
-  outline: none;
-  z-index: -1;
-}
-
-.game__board {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.game__board__category {
+.game__password__category {
   color: #1cbfba;
   text-align: center;
 }
 
-.game__board__letters {
+.game__password__letters {
+  width: 80%;
+  margin: 0 auto 20px auto;
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.game__password__letters__word {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+  align-self: flex-start;
 }
 
 .entry_letter {
+  align-self: flex-start;
   min-width: 40px;
   min-height: 50px;
   text-align: center;
@@ -73,22 +47,77 @@
 }
 
 .flip {
-  animation: fade_in .9s;
+  animation: fade_in 0.9s;
 }
 
-.entry_letter--active{
+.entry_letter--active {
   background-color: #1fbf27;
   border-color: #1fbf27;
 }
 
 @keyframes fade_in {
-  0% {opacity: 1}
-  50% {opacity: 0; transform: rotateY(90deg);}
-  100% {opacity: 1; transform: rotateY(0deg);}
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+    transform: rotateY(90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
 }
 
-#entry_space{
+#entry_space {
   padding: 10px;
+}
+
+.game__board {
+  width: 100%;
+  height: 70%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.game__board__left {
+}
+
+.game__board__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game__board__wheel {
+  margin: 0 auto 10px auto;
+}
+
+#arrow_down {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 20px solid #fff;
+  margin: 0 auto;
+  transform: translateY(10px);
+  z-index: 3;
+}
+
+#wheel {
+  background: url('../../assets/img/wheel.png') no-repeat center;
+  border: none;
+  height: 300px;
+  width: 300px;
+  cursor: pointer;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+#wheel:focus,
+#wheel:active,
+#wheel:hover {
+  outline: none;
 }
 
 .game__board__keyboard {
@@ -125,20 +154,25 @@
   border-color: white;
 }
 
-.game__labels {
+.game__board__label {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20%;
-  text-align: center;
-  font-weight: bolder;
+  justify-content: center;
 }
 
-.game__labels__player {
+.game__board__label__player, .game__board__label__score {
+  text-align: center;
+  width: 80%;
+  margin: 0 auto 10px auto;
+  font-weight: bold;
+}
+
+.game__board__label__player {
   color: #1cbfba;
 }
 
-.game__labels__btn {
+.game__board__label__btn {
   border: none;
   border-radius: 30px;
   background-color: #000;
@@ -152,14 +186,62 @@
   cursor: pointer;
 }
 
-.info_keyboard, .info_wheel{
+.info_keyboard,
+.info_wheel {
   text-align: center;
 }
 
-.info_keyboard--win{
+.info_keyboard--win {
   font-weight: bold;
   font-size: 1.2em;
   color: #3b8b27;
 }
 
+@media only screen and (max-width: 1100px) {
+  .game {
+    margin-top: 12%;
+  }
 
+  .entry_letter {
+    min-width: 32px;
+    min-height: 40px;
+    padding: 3px 2px;
+    font-weight: 700;
+    font-size: 1.2em;
+    margin: 0 2px;
+    border-radius: 3px;
+  }
+
+  .game__board__label {
+    font-size: 0.9em;
+  }
+
+  .game__board__label__btn {
+    margin: 10px 0;
+    font-size: 0.9em;
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .game {
+    margin-top: 16%;
+  }
+
+  .entry_letter {
+    min-width: 25px;
+    min-height: 32px;
+    padding: 3px 0px;
+    margin: 0 1px;
+    border-radius: 2px;
+  }
+
+  .game__board__label {
+    font-size: 0.8em;
+  }
+
+  .game__board__label__btn {
+    margin: 5px 0;
+    font-size: 0.8em;
+  }
+}

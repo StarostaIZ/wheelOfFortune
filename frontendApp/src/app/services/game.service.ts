@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SseService} from "./sse-service.service";
+import { SseService } from './sse-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,18 +34,19 @@ export class GameService {
   }
 
   drawWord() {
-    return this.http
-      .get('http://localhost:8000/drawWord', { headers: this.header })
-      .pipe();
+    return this.http.get('/drawWord', { headers: this.header }).pipe();
   }
 
-  startGame() {
+  startGame(maxPoints) {
     const roomID = localStorage.getItem('roomID');
-    const body = { maxPoints: 1000 };
     return this.http
-      .post(`http://localhost:8000/room/${roomID}/startGame`, body, {
-        headers: this.header,
-      })
+      .post(
+        `/room/${roomID}/startGame`,
+        { maxPoints: maxPoints },
+        {
+          headers: this.header,
+        }
+      )
       .pipe();
   }
 
@@ -53,7 +54,7 @@ export class GameService {
     const roomID = localStorage.getItem('roomID');
     const body = { angle: angle };
     return this.http
-      .post(`http://localhost:8000/room/${roomID}/spin`, body, {
+      .post(`/room/${roomID}/spin`, body, {
         headers: this.header,
       })
       .pipe();
@@ -63,7 +64,7 @@ export class GameService {
     const roomID = localStorage.getItem('roomID');
     const body = { letter: letter };
     return this.http
-      .post(`http://localhost:8000/room/${roomID}/letter`, body, {
+      .post(`/room/${roomID}/letter`, body, {
         headers: this.header,
       })
       .pipe();
@@ -74,7 +75,7 @@ export class GameService {
     const body = { playerId: playerId, points: points };
 
     return this.http
-      .post(`http://localhost:8000/room/${roomID}/points`, body, {
+      .post(`/room/${roomID}/points`, body, {
         headers: this.header,
       })
       .pipe();
@@ -82,9 +83,10 @@ export class GameService {
 
   divineWord(guessed) {
     const roomID = localStorage.getItem('roomID');
+    console.log(guessed);
     const body = { guessed: guessed };
     return this.http
-      .post(`http://localhost:8000/room/${roomID}/guess`, body, {
+      .post(`/room/${roomID}/guess`, body, {
         headers: this.header,
       })
       .pipe();
@@ -93,7 +95,7 @@ export class GameService {
   newWord() {
     const roomID = localStorage.getItem('roomID');
     return this.http
-      .get(`http://localhost:8000/room/${roomID}/newWord`, {
+      .get(`/room/${roomID}/newWord`, {
         headers: this.header,
       })
       .pipe();

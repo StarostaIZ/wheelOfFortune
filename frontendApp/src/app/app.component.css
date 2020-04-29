@@ -1,5 +1,17 @@
-.start_page{
+.start_page {
   width: 100%;
   min-height: 100%;
 }
 
+.content {
+  margin-top: 6%;
+  height: 94%;
+  width: 100%;
+}
+
+@media only screen and (max-width: 1000px) {
+  .content {
+    margin-top: 10%;
+    height: 90%;
+  }
+}
