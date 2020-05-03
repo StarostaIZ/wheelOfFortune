@@ -1,105 +1,131 @@
 <div class="game">
-  <div class="left_panel"></div>
-  <div class="game__board">
-    <h3 class="game__board__category">Kategoria: {{ category }}</h3>
-    <div class="game__board__letters">
-      <div *ngFor="let entry_letter of entry">
-        <div *ngIf="entry_letter.value === ' '; then space; else letter"></div>
-        <ng-template #letter>
-          <div class="entry_box entry_letter">
-            <div
-              *ngIf="
-                entry_letter.visible === true;
-                then visible;
-                else notVisible
-              "
-            ></div>
-            <ng-template #visible>{{ entry_letter.value }}</ng-template>
-            <ng-template #notVisible>{{ ' ' }}</ng-template>
-          </div>
-        </ng-template>
-        <ng-template #space>
-          <div class="entry_box" id="entry_space"></div>
-        </ng-template>
-      </div>
-    </div>
-    <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
-    <ng-template #keyboard>
-      <p>Kwota: {{ prize }}</p>
-      <p class="info_keyboard">{{ this.infoKeyboard }}</p>
-      <div class="game__board__keyboard">
-        <div *ngFor="let letter of alphabet">
+  <div class="game__password">
+    <h3 class="game__password__category">Kategoria: {{ category }}</h3>
+    <div class="game__password__letters">
+      <div class="game__password__letters__word" *ngFor="let entry_word of entryWords">
+        <div *ngFor="let entry_letter of entry_word">
           <div
-            *ngIf="letter.clicked === true; then clicked; else notClicked"
+            *ngIf="entry_letter.value === ' '; then space; else letter"
           ></div>
-          <ng-template #notClicked>
-            <div id="letter--notcliked" (click)="divine($event)">
-              {{ letter.value }}
+          <ng-template #letter>
+            <div class="entry_letter entry_box">
+              <div
+                *ngIf="
+                  entry_letter.visible === true;
+                  then visible;
+                  else notVisible
+                "
+              ></div>
+              <ng-template #visible>{{ entry_letter.value }}</ng-template>
+              <ng-template #notVisible>{{ ' ' }}</ng-template>
             </div>
           </ng-template>
-          <ng-template #clicked>
-            <div id="letter--cliked" (click)="divine($event)">
-              {{ letter.value }}
-            </div>
+          <ng-template #space>
+            <div class="entry_box" id="entry_space"></div>
           </ng-template>
         </div>
       </div>
-      <div
-        *ngIf="
-          divinePasswordTour === true;
-          then divinePassword;
-          else notDivinePassword
-        "
-      ></div>
-      <ng-template #notDivinePassword>
-        <button class="button" (click)="divinePasswordListener()">
-          Odgadnij hasło
-        </button>
-      </ng-template>
-      <ng-template #divinePassword>
-        <button class="button" (click)="resetGuess()" [disabled]="gameEnd">
-          Cofnij
-        </button>
-        <button class="button" (click)="saveGuess()"  [disabled]="gameEnd">
-          Zapisz
-        </button>
-      </ng-template>
-    </ng-template>
-    <ng-template #wheel>
-      <p class="info_wheel">{{ this.infoWheel }}</p>
-      <div class="game__board__wheel">
-        <div id="arrow_down"></div>
-        <button id="wheel" (click)="rotateWheel($event)"></button>
-      </div>
-    </ng-template>
-  </div>
-  <div class="game__labels">
-    <p class="game__labels__player">
-      {{ player.name }}
-    </p>
-    <p>Wynik: {{ player.score }}</p>
-    <button class="game__labels__btn" (click)="exitGame()">Wyjdź z gry</button>
-    <button class="game__labels__btn" (click)="newGame()">Nowe hasło</button>
-  </div>
-</div>
-
-<div class="chatBox">
-  <div class="chatBox__header">Czat</div>
-  <div class="chatBox__content">
-    <div *ngFor="let msg of messages">
-      <p class="chatBox__content__msg">{{ msg }}</p>
     </div>
   </div>
-  <form (submit)="onMessageSubmit()" class="chatBox__form">
-    <input
-      class="chatBox__input"
-      [(ngModel)]="chatMessage"
-      type="text"
-      name="chatMessage"
-      placeholder="Wiadomość..."
-    />
-  </form>
-</div>
 
-<!--<div *ngIf="isLoading === true"><app-loading-spinner></app-loading-spinner></div>-->
-<div *ngIf="waitingForStart === true"><app-loading-spinner-game (messageEvent)="startGame()" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>
+  <div class="game__board">
+    <div class="game__board__left"></div>
+    <div class="game__board__main">
+      <div *ngIf="isDivineTour; then keyboard; else wheel"></div>
+      <ng-template #keyboard>
+        <p>Kwota: {{ prize }}</p>
+        <p class="info_keyboard">{{ this.infoKeyboard }}</p>
+        <div class="game__board__keyboard">
+          <div *ngFor="let letter of alphabet">
+            <div
+              *ngIf="letter.clicked === true; then clicked; else notClicked"
+            ></div>
+            <ng-template #notClicked>
+              <div id="letter--notcliked" (click)="divine($event)">
+                {{ letter.value }}
+              </div>
+            </ng-template>
+            <ng-template #clicked>
+              <div id="letter--cliked" (click)="divine($event)">
+                {{ letter.value }}
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            divinePasswordTour === true;
+            then divinePassword;
+            else notDivinePassword
+          "
+        ></div>
+        <ng-template #notDivinePassword>
+          <button class="button" (click)="divinePasswordListener()">
+            Odgadnij hasło
+          </button>
+        </ng-template>
+        <ng-template #divinePassword>
+          <button class="button" (click)="resetGuess()" [disabled]="gameEnd">
+            Cofnij
+          </button>
+          <button class="button" (click)="saveGuess()" [disabled]="gameEnd">
+            Zapisz
+          </button>
+        </ng-template>
+      </ng-template>
+      <ng-template #wheel>
+        <p class="info_wheel">{{ this.infoWheel }}</p>
+        <div class="game__board__wheel">
+          <div id="arrow_down"></div>
+          <button id="wheel" [ngStyle]="{'transform': 'rotate('+wheelAngle+'deg)'}" (click)="rotateWheel()"></button>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="game__board__labels">
+      <div class="game__board__labels__player" *ngFor="let player of players">
+        <p>
+          {{ player.name }}
+        </p>
+        <p>{{ player.score }}</p>
+      </div>
+      <button class="game__labels__btn" (click)="exitGame()">
+        Wyjdź z gry
+      </button>
+      <button class="game__labels__btn" (click)="newGame()">Nowe hasło</button>
+    </div>
+  </div>
+
+  <div class="chatBox">
+    <div class="chatBox__header">
+      <p>Czat</p>
+      <div class="chatBox__header__btn">
+        <div class="chatBox__header__cross" (click)="closeChatBox()"></div>
+      </div>
+    </div>
+    <div class="chatBox__content">
+      <div *ngFor="let msg of messages">
+        <p class="chatBox__content__msg">{{ msg }}</p>
+      </div>
+    </div>
+    <form (submit)="onMessageSubmit()" class="chatBox__form">
+      <input
+        class="chatBox__input"
+        [(ngModel)]="chatMessage"
+        type="text"
+        name="chatMessage"
+        placeholder="Wiadomość..."
+      />
+    </form>
+  </div>
+
+  <div class="chatBox_icon" (click)="openChatBox()">
+    <img
+      class="chatBox_icon__img"
+      src="../../assets/img/chatbox_img.png"
+      alt="chatbox_img"
+    />
+  </div>
+
+  <div *ngIf="waitingForStart === true"><app-loading-spinner-game (messageEvent)="startGame($event)" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>
+</div>

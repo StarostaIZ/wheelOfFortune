@@ -1,53 +1,60 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FriendsService {
-
-  constructor(private http: HttpClient) { }
+  header = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
+  constructor(private http: HttpClient) {}
 
   getFriends() {
-    return this.http.get('./friendList').pipe();
+    return this.http.get('http://localhost:8000/friendList').pipe();
   }
 
   addFriend(friend) {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./addFriend', friend).pipe();
+    return this.http
+      .post('http://localhost:8000/addFriend', friend, { headers: this.header })
+      .pipe();
   }
 
-  deleteFriend(friend){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./removeFriend', friend, { headers: header }).pipe();
+  deleteFriend(friend) {
+    return this.http
+      .post('http://localhost:8000/removeFriend', friend, {
+        headers: this.header,
+      })
+      .pipe();
   }
 
-  getFriendRequest(){
-    return this.http.get('./friendRequestList').pipe();
+  getFriendRequest() {
+    return this.http
+      .get('http://localhost:8000/friendRequestList', { headers: this.header })
+      .pipe();
   }
 
-  acceptFriendRequest(friend){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./acceptFriendRequest', friend, { headers: header }).pipe();
+  acceptFriendRequest(friend) {
+    return this.http
+      .post('http://localhost:8000/acceptFriendRequest', friend, {
+        headers: this.header,
+      })
+      .pipe();
   }
 
-  sendFriendRequest(friend){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./sendFriendRequest', friend, { headers: header }).pipe();
+  sendFriendRequest(friend) {
+    return this.http
+      .post('http://localhost:8000/sendFriendRequest', friend, {
+        headers: this.header,
+      })
+      .pipe();
   }
 
-  rejectFriendRequest(friend){
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post('./rejectFriendRequest', friend, { headers: header }).pipe();
+  rejectFriendRequest(friend) {
+    return this.http
+      .post('http://localhost:8000/rejectFriendRequest', friend, {
+        headers: this.header,
+      })
+      .pipe();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { GameService } from '../services/game.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { GameService } from '../services/game.service';
     '../../css/logoSmall.css',
   ],
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, AfterViewChecked {
   entry = [];
   entry_copy = [];
   VOWELS = ['A', 'Ą', 'E', 'Ę', 'I', 'O', 'Ó', 'U', 'Y'];
@@ -76,16 +76,21 @@ export class GameComponent implements OnInit {
   password = '';
   gameEnd = false;
   isLoading = true;
+  entryWords = [];
+  wheel = null;
+  wheelAngle = 0;
 
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
-      this.password = data.data.word.toUpperCase();
+      this.password = data.data.word;
+      console.log(this.password)
       for (const letter of this.password) {
         this.entry.push({ value: letter, visible: false });
       }
+      this.dividePasswordIntoWords();
       // @ts-ignore
       this.category = data.data.category;
       this.player.name =
@@ -96,18 +101,21 @@ export class GameComponent implements OnInit {
     });
   }
 
-  rotateWheel(event) {
+  ngAfterViewChecked(): void {
+    this.wheel = document.querySelector('#wheel');
+  }
+
+  rotateWheel() {
     this.infoKeyboard = 'Wybierz literę';
-    const wheel = event.target;
-    wheel.style.pointerEvents = 'none';
+    this.wheel.style.pointerEvents = 'none';
     const deg = 720 + Math.floor(Math.random() * 270);
-    wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
-    wheel.style.transform = `rotate(${deg}deg)`;
-    wheel.addEventListener('transitionend', () => {
-      wheel.style.pointerEvents = 'auto';
-      wheel.style.transition = 'none';
+    this.wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
+    this.wheel.style.transform = `rotate(${deg}deg)`;
+    this.wheel.addEventListener('transitionend', () => {
+      this.wheel.style.pointerEvents = 'auto';
+      this.wheel.style.transition = 'none';
       let actualDeg = deg % 360;
-      wheel.style.transform = `rotate(${actualDeg}deg`;
+      this.wheel.style.transform = `rotate(${actualDeg}deg`;
       actualDeg = actualDeg + 15;
       this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
       if (this.prize === 'BANKRUT') {
@@ -266,5 +274,18 @@ export class GameComponent implements OnInit {
     document.body
       .querySelector('.info_keyboard')
       .classList.remove('info_keyboard--win');
+  }
+
+  dividePasswordIntoWords() {
+    const wordsArray = this.password.split(' ');
+    let index = 0;
+    for (let i = 0; i < wordsArray.length; i++) {
+      this.entryWords.push([]);
+      for (let j = 0; j < wordsArray[i].length + 1; j++) {
+        this.entryWords[i].push(this.entry[index]);
+        index++;
+      }
+    }
+    this.entryWords[this.entryWords.length - 1].splice(-1, 1);
   }
 }
