@@ -33,9 +33,9 @@ class PublisherService
     public function updatePeopleInRoom(Room $room)
     {
         $topic = self::ROOM_TOPIC . $room->getId();
-        $data = $room->getUsersInRoom();
+        $data['users'] = [];
         foreach ($room->getUsersInRoom() as $user) {
-            $data[] = UserResponseStruct::mapFromUser($user);
+            $data['users'][] = UserResponseStruct::mapFromUser($user);
         }
         $this->publish($topic, json_encode($data));
 
@@ -43,8 +43,15 @@ class PublisherService
 
     public function startGame(Room $room){
         $topic = self::ROOM_TOPIC. $room->getId();
-        $data = ['word' => WordResponseStruct::mapFromWord($room->getGame()->getWord())];
+        $data = [
+            'word' => WordResponseStruct::mapFromWord($room->getGame()->getWord()),
+            'players' => [],
+            'maxPoints' => $room->getGame()->getMaxPoints()];
+        foreach ($room->getGame()->getPlayers() as $player){
+            $data['players'][] = PlayerResponseStruct::mapFromPlayer($player);
+        }
         $this->publish($topic, json_encode($data));
+        return $data;
     }
 
     public function updateWheel(Room $room, $angle)
@@ -83,6 +90,18 @@ class PublisherService
         $data['points'] = [];
         foreach ($room->getGame()->getPlayers() as $player) {
             $data['points'][] = PlayerResponseStruct::mapFromPlayer($player);
+        }
+        $this->publish($topic, json_encode($data));
+    }
+
+    public function updateTurn(Room $room)
+    {
+        $topic = self::GAME_TOPIC. $room->getId();
+        $data = [];
+        foreach ($room->getGame()->getPlayers() as $player){
+            if ($player->getIsNow()){
+                $data['turn'] = $player->getId();
+            }
         }
         $this->publish($topic, json_encode($data));
     }

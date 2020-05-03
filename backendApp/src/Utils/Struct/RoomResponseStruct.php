@@ -26,6 +26,9 @@ class RoomResponseStruct
     /** @var int */
     public $adminId;
 
+    /** @var array  */
+    public $usersInRoom = [];
+
 
     public static function mapFromRoom(Room $room)
     {
