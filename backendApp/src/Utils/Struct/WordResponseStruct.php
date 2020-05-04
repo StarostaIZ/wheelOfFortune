@@ -16,7 +16,7 @@ class WordResponseStruct
     {
         $wordStruct = new WordResponseStruct();
         $wordStruct->category = $word->getCategory()->getName();
-        $wordStruct->word = strtoupper($word->getWord());
+        $wordStruct->word = mb_convert_case($word->getWord(), MB_CASE_UPPER, "UTF-8");
         return $wordStruct;
     }
 
