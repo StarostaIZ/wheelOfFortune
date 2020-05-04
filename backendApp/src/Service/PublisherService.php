@@ -94,6 +94,7 @@ class PublisherService
             $data['points'][] = PlayerResponseStruct::mapFromPlayer($player);
         }
         $this->publish($topic, json_encode($data));
+        return $data;
     }
 
     public function updateTurn(Room $room)
