@@ -39,11 +39,12 @@ class GameService
         foreach ($room->getUsersInRoom() as $user){
             $player = new Player();
             $player->setPoints(0)
-                ->setGame($room->getGame())
                 ->setUser($user)
                 ->setUsername($user->getUsername());
             $this->em->persist($player);
+            $room->getGame()->addPlayer($player);
         }
+        $this->em->flush();
         $room->getGame()->getPlayers()[0]->setIsNow(true);
     }
 
