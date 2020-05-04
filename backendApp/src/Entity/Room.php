@@ -104,7 +104,6 @@ class Room
         return $this;
     }
 
-
     /**
      * @return Collection|User[]
      */
