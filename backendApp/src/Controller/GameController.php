@@ -148,6 +148,7 @@ class GameController extends AbstractController
     public function nextPlayer($id){
         $room = $this->getRoom($id);
         $nextPlayer = $this->gameService->nextPlayer($room);
+        $this->getDoctrine()->getManager()->flush();
         $this->publisherService->updateTurn($room);
         return new MyJsonResponse(PlayerResponseStruct::mapFromPlayer($nextPlayer));
     }
