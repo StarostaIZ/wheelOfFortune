@@ -63,12 +63,14 @@ class GameService
                 $players[$i]->setIsNow(false);
                 if ($i==count($players)-1){
                     $players[0]->setIsNow(true);
+                    return $players[0];
                 }
                 else{
                     $players[$i+1]->setIsNow(true);
+                    return $players[$i+1];
                 }
             }
-            return $players[$i];
+
         }
         return null;
     }
