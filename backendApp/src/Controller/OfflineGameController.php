@@ -26,7 +26,6 @@ class OfflineGameController
      * @Route("/drawWord", methods={"GET"})
      */
     public function drawWord(){
-
         return new MyJsonResponse(WordResponseStruct::mapFromWord($this->gameService->drawWord()));
     }
 
