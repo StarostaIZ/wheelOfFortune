@@ -10,6 +10,8 @@ class PlayerResponseStruct
 {
     public $id;
 
+    public $userId;
+
     public $name;
 
     public $points;
@@ -20,6 +22,7 @@ class PlayerResponseStruct
         $struct->id = $player->getId();
         $struct->name = $player->getUsername();
         $struct->points = $player->getPoints();
+        $struct->userId = $player->getUser()->getId();
         return $struct;
     }
 

@@ -8,6 +8,7 @@ use App\Entity\Room;
 use App\Service\GameService;
 use App\Service\PublisherService;
 use App\Utils\Response\MyJsonResponse;
+use App\Utils\Struct\PlayerResponseStruct;
 use App\Utils\Struct\WordResponseStruct;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,11 +56,11 @@ class GameController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         /** @var Room $room */
         $room = $em->getRepository(Room::class)->find($id);
-        $em->persist($game);
         $room->setGame($game);
+        $this->gameService->createPlayers($room);
         $em->flush();
-        $this->publisherService->startGame($room);
-        return new MyJsonResponse(WordResponseStruct::mapFromWord($room->getGame()->getWord()));
+        $response = $this->publisherService->startGame($room);
+        return new MyJsonResponse($response);
     }
 
     /**
@@ -137,6 +138,18 @@ class GameController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
         $this->publisherService->updateWord($room, WordResponseStruct::mapFromWord($word));
         return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
+    }
+
+    /**
+     * @Route("/room/{id}/nextPlayer")
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function nextPlayer($id){
+        $room = $this->getRoom($id);
+        $nextPlayer = $this->gameService->nextPlayer($room);
+        $this->publisherService->updateTurn($room);
+        return new MyJsonResponse(PlayerResponseStruct::mapFromPlayer($nextPlayer));
     }
 
 

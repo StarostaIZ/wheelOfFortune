@@ -55,7 +55,9 @@ class RoomController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($room);
         $em->flush();
-        return new MyJsonResponse(RoomResponseStruct::mapFromRoom($room));
+        $roomStruct = RoomResponseStruct::mapFromRoom($room);
+        $roomStruct->usersInRoom = $this->roomService->getUsersInRoom($room);
+        return new MyJsonResponse($roomStruct);
     }
 
     /**
@@ -68,8 +70,8 @@ class RoomController extends AbstractController
         $content = json_decode($request->getContent());
         /** @var Room $room */
         $room = $this->em->getRepository(Room::class)->find($content->roomId);
-        $this->publisherService->updatePeopleInRoom($room);
         $response = $this->roomService->enterRoom($room);
+        $this->publisherService->updatePeopleInRoom($room);
         return new MyJsonResponse($response);
     }
 
@@ -81,7 +83,9 @@ class RoomController extends AbstractController
     public function getRoomData($id){
         /** @var Room $room */
         $room = $this->getDoctrine()->getManager()->getRepository(Room::class)->find($id);
-        return new MyJsonResponse(RoomResponseStruct::mapFromRoom($room));
+        $roomStruct = RoomResponseStruct::mapFromRoom($room);
+        $roomStruct->usersInRoom = $this->roomService->getUsersInRoom($room);
+        return new MyJsonResponse($roomStruct);
     }
 
     /**
@@ -89,7 +93,7 @@ class RoomController extends AbstractController
      * @return MyJsonResponse
      */
     public function exitRoom(){
-        $this->roomService->exitRoom();
+        $room = $this->roomService->exitRoom();
         $this->publisherService->updatePeopleInRoom($room);
         return new MyJsonResponse(true);
     }

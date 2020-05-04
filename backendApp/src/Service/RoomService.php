@@ -61,11 +61,10 @@ class RoomService
             }
         }
         $user->setRoom(null);
+        return $room;
     }
 
-    public function getUsersInRoom(Request $request){
-        $content = json_decode($request->getContent(), true);
-        $room = $this->em->getRepository(Room::class)->find($content['roomId']);
+    public function getUsersInRoom(Room $room){
         $usersData['users'] = [];
         foreach ($room->getUsersInRoom() as $user) {
             $usersData['users'][] = UserResponseStruct::mapFromUser($user);

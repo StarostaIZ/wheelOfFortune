@@ -5,6 +5,8 @@ namespace App\Service;
 
 
 use App\Entity\Game;
+use App\Entity\Player;
+use App\Entity\Room;
 use App\Entity\User;
 use App\Entity\Word;
 use App\Utils\Struct\WordResponseStruct;
@@ -28,8 +30,21 @@ class GameService
             ->setMaxPoints($maxPoints)
             ->setWord($this->drawWord());
 
+        $this->em->persist($game);
         return $game;
 
+    }
+
+    public function createPlayers(Room $room){
+        foreach ($room->getUsersInRoom() as $user){
+            $player = new Player();
+            $player->setPoints(0)
+                ->setGame($room->getGame())
+                ->setUser($user)
+                ->setUsername($user->getUsername());
+            $this->em->persist($player);
+        }
+        $room->getGame()->getPlayers()[0]->setIsNow(true);
     }
 
     public function drawWord(): Word
@@ -40,4 +55,20 @@ class GameService
         return $words[$rand];
     }
 
+    public function nextPlayer(Room $room){
+        $players = $room->getGame()->getPlayers();
+        for ($i = 0; $i<count($players); $i++){
+            if ($players[$i]->getIsNow()){
+                $players[$i]->setIsNow(false);
+                if ($i==count($players)-1){
+                    $players[0]->setIsNow(true);
+                }
+                else{
+                    $players[$i+1]->setIsNow(true);
+                }
+            }
+            return $players[$i];
+        }
+        return null;
+    }
 }
