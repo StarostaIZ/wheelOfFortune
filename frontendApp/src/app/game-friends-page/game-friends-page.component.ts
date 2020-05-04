@@ -94,6 +94,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   wheelAngle = 0;
   userId = null;
   userName = null;
+  playersList = [];
+  maxGamePoints = 0;
 
   constructor(
     private gameService: GameService,
@@ -130,6 +132,12 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
             this.waitingForStart = false;
             const { category, word } = incomingData.word;
             this.incomingWord(category, word);
+          }
+          if (incomingData.players !== this.playersList) {
+            this.playersList = incomingData.players;
+          }
+          if (incomingData.maxPoints !== undefined) {
+            this.maxGamePoints = incomingData.maxPoints;
           }
         }
       });

@@ -2,6 +2,10 @@
   <div *ngIf="isGameAdmin !== true">
     <mat-spinner class="spinner__circle" color="accent"></mat-spinner>
   </div>
+  <p>Lista graczy w pokoju:</p>
+  <div *ngFor="let player of playersList">
+    <p>{{player.name}}</p>
+  </div>
   <div *ngIf="isGameAdmin !== null">
     <div *ngIf="isGameAdmin; then admin; else commonPlayer"></div>
     <ng-template #commonPlayer>

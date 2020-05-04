@@ -127,5 +127,5 @@
     />
   </div>
 
-  <div *ngIf="waitingForStart === true"><app-loading-spinner-game (messageEvent)="startGame($event)" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>
+  <div *ngIf="waitingForStart === true"><app-loading-spinner-game [playersList] = playersList (messageEvent)="startGame($event)" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>
 </div>
