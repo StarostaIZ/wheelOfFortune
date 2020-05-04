@@ -107,7 +107,7 @@ class GameController extends AbstractController
         /** @var Player $player */
         $player = $this->getDoctrine()->getManager()->getRepository(Player::class)->find($playerId);
         $player->setPoints($points);
-        $this->publisherService->updatePoints($points);
+        $this->publisherService->updatePoints($this->getRoom($id));
         $this->getDoctrine()->getManager()->flush();
         return new MyJsonResponse(true);
     }

@@ -38,6 +38,7 @@ class PublisherService
             $data['users'][] = UserResponseStruct::mapFromUser($user);
         }
         $this->publish($topic, json_encode($data));
+        return $data;
 
     }
 
@@ -46,7 +47,8 @@ class PublisherService
         $data = [
             'word' => WordResponseStruct::mapFromWord($room->getGame()->getWord()),
             'players' => [],
-            'maxPoints' => $room->getGame()->getMaxPoints()];
+            'maxPoints' => $room->getGame()->getMaxPoints(),
+            'turn' => $room->getGame()->getTurn()->getId()];
         foreach ($room->getGame()->getPlayers() as $player){
             $data['players'][] = PlayerResponseStruct::mapFromPlayer($player);
         }
@@ -97,12 +99,7 @@ class PublisherService
     public function updateTurn(Room $room)
     {
         $topic = self::GAME_TOPIC. $room->getId();
-        $data = [];
-        foreach ($room->getGame()->getPlayers() as $player){
-            if ($player->getIsNow()){
-                $data['turn'] = $player->getId();
-            }
-        }
+        $data = ['turn' => $room->getGame()->getTurn()->getId()];
         $this->publish($topic, json_encode($data));
     }
 

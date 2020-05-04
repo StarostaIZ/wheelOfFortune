@@ -137,4 +137,14 @@ class Game
     public function addLetter(string $letter){
         $this->letters[] = $letter;
     }
+
+    public function getTurn(): ?Player
+    {
+        foreach ($this->getPlayers() as $player) {
+            if ($player->getIsNow()){
+                return $player;
+            }
+        }
+        return null;
+    }
 }
