@@ -2,7 +2,10 @@
   <div class="game__password">
     <h3 class="game__password__category">Kategoria: {{ category }}</h3>
     <div class="game__password__letters">
-      <div class="game__password__letters__word" *ngFor="let entry_word of entryWords">
+      <div
+        class="game__password__letters__word"
+        *ngFor="let entry_word of entryWords"
+      >
         <div *ngFor="let entry_letter of entry_word">
           <div
             *ngIf="entry_letter.value === ' '; then space; else letter"
@@ -35,6 +38,11 @@
       <ng-template #keyboard>
         <p>Kwota: {{ prize }}</p>
         <p class="info_keyboard">{{ this.infoKeyboard }}</p>
+        <div *ngIf="roundEnd">
+          <button class="game__labels__btn" (click)="newRound()">
+            Nowe hasło
+          </button>
+        </div>
         <div class="game__board__keyboard">
           <div *ngFor="let letter of alphabet">
             <div
@@ -75,24 +83,36 @@
       </ng-template>
       <ng-template #wheel>
         <p class="info_wheel">{{ this.infoWheel }}</p>
+        <p class="info_wheel_turn">Runda gracza: {{ this.turnPlayerName }}</p>
+        <div *ngIf="roundEnd">
+          <button class="game__labels__btn" (click)="newRound()">
+            Nowe hasło
+          </button>
+        </div>
         <div class="game__board__wheel">
           <div id="arrow_down"></div>
-          <button id="wheel" [ngStyle]="{'transform': 'rotate('+wheelAngle+'deg)'}" (click)="rotateWheel()"></button>
+          <button
+            id="wheel"
+            [ngStyle]="{ transform: 'rotate(' + wheelAngle + 'deg)' }"
+            (click)="rotateWheel()"
+          ></button>
         </div>
       </ng-template>
     </div>
 
     <div class="game__board__labels">
+      <div class="game__board__labels__player">
+        Limit punktów: {{ maxGamePoints }}
+      </div>
       <div class="game__board__labels__player" *ngFor="let player of players">
         <p>
           {{ player.name }}
         </p>
-        <p>{{ player.score }}</p>
+        <p>{{ player.points }}</p>
       </div>
       <button class="game__labels__btn" (click)="exitGame()">
         Wyjdź z gry
       </button>
-      <button class="game__labels__btn" (click)="newGame()">Nowe hasło</button>
     </div>
   </div>
 
@@ -127,5 +147,25 @@
     />
   </div>
 
-  <div *ngIf="waitingForStart === true"><app-loading-spinner-game [playersList] = playersList (messageEvent)="startGame($event)" [isGameAdmin]="isGameAdmin"></app-loading-spinner-game></div>
+  <div *ngIf="waitingForStart === true">
+    <app-loading-spinner-game
+      [playersListQueue]="playersListQueue"
+      (messageEvent)="startGame($event)"
+      [isGameAdmin]="isGameAdmin"
+    ></app-loading-spinner-game>
+  </div>
+
+  <div *ngIf="gameEnd === true">
+    <div class="game_results">
+      <div class="game_results__inner">
+        <h2>Koniec gry</h2>
+        <div *ngFor="let player of playersOrder">
+          <p>{{ index }}. {{ player.name }}: {{ player.points }}</p>
+        </div>
+        <button class="game__labels__btn" (click)="exitGame()">
+          Wyjdź z gry
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

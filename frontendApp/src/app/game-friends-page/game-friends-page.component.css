@@ -180,8 +180,8 @@
   border-radius: 30px;
   background-color: #000;
   color: #fff;
-  padding: 8px 0px;
-  min-width: 40%;
+  padding: 12px 30px;
+  min-width: 150px;
   margin: 20px 0;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
@@ -190,7 +190,7 @@
 }
 
 .info_keyboard,
-.info_wheel {
+.info_wheel_turn {
   text-align: center;
 }
 
@@ -198,6 +198,39 @@
   font-weight: bold;
   font-size: 1.2em;
   color: #3b8b27;
+}
+
+.game_results{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(8, 8, 21, 0.8);
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game_results__inner{
+  position: relative;
+  top: 2%;
+  left: 0;
+  margin: 0 auto;
+  width: 60%;
+  height: 70%;
+  background-color: #f1eaea;
+  color: black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 11;
+  font-weight: bolder;
+  font-size: 1.1em;
 }
 
 .chatBox {
@@ -318,8 +351,9 @@
 
   .game__labels__btn {
     margin: 10px 0;
+    padding: 10px 20px;
     font-size: 0.9em;
-    width: 50%;
+    min-width: 100px;
   }
 }
 

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RoomsService } from '../services/rooms.service';
 import { log } from 'util';
 import { ValidateService } from '../services/validate.service';
-import {Router} from "@angular/router";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-play-friends-page',
@@ -19,27 +19,12 @@ export class PlayFriendsPageComponent implements OnInit {
   targetRoomPassword = '';
   isPasswordBoxVisible = false;
   errorLabel = null;
-  roomsList = [
-    // {
-    //   id: 1,
-    //   name: 'pokoj1',
-    //   maxPeople: '3',
-    //   password: null,
-    //   peopleInRoom: '1',
-    // },
-    // {
-    //   id: 2,
-    //   name: 'pokoj2',
-    //   maxPeople: '4',
-    //   password: '12345',
-    //   peopleInRoom: '2',
-    // },
-  ];
+  roomsList = [];
   isLoading = true;
   constructor(
     private roomsService: RoomsService,
     private validateService: ValidateService,
-    private router:Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -68,9 +53,8 @@ export class PlayFriendsPageComponent implements OnInit {
         if (data.data !== true) {
           this.errorLabel.style.display = 'block';
           // @ts-ignore
-          this.errorLabel.textContent = data.data;
-        } else{
-          console.log(this.currentRoomId);
+          this.errorLabel.textContent = 'Brak miejsca w pokoju';
+        } else {
           // @ts-ignore
           localStorage.setItem('roomID', this.currentRoomId);
           this.router.navigate(['gameWithFriends']);
