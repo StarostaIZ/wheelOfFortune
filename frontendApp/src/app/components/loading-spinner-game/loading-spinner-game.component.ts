@@ -10,12 +10,14 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class LoadingSpinnerGameComponent implements OnInit {
   @Input() isGameAdmin: boolean;
+  @Input() playersListQueue: any;
   @Output() messageEvent = new EventEmitter<number>();
   maxPoints = 10000;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   startGame() {
     this.messageEvent.emit(this.maxPoints);

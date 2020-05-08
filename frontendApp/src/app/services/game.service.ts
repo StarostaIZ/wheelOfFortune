@@ -73,7 +73,6 @@ export class GameService {
   points(playerId, points) {
     const roomID = localStorage.getItem('roomID');
     const body = { playerId: playerId, points: points };
-
     return this.http
       .post(`/room/${roomID}/points`, body, {
         headers: this.header,
@@ -83,7 +82,6 @@ export class GameService {
 
   divineWord(guessed) {
     const roomID = localStorage.getItem('roomID');
-    console.log(guessed);
     const body = { guessed: guessed };
     return this.http
       .post(`/room/${roomID}/guess`, body, {
@@ -92,10 +90,19 @@ export class GameService {
       .pipe();
   }
 
+  nextPlayer() {
+    const roomID = localStorage.getItem('roomID');
+    return this.http
+      .post(`/room/${roomID}/nextPlayer`, {}, {
+        headers: this.header,
+      })
+      .pipe();
+  }
+
   newWord() {
     const roomID = localStorage.getItem('roomID');
     return this.http
-      .get(`/room/${roomID}/newWord`, {
+      .post(`/room/${roomID}/newWord`, {
         headers: this.header,
       })
       .pipe();

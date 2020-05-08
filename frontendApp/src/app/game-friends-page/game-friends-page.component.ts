@@ -72,19 +72,14 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   ];
   isDivineTour = false;
   category = 'SPORT';
-  players = [
-    { name: 'xxxxxxxxxxxxxx', score: 0 },
-    { name: 'xxxxxxxxxxxxxx', score: 0 },
-    { name: 'xxxxxxxxxxxxxx', score: 0 },
-    { name: 'xxxxxxxxxxxxxx', score: 0 },
-  ];
-  player = { name: 'xxxxxxxxxxxxxx', score: 0 };
+  players = [];
   prize = '0';
   divinePasswordTour = false;
   infoWheel = 'Zakręć kołem';
   infoKeyboard = 'Wybierz literę';
   password = '';
   gameEnd = false;
+  roundEnd = false;
   roomID;
   wheel = null;
   chatBox = null;
@@ -94,6 +89,10 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   wheelAngle = 0;
   userId = null;
   userName = null;
+  playersListQueue = [{ username: '' }];
+  maxGamePoints = 0;
+  turnPlayerName = '';
+  playersOrder = [];
 
   constructor(
     private gameService: GameService,
@@ -107,7 +106,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     let adminId;
 
     this.roomsService.getRoomData(this.roomID).subscribe(data => {
-      console.log(data)
+      // @ts-ignore
+      this.playersListQueue = data.data.usersInRoom.users;
       // @ts-ignore
       adminId = data.data.adminId;
       this.userService.getUser().subscribe(data => {
@@ -116,13 +116,21 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
         this.isGameAdmin = adminId === this.userId;
       });
     });
+    this.initWebSocketRoom();
+    this.initWebSocketGame();
+  }
 
+  ngAfterViewChecked(): void {
+    this.wheel = document.querySelector('#wheel');
+    this.chatBox = document.querySelector('.chatBox');
+  }
+
+  initWebSocketRoom() {
     this.gameService
       .getServerSendEvent(
         `http://localhost:3000/.well-known/mercure?topic=roomInfo/${this.roomID}`
       )
       .subscribe(data => {
-        console.log(data)
         // @ts-ignore
         const incomingData = JSON.parse(data.data);
         if (this.isGameAdmin === false && this.waitingForStart === true) {
@@ -132,8 +140,22 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
             this.incomingWord(category, word);
           }
         }
+        if (incomingData.users !== undefined) {
+          this.playersListQueue = incomingData.users;
+        }
+        if (incomingData.players !== undefined) {
+          this.players = incomingData.players;
+        }
+        if (incomingData.maxPoints !== undefined) {
+          this.maxGamePoints = incomingData.maxPoints;
+        }
+        if (incomingData.turn !== undefined) {
+          this.incomingTurn(incomingData.turn);
+        }
       });
+  }
 
+  initWebSocketGame() {
     this.gameService
       .getServerSendEvent(
         `http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`
@@ -141,61 +163,76 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       .subscribe(data => {
         // @ts-ignore
         const incomingData = JSON.parse(data.data);
-        console.log(incomingData);
         // @ts-ignore
         if (incomingData.angle !== undefined) {
           // @ts-ignore
           this.incomingRotate(incomingData.angle);
         }
         // @ts-ignore
-        else if (incomingData.letter !== undefined) {
+        if (incomingData.letter !== undefined) {
           // @ts-ignore
           this.incomingLetter(incomingData.letter);
-        } else if (incomingData.guessed !== undefined) {
+        }
+        if (incomingData.guessed !== undefined) {
           // @ts-ignore
           this.incomingGuess(incomingData.guessed);
-        } else if (incomingData.points !== undefined) {
+        }
+        if (incomingData.points !== undefined) {
           // @ts-ignore
-          this.incomingPlayerListWithPoints(incomingData.letter);
-        } else if (incomingData.word !== undefined) {
+          this.incomingPlayersListWithPoints(incomingData.points);
+        }
+        if (incomingData.word !== undefined) {
           // @ts-ignore
-          this.incomingNewWord(incomingData.letter);
+          this.incomingNewWord(incomingData.word);
+        }
+        if (incomingData.turn !== undefined) {
+          // @ts-ignore
+          this.incomingTurn(incomingData.turn);
         }
       });
   }
 
-  incomingPlayerListWithPoints(){
+  incomingNewWord(newWord) {
+    const {word, category} = newWord;
+    this.incomingWord(category, word)
+  }
 
+  incomingTurn(turn) {
+    this.turnPlayerName = turn.name;
+  }
+
+  incomingPlayersListWithPoints(playersList) {
+    this.players = playersList;
   }
 
   incomingGuess(isGuessed) {
-    console.log(isGuessed)
     if (isGuessed) {
       this.infoWheel = `Hasło odgadnięte!`;
-      document.body
-        .querySelector('.info_wheel')
-        .classList.add('info_keyboard--win');
+      const infoWheelLabel = document.body.querySelector('.info_wheel');
+      if (infoWheelLabel !== null)
+        infoWheelLabel.classList.add('info_keyboard--win');
+      this.entry.forEach(letter => (letter.visible = true));
+      this.roundEnd = true;
+      this.checkGameEnd();
     }
-    this.entry.forEach(letter => (letter.visible = true));
   }
 
-  ngAfterViewChecked(): void {
-    this.wheel = document.querySelector('#wheel');
-    this.chatBox = document.querySelector('.chatBox');
-  }
-
-  startGame($event) {
-    this.waitingForStart = false
-    const maxPoints = $event;
-    console.log(maxPoints)
-    this.gameService.startGame(maxPoints).subscribe(data => {
-      // @ts-ignore
-      const { word, category } = data.data;
-      this.incomingWord(category, word);
-    });
+  incomingLetter(letter) {
+    const counter = this.countLetterInEntry(letter);
+    this.isLetterAlreadyClicked(letter);
+    if (counter > 0) {
+      this.infoWheel =
+        counter > 1
+          ? `Litera ${letter} występuje ${counter} razy.`
+          : `Litera ${letter} występuje ${counter} raz.`;
+    } else {
+      this.infoWheel = `Brak litery ${letter}.`;
+    }
   }
 
   incomingWord(category, word) {
+    console.log(word);
+    this.category = category;
     this.password = word;
     for (const letter of this.password) {
       this.entry.push({ value: letter, visible: false });
@@ -203,22 +240,10 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.dividePasswordIntoWords();
   }
 
-  dividePasswordIntoWords() {
-    const wordsArray = this.password.split(' ');
-    let index = 0;
-    for (let i = 0; i < wordsArray.length; i++) {
-      this.entryWords.push([]);
-      for (let j = 0; j < wordsArray[i].length + 1; j++) {
-        this.entryWords[i].push(this.entry[index]);
-        index++;
-      }
-    }
-    this.entryWords[this.entryWords.length - 1].splice(-1, 1);
-  }
-
   incomingRotate(deg) {
     this.wheelAngle = deg;
-    this.wheel.style.transition = 'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
+    this.wheel.style.transition =
+      'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
     this.wheel.addEventListener('transitionend', () => {
       this.wheel.style.pointerEvents = 'auto';
       this.wheel.style.transition = 'none';
@@ -234,40 +259,61 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  rotateWheel() {
-    this.infoKeyboard = 'Wybierz literę';
-    this.wheel.style.pointerEvents = 'none';
-    this.wheel.style.transition = 'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
-    const deg = 720 + Math.floor(Math.random() * 270);
-    this.gameService.spin(deg).subscribe();
-    this.wheelAngle = deg;
-    this.wheel.addEventListener('transitionend', () => {
-      this.wheel.style.pointerEvents = 'auto';
-      this.wheel.style.transition = 'none';
-      let actualDeg = deg % 360;
-      this.wheelAngle = deg;
-      actualDeg = actualDeg + 15;
-      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
-      if (this.prize === 'BANKRUT') {
-        this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
-      } else {
-        this.isDivineTour = true;
-      }
+  startGame($event) {
+    this.waitingForStart = false;
+    this.gameService.startGame($event).subscribe(data => {
+      // @ts-ignore
+      this.players = data.data.players;
+      // @ts-ignore
+      this.maxGamePoints = data.data.maxPoints;
+      // @ts-ignore
+      const { word, category } = data.data.word;
+      this.incomingWord(category, word);
     });
   }
 
-  incomingLetter(letter) {
-    const counter = this.countLetterInEntry(letter);
-    this.isLetterAlreadyClicked(letter);
-    if (counter > 0) {
-      this.infoWheel =
-        counter > 1
-          ? `Litera ${letter} występuje ${counter} razy.`
-          : `Litera ${letter} występuje ${counter} raz.`;
-    } else {
-      this.infoWheel = `Brak litery ${letter}.`;
+  dividePasswordIntoWords() {
+    const wordsArray = this.password.split(' ');
+    let index = 0;
+    for (let i = 0; i < wordsArray.length; i++) {
+      this.entryWords.push([]);
+      for (let j = 0; j < wordsArray[i].length + 1; j++) {
+        this.entryWords[i].push(this.entry[index]);
+        index++;
+      }
     }
-    console.log(this.alphabet);
+    this.entryWords[this.entryWords.length - 1].splice(-1, 1);
+  }
+
+  rotateWheel() {
+    if (this.turnPlayerName === this.userName) {
+      this.infoKeyboard = 'Wybierz literę';
+      this.wheel.style.pointerEvents = 'none';
+      this.wheel.style.transition =
+        'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
+      const deg = 720 + Math.floor(Math.random() * 270);
+      this.gameService.spin(deg).subscribe();
+      this.wheelAngle = deg;
+      this.wheel.addEventListener('transitionend', () => {
+        this.wheel.style.pointerEvents = 'auto';
+        this.wheel.style.transition = 'none';
+        let actualDeg = deg % 360;
+        this.wheelAngle = deg;
+        actualDeg = actualDeg + 15;
+        this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+        if (this.prize === 'BANKRUT') {
+          this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
+          const player = this.players.find(
+            player => player.name === this.userName
+          );
+          player.points = 0;
+          this.gameService.points(player.id, player.points).subscribe();
+          this.gameService.nextPlayer().subscribe();
+        } else {
+          this.isDivineTour = true;
+        }
+      });
+    }
   }
 
   isLetterAlreadyClicked(divinedLetter) {
@@ -316,6 +362,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   divine(event) {
     if (this.gameEnd) return;
     const divinedLetter = event.target.textContent.trim();
+    const player = this.players.find(player => player.name === this.userName);
     if (this.divinePasswordTour) {
       const empty_letter = this.entry.find(letter => {
         return letter.visible === false && letter.value !== ' ';
@@ -330,28 +377,24 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
         isVowel = true;
       }
       if (isVowel) {
-        if (this.player.score < 200) {
-          console.log('samogłoska');
+        if (player.points < 200) {
           this.infoKeyboard = `Samogłoska kosztuje 200. Nie masz wystarczającej liczby punktów.`;
           return;
         } else {
-          this.player.score -= 200;
+          player.points -= 200;
+          this.gameService.points(player.id, player.points).subscribe();
         }
       }
 
       if (!this.isLetterAlreadyClicked(divinedLetter)) {
-        console.log('here');
         this.gameService.divineLetter(divinedLetter).subscribe();
         const counter = this.countLetterInEntry(divinedLetter);
+
         if (counter > 0) {
-          console.log('is vov: ' + isVowel)
           if (!isVowel) {
             // Dodanie punktów
-
-            // const player = this.players.find(player => player.name ===  this.userName)
-            // player.score += counter * parseInt(this.prize);
-            // this.gameService.points(this.userId)
-            console.log('here2');
+            player.points += counter * parseInt(this.prize);
+            this.gameService.points(player.id, player.points).subscribe();
             this.isDivineTour = false;
           }
           this.infoWheel =
@@ -360,12 +403,15 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
               : `Litera ${divinedLetter} występuje ${counter} raz.`;
         } else {
           this.infoWheel = `Brak litery ${divinedLetter}.`;
+          player.points = 0;
+          this.gameService.points(this.userId, player.points).subscribe();
+          this.gameService.nextPlayer().subscribe();
           this.isDivineTour = false;
         }
       }
     }
     if (this.isCompleted()) {
-      this.infoWheel = `Gratulację! Twój wynik to ${this.player.score}`;
+      this.infoWheel = `Gratulację! Twój wynik to ${player.points}`;
     }
   }
 
@@ -386,17 +432,36 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
         guess += ' ';
       }
     });
-    this.gameService.divineWord(guess).subscribe();
-    if (guess === this.password) {
-      this.infoKeyboard = `Gratulację! Twój wynik to ${this.player.score}`;
+    const result = guess === this.password;
+    this.gameService.divineWord(result).subscribe();
+    if (result) {
+      const player = this.players.find(player => player.name === this.userName);
+      this.infoKeyboard = `Gratulację! Twój wynik to ${player.points}`;
+      // player.pointsTotal += player.points;
+      // set points total
+      // this.gameService.points(this.userId, player.points).subscribe();
       document.body
         .querySelector('.info_keyboard')
         .classList.add('info_keyboard--win');
-      this.gameEnd = true;
+      this.roundEnd = true;
+      this.checkGameEnd();
     } else {
       this.infoWheel = `Niestety hasło nie jest prawidłowe. Próbuj dalej.`;
       this.resetGuess();
       this.isDivineTour = false;
+    }
+  }
+
+  checkGameEnd() {
+    //pointsTotal
+    if (this.players.some(player => player.points >= this.maxGamePoints)) {
+      this.gameEnd = true;
+      this.playersOrder = JSON.parse(JSON.stringify(this.players))
+      console.log(this.playersOrder)
+      this.playersOrder.sort((a, b) =>
+        a.points > b.points ? 1 : b.points > a.points ? -1 : 0
+      );
+      console.log(this.playersOrder)
     }
   }
 
@@ -410,25 +475,18 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.roomsService.exitRoom().subscribe(data => {});
   }
 
-  newGame() {
+  newRound() {
     this.entry = [];
     this.alphabet = this.ALPHABET;
-    this.gameService.drawWord().subscribe(data => {
-      // @ts-ignore
-      this.password = data.data.word.toUpperCase();
-      for (const letter of this.password) {
-        this.entry.push({ value: letter, visible: false });
-      }
-      // @ts-ignore
-      this.category = data.data.category;
-    });
-    this.prize = '0';
-    this.player.score = 0;
     this.divinePasswordTour = false;
     this.isDivineTour = false;
     this.infoWheel = 'Zakręć kołem';
     this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
+    this.roundEnd = false;
+    // reset points
+    this.gameService.newWord().subscribe();
+    this.gameService.nextPlayer().subscribe();
     document.body
       .querySelector('.info_keyboard')
       .classList.remove('info_keyboard--win');
