@@ -19,10 +19,10 @@ class Test extends WebTestCase
         $this->client = static::createClient();
     }
 
-    public function testSecuredHello()
+    public function testSecuredArea()
     {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/admin');
+        $this->client->request('GET', '/admin');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
@@ -31,8 +31,8 @@ class Test extends WebTestCase
     {
         $session = self::$container->get('session');
 
-        $firewallName = 'test';
-        $firewallContext = 'test';
+        $firewallName = 'main';
+        $firewallContext = 'main';
 
         $token = new UsernamePasswordToken('admin',null, $firewallName, ['ROLE_USER']);
         $session->set('_security_'.$firewallContext, serialize($token));

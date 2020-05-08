@@ -23,7 +23,6 @@ security:
                 entry_point: App\Security\UserAuthenticator
             logout:
                 path: /logout
-        test:
             http_basic: ~
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
