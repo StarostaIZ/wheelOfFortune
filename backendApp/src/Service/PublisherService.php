@@ -5,16 +5,20 @@ namespace App\Service;
 
 
 use App\Entity\Room;
+use App\Entity\User;
 use App\Utils\Struct\PlayerResponseStruct;
 use App\Utils\Struct\UserResponseStruct;
 use App\Utils\Struct\WordResponseStruct;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class PublisherService
 {
     const GAME_TOPIC = "gameInfo/";
     const ROOM_TOPIC = "roomInfo/";
+    const CHAT = "chat/";
+
     private $publisher;
 
     public function __construct(PublisherInterface $publisher)
@@ -101,6 +105,13 @@ class PublisherService
     {
         $topic = self::GAME_TOPIC. $room->getId();
         $data = ['turn' => PlayerResponseStruct::mapFromPlayer($room->getGame()->getTurn())];
+        $this->publish($topic, json_encode($data));
+    }
+
+    public function sendMessage(Room $room, UserInterface $sender, $message)
+    {
+        $topic = self::CHAT. $room->getId();
+        $data = ['sender' => $sender->getUsername(), 'message' => $message];
         $this->publish($topic, json_encode($data));
     }
 
