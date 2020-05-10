@@ -16,6 +16,8 @@ class PlayerResponseStruct
 
     public $points;
 
+    public $totalPoints;
+
     public static function mapFromPlayer(Player $player)
     {
         $struct = new PlayerResponseStruct();
@@ -23,6 +25,7 @@ class PlayerResponseStruct
         $struct->name = $player->getUsername();
         $struct->points = $player->getCurrentPoints();
         $struct->userId = $player->getUser()->getId();
+        $struct->totalPoints = $player->getPoints();
         return $struct;
     }
 
