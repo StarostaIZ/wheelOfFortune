@@ -62,7 +62,7 @@ class User implements UserInterface
     private $friendsWithMe;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Player", mappedBy="userId", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Player", mappedBy="user", orphanRemoval=true)
      */
     private $gamesPlayed;
 
