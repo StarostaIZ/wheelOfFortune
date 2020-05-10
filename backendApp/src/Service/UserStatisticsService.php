@@ -29,7 +29,7 @@ class UserStatisticsService
         return $struct;
     }
 
-    private function getLastThreeDaysGames(User $user ): LastGamesStruct{
+    private function getLastThreeDaysGames(User $user): LastGamesStruct{
         $gamesPlayed = $user->getGamesPlayed();
         $struct = new LastGamesStruct();
         $today = new \DateTime();

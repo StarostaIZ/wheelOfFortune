@@ -21,7 +21,7 @@ class PlayerResponseStruct
         $struct = new PlayerResponseStruct();
         $struct->id = $player->getId();
         $struct->name = $player->getUsername();
-        $struct->points = $player->getPoints();
+        $struct->points = $player->getCurrentPoints();
         $struct->userId = $player->getUser()->getId();
         return $struct;
     }
