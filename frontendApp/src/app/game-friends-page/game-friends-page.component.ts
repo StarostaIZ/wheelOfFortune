@@ -198,6 +198,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   }
 
   incomingPlayersListWithPoints(playersList) {
+    console.log(playersList)
     this.players = playersList;
   }
 

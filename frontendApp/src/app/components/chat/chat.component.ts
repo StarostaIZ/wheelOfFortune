@@ -49,7 +49,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   onMessageSubmit() {
-    console.log(this.chatMessage)
     this.chatMessages.push({message: this.chatMessage, sender: this.userName});
     this.chatService.sendMessage(this.chatMessage, this.roomID).subscribe();
     this.chatMessage = '';

@@ -106,7 +106,7 @@
       </div>
       <div class="game__board__labels__player" *ngFor="let player of players">
         <p>
-          {{ player.name }}
+          {{ player.name }} - {{player.totalPoints}}
         </p>
         <p>{{ player.points }}</p>
       </div>
@@ -118,24 +118,24 @@
   <app-chat [roomID]="roomID" [userName]="userName"></app-chat>
 </div>
 
-<!--<div *ngIf="waitingForStart === true">-->
-<!--  <app-loading-spinner-game-->
-<!--    [playersListQueue]="playersListQueue"-->
-<!--    (messageEvent)="startGame($event)"-->
-<!--    [isGameAdmin]="isGameAdmin"-->
-<!--  ></app-loading-spinner-game>-->
-<!--</div>-->
+<div *ngIf="waitingForStart === true">
+  <app-loading-spinner-game
+    [playersListQueue]="playersListQueue"
+    (messageEvent)="startGame($event)"
+    [isGameAdmin]="isGameAdmin"
+  ></app-loading-spinner-game>
+</div>
 
-<!--<div *ngIf="gameEnd === true">-->
-<!--  <div class="game_results">-->
-<!--    <div class="game_results__inner">-->
-<!--      <h2>Koniec gry</h2>-->
-<!--      <div *ngFor="let player of playersOrder">-->
-<!--        <p>{{ player.name }}: {{ player.points }}</p>-->
-<!--      </div>-->
-<!--      <button class="game__labels__btn" (click)="exitGame()">-->
-<!--        Wyjdź z gry-->
-<!--      </button>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+<div *ngIf="gameEnd === true">
+  <div class="game_results">
+    <div class="game_results__inner">
+      <h2>Koniec gry</h2>
+      <div *ngFor="let player of playersOrder">
+        <p>{{ player.name }}: {{ player.points }}</p>
+      </div>
+      <button class="game__labels__btn" (click)="exitGame()">
+        Wyjdź z gry
+      </button>
+    </div>
+  </div>
+</div>

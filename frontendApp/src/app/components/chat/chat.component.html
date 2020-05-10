@@ -22,7 +22,12 @@
       </ng-template>
       <ng-template #othersMessage>
         <div class="message_box">
-          <p class="chatBox__content__msg__text">{{ msg.message }}</p>
+          <p
+            class="chatBox__content__msg__text"
+            style="text-align: left;"
+          >
+            {{ msg.message }}
+          </p>
           <p class="chatBox__content__msg__sender">{{ msg.sender }}</p>
         </div>
       </ng-template>

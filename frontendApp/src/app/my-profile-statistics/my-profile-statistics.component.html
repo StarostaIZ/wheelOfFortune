@@ -3,15 +3,15 @@
   <div class="menu__statistics">
     <div class="menu__statistics__results">
       <p class="menu__statistics__results__label">
-        Ilość gier: {{ numberOfGames }}
+        Ilość gier: {{ totalGamesCount }}
       </p>
-      <p class="menu__statistics__results__label">Wygrane: {{ wins }}</p>
-      <p class="menu__statistics__results__label">Przegrane: {{ losts }}</p>
+      <p class="menu__statistics__results__label">Wygrane: {{ totalWonGames }}</p>
+      <p class="menu__statistics__results__label">Przegrane: {{ totalGamesCount - totalWonGames }}</p>
       <p class="menu__statistics__results__label">
-        Suma punktów: {{ sumOfPoints }}
+        Suma punktów: {{ totalPointsCount }}
       </p>
       <p class="menu__statistics__results__label">
-        Średnia punktów w grze: {{ pointsAvg }}
+        Średnia punktów w grze: {{ totalPointsCount / totalGamesCount }}
       </p>
     </div>
     <div class="menu__statistics__charts">
@@ -19,7 +19,7 @@
         style="fill: white;"
         [view]="view"
         [scheme]="colorScheme"
-        [results]="single"
+        [results]="dataset"
         [gradient]="gradient"
         [xAxis]="showXAxis"
         [yAxis]="showYAxis"

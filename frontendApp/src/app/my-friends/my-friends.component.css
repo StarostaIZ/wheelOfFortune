@@ -60,7 +60,7 @@
 
 .menu__friend__buttons{
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .menu__friend__request_btn{
