@@ -43,6 +43,31 @@ class Player
      */
     private $isNow = false;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isWinner = false;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $currentPoints = 0;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $creationDate;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $guessedWords = 0;
+
+    public function __construct()
+    {
+        $this->creationDate = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,6 +109,11 @@ class Player
         return $this;
     }
 
+    public function addPointsAfterWin()
+    {
+        $this->points+=$this->currentPoints;
+    }
+
     public function getGame(): ?Game
     {
         return $this->game;
@@ -106,5 +136,57 @@ class Player
         $this->isNow = $isNow;
 
         return $this;
+    }
+
+    public function getIsWinner(): ?bool
+    {
+        return $this->isWinner;
+    }
+
+    public function setIsWinner(bool $isWinner): self
+    {
+        $this->isWinner = $isWinner;
+
+        return $this;
+    }
+
+    public function getCurrentPoints(): ?int
+    {
+        return $this->currentPoints;
+    }
+
+    public function setCurrentPoints(int $currentPoints): self
+    {
+        $this->currentPoints = $currentPoints;
+
+        return $this;
+    }
+
+    public function getCreationDate(): ?\DateTimeInterface
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate(\DateTimeInterface $creationDate): self
+    {
+        $this->creationDate = $creationDate;
+
+        return $this;
+    }
+
+    public function getGuessedWords(): ?int
+    {
+        return $this->guessedWords;
+    }
+
+    public function setGuessedWords(int $guessedWords): self
+    {
+        $this->guessedWords = $guessedWords;
+
+        return $this;
+    }
+
+    public function incrementGuessedWords(){
+        $this->guessedWords++;
     }
 }

@@ -106,7 +106,7 @@ class GameController extends AbstractController
         $points = $content->points;
         /** @var Player $player */
         $player = $this->getDoctrine()->getManager()->getRepository(Player::class)->find($playerId);
-        $player->setPoints($points);
+        $player->setCurrentPoints($points);
         $this->getDoctrine()->getManager()->flush();
         $data = $this->publisherService->updatePoints($this->getRoom($id));
         return new MyJsonResponse($data);
@@ -123,6 +123,20 @@ class GameController extends AbstractController
         $room = $this->getRoom($id);
         $guessed = $content->guessed;
         $this->publisherService->isWordGuessed($room, $guessed);
+        if ($guessed){
+            $playerId = $content->playerId;
+            $isEnd = $this->gameService->finalizeRound($room, $playerId);
+            if (!$isEnd) {
+
+                $word = $this->gameService->drawWord();
+                $room->getGame()->setWord($word);
+                $this->getDoctrine()->getManager()->flush();
+                $this->publisherService->updateWord($room, WordResponseStruct::mapFromWord($word));
+                return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
+            }
+
+
+        }
         return new MyJsonResponse(true);
     }
 

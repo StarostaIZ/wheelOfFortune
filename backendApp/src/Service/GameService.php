@@ -74,4 +74,21 @@ class GameService
         }
         return null;
     }
+
+    public function finalizeRound(Room $room, $playerId){
+        /** @var Player $player */
+        $player = $this->em->getRepository(Player::class)->find($playerId);
+        $player->addPointsAfterWin();
+        $player->incrementGuessedWords();
+        foreach ($room->getGame()->getPlayers() as $playerInRoom){
+            $playerInRoom->setCurrentPoints(0);
+        }
+        if ($player->getPoints()>=$room->getGame()->getMaxPoints()){
+            $player->setIsWinner(true);
+            $room->getGame()->setIsRunning(false);
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\FriendRequest;
 use App\Entity\User;
 use App\Service\UserService;
+use App\Service\UserStatisticsService;
 use App\Utils\Response\MyJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,9 +27,12 @@ class UserController extends AbstractController
 
     private $userService;
 
-    public function __construct(UserService $userService)
+    private $userStatisticService;
+
+    public function __construct(UserService $userService, UserStatisticsService $userStatisticService)
     {
         $this->userService = $userService;
+        $this->userStatisticService = $userStatisticService;
     }
 
     /**
@@ -140,6 +144,15 @@ class UserController extends AbstractController
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getDoctrine()->getManager()->getRepository(User::class)->find($friendId);
 
+    }
+
+    /**
+     * @Route("/getStats")
+     */
+    public function getStats(){
+        /** @var User $user */
+        $user = $this->getUser();
+        return new MyJsonResponse($this->userStatisticService->getStats($user));
     }
 
 
