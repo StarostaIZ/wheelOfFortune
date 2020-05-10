@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserService} from "../services/user.service";
 // import * as CanvasJS from './canvasjs.min';
 
 @Component({
@@ -16,8 +17,6 @@ export class MyProfileStatisticsComponent implements OnInit {
   losts = 10;
   sumOfPoints = 1500;
   pointsAvg = 100;
-  constructor() {}
-
   view: any[] = [600, 400];
   // options for the chart
   mainColor = '#fff';
@@ -52,5 +51,14 @@ export class MyProfileStatisticsComponent implements OnInit {
     },
   ];
 
-  ngOnInit(): void {}
+  constructor(private userService: UserService) {
+
+  }
+
+  ngOnInit(): void {
+    console.log('ehe')
+    this.userService.getStats().subscribe(data => {
+      console.log(data)
+    })
+  }
 }

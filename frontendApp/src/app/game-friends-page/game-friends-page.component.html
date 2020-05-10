@@ -115,57 +115,27 @@
       </button>
     </div>
   </div>
-
-  <div class="chatBox">
-    <div class="chatBox__header">
-      <p>Czat</p>
-      <div class="chatBox__header__btn">
-        <div class="chatBox__header__cross" (click)="closeChatBox()"></div>
-      </div>
-    </div>
-    <div class="chatBox__content">
-      <div *ngFor="let msg of messages">
-        <p class="chatBox__content__msg">{{ msg }}</p>
-      </div>
-    </div>
-    <form (submit)="onMessageSubmit()" class="chatBox__form">
-      <input
-        class="chatBox__input"
-        [(ngModel)]="chatMessage"
-        type="text"
-        name="chatMessage"
-        placeholder="Wiadomość..."
-      />
-    </form>
-  </div>
-
-  <div class="chatBox_icon" (click)="openChatBox()">
-    <img
-      class="chatBox_icon__img"
-      src="../../assets/img/chatbox_img.png"
-      alt="chatbox_img"
-    />
-  </div>
-
-  <div *ngIf="waitingForStart === true">
-    <app-loading-spinner-game
-      [playersListQueue]="playersListQueue"
-      (messageEvent)="startGame($event)"
-      [isGameAdmin]="isGameAdmin"
-    ></app-loading-spinner-game>
-  </div>
-
-  <div *ngIf="gameEnd === true">
-    <div class="game_results">
-      <div class="game_results__inner">
-        <h2>Koniec gry</h2>
-        <div *ngFor="let player of playersOrder">
-          <p>{{ index }}. {{ player.name }}: {{ player.points }}</p>
-        </div>
-        <button class="game__labels__btn" (click)="exitGame()">
-          Wyjdź z gry
-        </button>
-      </div>
-    </div>
-  </div>
+  <app-chat [roomID]="roomID" [userName]="userName"></app-chat>
 </div>
+
+<!--<div *ngIf="waitingForStart === true">-->
+<!--  <app-loading-spinner-game-->
+<!--    [playersListQueue]="playersListQueue"-->
+<!--    (messageEvent)="startGame($event)"-->
+<!--    [isGameAdmin]="isGameAdmin"-->
+<!--  ></app-loading-spinner-game>-->
+<!--</div>-->
+
+<!--<div *ngIf="gameEnd === true">-->
+<!--  <div class="game_results">-->
+<!--    <div class="game_results__inner">-->
+<!--      <h2>Koniec gry</h2>-->
+<!--      <div *ngFor="let player of playersOrder">-->
+<!--        <p>{{ player.name }}: {{ player.points }}</p>-->
+<!--      </div>-->
+<!--      <button class="game__labels__btn" (click)="exitGame()">-->
+<!--        Wyjdź z gry-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

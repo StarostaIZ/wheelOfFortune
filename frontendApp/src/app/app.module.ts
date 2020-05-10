@@ -33,6 +33,7 @@ import {AuthGuardService} from "./services/auth-guard.service";
 import { GameService} from "./services/game.service";
 import {SseService} from "./services/sse-service.service";
 import { LoadingSpinnerGameComponent } from './components/loading-spinner-game/loading-spinner-game.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { LoadingSpinnerGameComponent } from './components/loading-spinner-game/l
     Page404Component,
     LoadingSpinnerComponent,
     LoadingSpinnerGameComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,

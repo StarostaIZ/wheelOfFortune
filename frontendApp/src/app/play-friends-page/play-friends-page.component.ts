@@ -45,9 +45,9 @@ export class PlayFriendsPageComponent implements OnInit {
     rooms[index].classList.add('menu__list__room--clicked');
   }
 
-  enterRooom() {
+  enterRoom() {
     this.roomsService
-      .enterRooom({ roomId: this.currentRoomId })
+      .enterRoom({ roomId: this.currentRoomId })
       .subscribe(data => {
         // @ts-ignore
         if (data.data !== true) {
@@ -69,7 +69,7 @@ export class PlayFriendsPageComponent implements OnInit {
       this.currentRoom
     );
     if (validator.isValid) {
-      this.enterRooom();
+      this.enterRoom();
       this.errorLabel.style.display = 'none';
     } else {
       this.errorLabel.style.display = 'block';
@@ -83,7 +83,7 @@ export class PlayFriendsPageComponent implements OnInit {
       if (this.currentRoom.password !== null) {
         this.isPasswordBoxVisible = true;
       } else {
-        this.enterRooom();
+        this.enterRoom();
         this.isPasswordBoxVisible = false;
       }
     } else {

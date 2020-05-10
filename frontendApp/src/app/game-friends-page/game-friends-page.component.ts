@@ -13,8 +13,6 @@ import { UserService } from '../services/user.service';
   ],
 })
 export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
-  chatMessage: string;
-  messages = [];
   entry = [];
   entry_copy = [];
   VOWELS = ['A', 'Ą', 'E', 'Ę', 'I', 'O', 'Ó', 'U', 'Y'];
@@ -82,7 +80,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   roundEnd = false;
   roomID;
   wheel = null;
-  chatBox = null;
   entryWords = [];
   waitingForStart = true;
   isGameAdmin = null;
@@ -122,7 +119,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.wheel = document.querySelector('#wheel');
-    this.chatBox = document.querySelector('.chatBox');
   }
 
   initWebSocketRoom() {
@@ -490,18 +486,5 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     document.body
       .querySelector('.info_keyboard')
       .classList.remove('info_keyboard--win');
-  }
-
-  openChatBox() {
-    this.chatBox.style.transform = `translateX(${this.chatBox.offsetWidth}px)`;
-  }
-
-  closeChatBox() {
-    this.chatBox.style.transform = `translateX(-${this.chatBox.offsetWidth}px)`;
-  }
-
-  onMessageSubmit() {
-    this.messages.push(this.chatMessage);
-    this.chatMessage = '';
   }
 }

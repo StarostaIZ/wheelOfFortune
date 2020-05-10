@@ -19,7 +19,7 @@ export class RoomsService {
     return  this.http.post('/createRoom', room, { headers: this.header }).pipe();
   }
 
-  enterRooom(room){
+  enterRoom(room){
     return this.http.post('/enterRoom', room, { headers: this.header }).pipe();
   }
 
