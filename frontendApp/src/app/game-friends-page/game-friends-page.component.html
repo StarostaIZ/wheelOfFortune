@@ -130,8 +130,8 @@
   <div class="game_results">
     <div class="game_results__inner">
       <h2>Koniec gry</h2>
-      <div *ngFor="let player of playersOrder">
-        <p>{{ player.name }}: {{ player.points }}</p>
+      <div *ngFor="let player of playersResults">
+        <p>{{ player.name }}: {{ player.totalPoints }}</p>
       </div>
       <button class="game__labels__btn" (click)="exitGame()">
         Wyjdź z gry

@@ -89,6 +89,12 @@
   padding: 4px 8px;
   font-size: 0.8em;
   margin: 5px 5px 0 5px;
+  text-align: left;
+}
+
+.own_message {
+  text-align: right;
+  background-color: #1cbfba;
 }
 
 .chatBox__content__msg__sender {

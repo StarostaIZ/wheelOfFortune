@@ -89,7 +89,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   playersListQueue = [{ username: '' }];
   maxGamePoints = 0;
   turnPlayerName = '';
-  playersOrder = [];
+  playersResults = [];
 
   constructor(
     private gameService: GameService,
@@ -189,16 +189,17 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   }
 
   incomingNewWord(newWord) {
-    const {word, category} = newWord;
-    this.incomingWord(category, word)
+    const { word, category } = newWord;
+    this.incomingWord(category, word);
   }
 
   incomingTurn(turn) {
+    console.log('zmiana tury');
     this.turnPlayerName = turn.name;
   }
 
   incomingPlayersListWithPoints(playersList) {
-    console.log(playersList)
+    console.log(playersList);
     this.players = playersList;
   }
 
@@ -305,6 +306,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
           );
           player.points = 0;
           this.gameService.points(player.id, player.points).subscribe();
+
           this.gameService.nextPlayer().subscribe();
         } else {
           this.isDivineTour = true;
@@ -400,8 +402,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
               : `Litera ${divinedLetter} występuje ${counter} raz.`;
         } else {
           this.infoWheel = `Brak litery ${divinedLetter}.`;
-          player.points = 0;
-          this.gameService.points(this.userId, player.points).subscribe();
           this.gameService.nextPlayer().subscribe();
           this.isDivineTour = false;
         }
@@ -430,13 +430,12 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       }
     });
     const result = guess === this.password;
-    this.gameService.divineWord(result).subscribe();
+    const player = this.players.find(player => player.name === this.userName);
     if (result) {
-      const player = this.players.find(player => player.name === this.userName);
+      player.points += 1000;
       this.infoKeyboard = `Gratulację! Twój wynik to ${player.points}`;
-      // player.pointsTotal += player.points;
-      // set points total
-      // this.gameService.points(this.userId, player.points).subscribe();
+      player.totalPoints += player.points;
+      this.gameService.points(this.userId, player.points).subscribe();
       document.body
         .querySelector('.info_keyboard')
         .classList.add('info_keyboard--win');
@@ -447,18 +446,21 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       this.resetGuess();
       this.isDivineTour = false;
     }
+    this.gameService.divineWord(result, player.playerId).subscribe();
   }
 
   checkGameEnd() {
-    //pointsTotal
-    if (this.players.some(player => player.points >= this.maxGamePoints)) {
+    console.log('check');
+    if (this.players.some(player => player.totalPoints >= this.maxGamePoints)) {
       this.gameEnd = true;
-      this.playersOrder = JSON.parse(JSON.stringify(this.players))
-      console.log(this.playersOrder)
-      this.playersOrder.sort((a, b) =>
-        a.points > b.points ? 1 : b.points > a.points ? -1 : 0
+      this.playersResults = JSON.parse(JSON.stringify(this.players));
+      this.playersResults.sort((a, b) =>
+        a.totalPoints > b.totalPoints
+          ? -1
+          : b.totalPoints > a.totalPoints
+          ? 1
+          : 0
       );
-      console.log(this.playersOrder)
     }
   }
 
@@ -474,6 +476,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   newRound() {
     this.entry = [];
+    this.players.forEach(player => (player.points = 0));
     this.alphabet = this.ALPHABET;
     this.divinePasswordTour = false;
     this.isDivineTour = false;
@@ -481,8 +484,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
     this.roundEnd = false;
-    // reset points
     this.gameService.newWord().subscribe();
+
     this.gameService.nextPlayer().subscribe();
     document.body
       .querySelector('.info_keyboard')

@@ -82,9 +82,9 @@ export class GameService {
       .pipe();
   }
 
-  divineWord(guessed) {
+  divineWord(guessed, playerId) {
     const roomID = localStorage.getItem('roomID');
-    const body = { guessed: guessed };
+    const body = { guessed: guessed, playerId: playerId};
     return this.http
       .post(`/room/${roomID}/guess`, body, {
         headers: this.header,
@@ -93,6 +93,7 @@ export class GameService {
   }
 
   nextPlayer() {
+    console.log('kolejny gracz')
     const roomID = localStorage.getItem('roomID');
     return this.http
       .post(`/room/${roomID}/nextPlayer`, {}, {

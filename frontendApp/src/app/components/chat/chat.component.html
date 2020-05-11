@@ -12,20 +12,14 @@
       ></div>
       <ng-template #myMessage>
         <div class="message_box_own">
-          <p
-            class="chatBox__content__msg__text own_message"
-            style="text-align: right; background-color: #1cbfba;"
-          >
+          <p class="chatBox__content__msg__text own_message">
             {{ msg.message }}
           </p>
         </div>
       </ng-template>
       <ng-template #othersMessage>
         <div class="message_box">
-          <p
-            class="chatBox__content__msg__text"
-            style="text-align: left;"
-          >
+          <p class="chatBox__content__msg__text">
             {{ msg.message }}
           </p>
           <p class="chatBox__content__msg__sender">{{ msg.sender }}</p>

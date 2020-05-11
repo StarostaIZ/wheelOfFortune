@@ -11,7 +11,7 @@
         Suma punktów: {{ totalPointsCount }}
       </p>
       <p class="menu__statistics__results__label">
-        Średnia punktów w grze: {{ totalPointsCount / totalGamesCount }}
+        Średnia punktów w grze: {{ (totalPointsCount / totalGamesCount).toFixed(2) }}
       </p>
     </div>
     <div class="menu__statistics__charts">
