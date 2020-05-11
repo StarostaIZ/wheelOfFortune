@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   logIn(user) {
-    return this.http.post('/login', user, { headers: this.header }).pipe();
+    return this.http.post('http://localhost:8000/login', user, { headers: this.header }).pipe();
   }
 
   storeUserData(username) {
