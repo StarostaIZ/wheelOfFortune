@@ -306,7 +306,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
           );
           player.points = 0;
           this.gameService.points(player.id, player.points).subscribe();
-
           this.gameService.nextPlayer().subscribe();
         } else {
           this.isDivineTour = true;
@@ -435,6 +434,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       player.points += 1000;
       this.infoKeyboard = `Gratulację! Twój wynik to ${player.points}`;
       player.totalPoints += player.points;
+      console.log(player.points)
       this.gameService.points(this.userId, player.points).subscribe();
       document.body
         .querySelector('.info_keyboard')
@@ -484,8 +484,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
     this.roundEnd = false;
-    this.gameService.newWord().subscribe();
-
+    // this.gameService.newWord().subscribe();
     this.gameService.nextPlayer().subscribe();
     document.body
       .querySelector('.info_keyboard')

@@ -83,8 +83,10 @@ export class GameService {
   }
 
   divineWord(guessed, playerId) {
+    console.log(playerId)
+    console.log(guessed)
     const roomID = localStorage.getItem('roomID');
-    const body = { guessed: guessed, playerId: playerId};
+    const body = { playerId: playerId, guessed: guessed };
     return this.http
       .post(`/room/${roomID}/guess`, body, {
         headers: this.header,
