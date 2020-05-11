@@ -24,6 +24,7 @@ security:
             logout:
                 path: /logout
             http_basic: ~
+            stateless: false
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

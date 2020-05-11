@@ -15,6 +15,8 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Guard\AuthenticatorInterface;
+use Symfony\Component\Security\Guard\Token\GuardTokenInterface;
 
 class UserAuthenticator extends AbstractGuardAuthenticator
 {
