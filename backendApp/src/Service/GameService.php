@@ -83,9 +83,11 @@ class GameService
         foreach ($room->getGame()->getPlayers() as $playerInRoom){
             $playerInRoom->setCurrentPoints(0);
         }
+        $this->em->flush();
         if ($player->getPoints()>=$room->getGame()->getMaxPoints()){
             $player->setIsWinner(true);
             $room->getGame()->setIsRunning(false);
+            $this->em->flush();
             return true;
         }
 

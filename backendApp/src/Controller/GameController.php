@@ -126,6 +126,7 @@ class GameController extends AbstractController
         if ($guessed){
             $playerId = $content->playerId;
             $isEnd = $this->gameService->finalizeRound($room, $playerId);
+            $this->publisherService->updatePoints($room);
             if (!$isEnd) {
 
                 $word = $this->gameService->drawWord();

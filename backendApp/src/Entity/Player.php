@@ -111,7 +111,7 @@ class Player
 
     public function addPointsAfterWin()
     {
-        $this->points+=$this->currentPoints;
+        $this->points+=$this->currentPoints+1000;
     }
 
     public function getGame(): ?Game
