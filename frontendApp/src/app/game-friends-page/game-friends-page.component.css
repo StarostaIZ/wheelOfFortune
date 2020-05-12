@@ -129,6 +129,7 @@
   cursor: pointer;
   margin: 0 auto;
   z-index: 2;
+  text-align: center;
 }
 
 #wheel:focus,
@@ -143,6 +144,10 @@
   grid-template-columns: repeat(7, 30px);
   grid-template-rows: repeat(5, 20px);
   grid-gap: 30px 30px;
+}
+
+.game__board__keyboard__btn{
+  display: flex;
 }
 
 #letter--notcliked {
@@ -204,7 +209,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(8, 8, 21, 0.8);
-  z-index: 10;
+  z-index: 10000;
   position: absolute;
   top: 0;
   left: 0;
@@ -216,11 +221,12 @@
 
 .game_results__inner{
   position: relative;
-  top: 2%;
+  top: 0;
   left: 0;
+  transform: translateY(10px);
   margin: 0 auto;
-  width: 60%;
-  height: 70%;
+  width: 50%;
+  height: 60%;
   background-color: #f1eaea;
   color: black;
   border-radius: 10px;
@@ -228,7 +234,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 11;
+  z-index: 110000;
   font-weight: bolder;
   font-size: 1.1em;
 }
@@ -257,6 +263,10 @@
     padding: 10px 20px;
     font-size: 0.9em;
     min-width: 100px;
+  }
+
+  .game__board__keyboard__btn{
+    flex-direction: column;
   }
 }
 

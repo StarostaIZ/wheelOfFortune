@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SseService } from './sse-service.service';
-import {loadConfigurationFromPath} from "tslint/lib/configuration";
+import { loadConfigurationFromPath } from 'tslint/lib/configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -74,7 +74,7 @@ export class GameService {
   points(playerId, points) {
     const roomID = localStorage.getItem('roomID');
     const body = { playerId: playerId, points: points };
-    console.log(points)
+    console.log(points);
     return this.http
       .post(`/room/${roomID}/points`, body, {
         headers: this.header,
@@ -83,24 +83,37 @@ export class GameService {
   }
 
   divineWord(guessed, playerId) {
-    console.log(playerId)
-    console.log(guessed)
+    console.log(playerId);
+    console.log(guessed);
     const roomID = localStorage.getItem('roomID');
-    const body = { playerId: playerId, guessed: guessed };
-    return this.http
-      .post(`/room/${roomID}/guess`, body, {
-        headers: this.header,
-      })
-      .pipe();
+    if (guessed) {
+      const body = { guessed: guessed, playerId: playerId };
+      return this.http
+        .post(`/room/${roomID}/guess`, body, {
+          headers: this.header,
+        })
+        .pipe();
+    } else {
+      const body = { guessed: guessed};
+      return this.http
+        .post(`/room/${roomID}/guess`, body, {
+          headers: this.header,
+        })
+        .pipe();
+    }
   }
 
   nextPlayer() {
-    console.log('kolejny gracz')
+    console.log('kolejny gracz');
     const roomID = localStorage.getItem('roomID');
     return this.http
-      .post(`/room/${roomID}/nextPlayer`, {}, {
-        headers: this.header,
-      })
+      .post(
+        `/room/${roomID}/nextPlayer`,
+        {},
+        {
+          headers: this.header,
+        }
+      )
       .pipe();
   }
 

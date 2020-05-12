@@ -16,10 +16,13 @@ export class LoadingSpinnerGameComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   startGame() {
-    this.messageEvent.emit(this.maxPoints);
+    if (this.maxPoints < 2000 || this.maxPoints > 1000000) {
+      const error = document.querySelector('.menu__error') as HTMLElement;;
+      error.style.display = 'block'
+      error.textContent = 'Podaj wartość z zakresu 2000 - 1000000';
+    } else this.messageEvent.emit(this.maxPoints);
   }
 }
