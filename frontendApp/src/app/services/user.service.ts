@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +9,12 @@ export class UserService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
   });
+  private API_URL: string = environment.API_URL;
   constructor(private http: HttpClient) {}
 
   getUser() {
     return this.http
-      .get('http://localhost:8000/getUser', { headers: this.header })
+      .get(`${this.API_URL}/getUser`, { headers: this.header })
       .pipe();
   }
 
@@ -21,7 +23,7 @@ export class UserService {
       'Content-Type': 'application/json',
     });
     return this.http
-      .put('http://localhost:8000/updateUser', user, { headers: this.header })
+      .put(`${this.API_URL}/updateUser`, user, { headers: this.header })
       .pipe();
   }
 }
