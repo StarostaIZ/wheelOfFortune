@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -23,18 +24,23 @@ class UserAuthenticator extends AbstractGuardAuthenticator
     private $em;
     private $urlGenerator;
     private $passwordEncoder;
+    private $security;
 
     private const LOGIN_ROUTE = "user_login";
 
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, UserPasswordEncoderInterface $passwordEncoder, Security $security)
     {
         $this->em = $em;
         $this->urlGenerator = $urlGenerator;
         $this->passwordEncoder = $passwordEncoder;
+        $this->security = $security;
     }
 
     public function supports(Request $request)
     {
+        if ($this->security->getUser()){
+            return false;
+        }
         return self::LOGIN_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
