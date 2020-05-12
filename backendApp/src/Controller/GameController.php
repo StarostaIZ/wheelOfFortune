@@ -122,13 +122,12 @@ class GameController extends AbstractController
         $content = json_decode($request->getContent());
         $room = $this->getRoom($id);
         $guessed = $content->guessed;
-        $this->publisherService->isWordGuessed($room, $guessed);
         if ($guessed){
             $playerId = $content->playerId;
             $isEnd = $this->gameService->finalizeRound($room, $playerId);
-            $this->publisherService->updatePoints($room);
             if (!$isEnd) {
-
+                $this->publisherService->isWordGuessed($room, $guessed, true);
+                $this->publisherService->updatePoints($room);
                 $word = $this->gameService->drawWord();
                 $room->getGame()->setWord($word);
                 $this->getDoctrine()->getManager()->flush();
@@ -138,6 +137,7 @@ class GameController extends AbstractController
 
 
         }
+        $this->publisherService->isWordGuessed($room, $guessed);
         return new MyJsonResponse(true);
     }
 
