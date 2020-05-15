@@ -1,0 +1,131 @@
+.menu {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu__title {
+  font-weight: bold;
+  font-size: 1.4em;
+}
+
+.menu__subtitle {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.menu__select{
+  display: flex;
+  justify-content: space-around;
+  background-color: #1CBFBA;
+  margin-bottom: 20px;
+}
+
+.menu__select__item{
+  padding: 15px 30px;
+  flex: 1;
+  min-width: 180px;
+  text-align: center;
+  border-left: 1px grey solid;
+  cursor: pointer;
+  transition: background-color .3s ease-in-out;
+}
+
+.menu__select__item:hover{
+  background-color: #17928f;
+}
+
+.menu__select__item:first-child{
+  border-left: none;
+}
+
+.menu_admin__list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #000;
+  padding: 0 30px;
+  width: 60%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
+  font-size: 0.8em;
+  margin: 5px 0;
+  min-height: 50px;
+}
+
+.menu_admin__list__btn {
+  border: none;
+  background: none;
+  font-weight: bold;
+  font-size: 1.4em;
+  color: red;
+  cursor: pointer;
+}
+
+.menu_admin__buttons{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.menu_admin__request_btn{
+  border: none;
+  background-color: #1fbf27;
+  color: white;
+  padding: 2px 3px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.menu_admin__request_btn--reject{
+  margin-right: 5px;
+  background-color: red;
+}
+
+.menu_admin__name{
+  margin: 0;
+  padding: 0;
+}
+
+.menu__input{
+  border:none;
+  border-radius: 30px;
+  background-color: #fff;
+  color: #000;
+  padding: 16px 14px;
+  min-width: 400px;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
+  font-size: .8em;
+}
+
+.menu__error{
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 30px;
+  margin-bottom: 40px;
+  display: none;
+}
+
+.menu_admin_request_box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media only screen and (max-width: 1000px) {
+  .menu_admin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
+}
+

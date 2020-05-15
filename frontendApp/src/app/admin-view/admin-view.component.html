@@ -1,0 +1,63 @@
+<div class="menu">
+  <p class="menu__title">Zarządzaj aplikacją</p>
+  <div class="menu__select">
+    <div class="menu__select__item" id="users" (click)="onChangeType($event)">
+      Użytkownicy
+    </div>
+    <div class="menu__select__item" id="rooms"(click)="onChangeType($event)">
+      Pokoje
+    </div>
+    <div class="menu__select__item" id="words" (click)="onChangeType($event)">
+      Słowa
+    </div>
+  </div>
+  <div *ngIf="type === 'users'; then usersTemp"></div>
+  <div *ngIf="type === 'rooms'; then roomsTemp"></div>
+  <div *ngIf="type === 'words'; then wordsTemp"></div>
+  <ng-template #usersTemp>
+    <p class="menu__subtitle">Użytkownicy</p>
+    <div class="menu_admin__list" *ngFor="let user of users">
+      <p class="menu_admin__list__name">{{ user.name }}</p>
+      <button class="menu_admin__list__btn" (click)="removeUser(user.id)">
+        X
+      </button>
+    </div>
+  </ng-template>
+  <ng-template #roomsTemp>
+    <p class="menu__subtitle">Pokoje</p>
+    <div class="menu_admin__list" *ngFor="let room of rooms">
+      <p class="menu_admin__list__name">{{ room.name }}</p>
+      <button class="menu_admin__list__btn" (click)="removeRoom(room.id)">
+        X
+      </button>
+    </div>
+  </ng-template>
+  <ng-template #wordsTemp>
+    <p class="menu__subtitle">Słowa</p>
+    <button class="button" (click)="showAddWordBox()">
+      Dodaj słowo
+    </button>
+    <form [hidden]="!isAddWordBoxVisible" (ngSubmit)="addWord()">
+      <div class="menu_admin__list_request_box">
+        <input
+          class="menu__input"
+          type="text"
+          [(ngModel)]="newWord"
+          name="newWord"
+          placeholder="Podaj nowe słowo..."
+        />
+        <input value="Dodaj" type="submit" class="button" />
+      </div>
+    </form>
+    <div class="menu_admin__list" *ngFor="let word of words">
+      <p class="menu_admin__list__name">{{ word.name }}</p>
+      <button class="menu_admin__list__btn" (click)="removeWord(word.id)">
+        X
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+<div *ngIf="isLoading === true">
+  <app-loading-spinner></app-loading-spinner>
+</div>

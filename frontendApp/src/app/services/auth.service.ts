@@ -22,6 +22,7 @@ export class AuthService {
 
   storeUserData(username) {
     localStorage.setItem('username', username);
+    // localStorage.setItem('role', role);
     this.username = username;
   }
 
