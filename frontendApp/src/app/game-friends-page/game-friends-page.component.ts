@@ -182,6 +182,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
           this.incomingNewWord(incomingData.word);
         }
         if (incomingData.turn !== undefined) {
+          console.log('A tu chujek przy grze, przyszło info o zmianie ');
           // @ts-ignore
           this.incomingTurn(incomingData.turn);
         }
@@ -306,6 +307,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
           );
           player.points = 0;
           this.gameService.points(player.id, player.points).subscribe();
+          console.log('Następy bo bankrut');
           this.gameService.nextPlayer().subscribe();
         } else {
           this.isDivineTour = true;
@@ -401,6 +403,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
               : `Litera ${divinedLetter} występuje ${counter} raz.`;
         } else {
           this.infoWheel = `Brak litery ${divinedLetter}.`;
+          console.log('Następny bo brak litery');
           this.gameService.nextPlayer().subscribe();
           this.isDivineTour = false;
         }
@@ -434,7 +437,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       player.points += 1000;
       this.infoKeyboard = `Gratulację! Twój wynik to ${player.points}`;
       player.totalPoints += player.points;
-      console.log(player.points)
       this.gameService.points(this.userId, player.points).subscribe();
       document.body
         .querySelector('.info_keyboard')
@@ -484,7 +486,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
     this.roundEnd = false;
-    // this.gameService.newWord().subscribe();
+    this.gameService.newWord().subscribe();
+
     this.gameService.nextPlayer().subscribe();
     document.body
       .querySelector('.info_keyboard')

@@ -95,7 +95,7 @@ export class GameService {
   }
 
   nextPlayer() {
-    console.log('kolejny gracz')
+    console.log('kolejny gracz');
     const roomID = localStorage.getItem('roomID');
     return this.http
       .post(`/room/${roomID}/nextPlayer`, {}, {

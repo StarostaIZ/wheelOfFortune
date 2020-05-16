@@ -86,7 +86,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word;
-      console.log(this.password)
+      console.log(this.password);
       for (const letter of this.password) {
         this.entry.push({ value: letter, visible: false });
       }
@@ -171,7 +171,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
   }
 
   divine(event) {
-    if (this.gameEnd) return;
+    if (this.gameEnd) { return; }
     const divinedLetter = event.target.textContent.trim();
     if (this.divinePasswordTour) {
       const empty_letter = this.entry.find(letter => {
