@@ -30,6 +30,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
+        if(empty($request->headers->has('X-AUTH-TOKEN'))){
+            return false;
+        }
         return $request->headers->has('X-AUTH-TOKEN');
     }
 

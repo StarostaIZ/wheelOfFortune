@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Utils\Response\MyJsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -80,6 +81,7 @@ class UserAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+//        $newToken = $this->jwtTokenGenerator->createAuthenticatedToken()
         return new JsonResponse(true);
     }
 

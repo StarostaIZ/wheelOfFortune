@@ -81,10 +81,8 @@ class User implements UserInterface
      */
     private $isRoomAdmin = false;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
-     */
-    private $apiToken;
+
+
 
     public function __construct()
     {
@@ -322,18 +320,6 @@ class User implements UserInterface
     public function setIsRoomAdmin(bool $isRoomAdmin): self
     {
         $this->isRoomAdmin = $isRoomAdmin;
-
-        return $this;
-    }
-
-    public function getApiToken(): ?string
-    {
-        return $this->apiToken;
-    }
-
-    public function setApiToken(?string $apiToken): self
-    {
-        $this->apiToken = $apiToken;
 
         return $this;
     }
