@@ -150,8 +150,8 @@ class AdminController extends AbstractController
      */
     public function removeRoom($id){
         $room = $this->em->getRepository(Room::class)->find($id);
-        $this->removeRoom($room);
         $this->em->remove($room);
+        $this->em->flush();
         return new MyJsonResponse(true);
     }
 
@@ -162,8 +162,8 @@ class AdminController extends AbstractController
      */
     public function removeWord($id){
         $word = $this->em->getRepository(Word::class)->find($id);
-        $this->removeRoom($word);
         $this->em->remove($word);
+        $this->em->flush();
         return new MyJsonResponse(true);
     }
 
@@ -174,8 +174,8 @@ class AdminController extends AbstractController
      */
     public function removeCategory($id){
         $category = $this->em->getRepository(Category::class)->find($id);
-        $this->removeRoom($category);
         $this->em->remove($category);
+        $this->em->flush();
         return new MyJsonResponse(true);
     }
 
