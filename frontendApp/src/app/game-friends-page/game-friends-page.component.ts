@@ -53,7 +53,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     { value: 'Ź', clicked: false },
     { value: 'Ż', clicked: false },
   ];
-  alphabet = this.ALPHABET;
+  deg = 0;
+  alphabet = JSON.parse(JSON.stringify(this.ALPHABET));
   PRIZES = [
     '2500',
     '800',
@@ -90,6 +91,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   maxGamePoints = 0;
   turnPlayerName = '';
   playersResults = [];
+  letterBoxes = null;
 
   constructor(
     private gameService: GameService,
@@ -119,6 +121,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.wheel = document.querySelector('#wheel');
+    this.letterBoxes = document.body.querySelectorAll('.entry_box');
   }
 
   initWebSocketRoom() {
@@ -159,32 +162,24 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       .subscribe(data => {
         // @ts-ignore
         const incomingData = JSON.parse(data.data);
-        // @ts-ignore
-        if (incomingData.angle !== undefined) {
-          // @ts-ignore
-          this.incomingRotate(incomingData.angle);
-        }
-        // @ts-ignore
-        if (incomingData.letter !== undefined) {
-          // @ts-ignore
-          this.incomingLetter(incomingData.letter);
-        }
-        if (incomingData.guessed !== undefined) {
-          // @ts-ignore
-          this.incomingGuess(incomingData.guessed);
-        }
+        console.log(incomingData)
         if (incomingData.points !== undefined) {
-          // @ts-ignore
           this.incomingPlayersListWithPoints(incomingData.points);
         }
-        if (incomingData.word !== undefined) {
-          // @ts-ignore
-          this.incomingNewWord(incomingData.word);
+        if (incomingData.angle !== undefined) {
+          this.incomingRotate(incomingData.angle);
+        }
+        if (incomingData.letter !== undefined) {
+          this.incomingLetter(incomingData.letter);
         }
         if (incomingData.turn !== undefined) {
-          console.log('A tu chujek przy grze, przyszło info o zmianie ');
-          // @ts-ignore
           this.incomingTurn(incomingData.turn);
+        }
+        if (incomingData.guessed !== undefined) {
+          this.incomingGuess(incomingData.guessed);
+        }
+        if (incomingData.word !== undefined) {
+          this.incomingNewWord(incomingData.word);
         }
       });
   }
@@ -195,78 +190,85 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   }
 
   incomingTurn(turn) {
-    console.log('zmiana tury');
     this.turnPlayerName = turn.name;
   }
 
   incomingPlayersListWithPoints(playersList) {
-    console.log(playersList);
     this.players = playersList;
+    this.checkGameEnd()
   }
 
   incomingGuess(isGuessed) {
     if (isGuessed) {
       this.infoWheel = `Hasło odgadnięte!`;
-      const infoWheelLabel = document.body.querySelector('.info_wheel');
-      if (infoWheelLabel !== null)
-        infoWheelLabel.classList.add('info_keyboard--win');
-      this.entry.forEach(letter => (letter.visible = true));
-      this.roundEnd = true;
-      this.checkGameEnd();
+      this.entry.forEach(letter => {
+        letter.visible = true;
+        letter.isShown = true;
+      });
     }
   }
 
   incomingLetter(letter) {
-    const counter = this.countLetterInEntry(letter);
-    this.isLetterAlreadyClicked(letter);
-    if (counter > 0) {
-      this.infoWheel =
-        counter > 1
-          ? `Litera ${letter} występuje ${counter} razy.`
-          : `Litera ${letter} występuje ${counter} raz.`;
-    } else {
-      this.infoWheel = `Brak litery ${letter}.`;
+    if (this.turnPlayerName !== this.userName) {
+      const counter = this.countLetterInEntry(letter);
+      this.isLetterAlreadyClicked(letter);
+      if (counter > 0) {
+        this.infoWheel =
+          counter > 1
+            ? `Litera ${letter} występuje ${counter} razy.`
+            : `Litera ${letter} występuje ${counter} raz.`;
+      } else {
+        this.infoWheel = `Brak litery ${letter}.`;
+      }
     }
   }
 
   incomingWord(category, word) {
-    console.log(word);
     this.category = category;
     this.password = word;
     for (const letter of this.password) {
-      this.entry.push({ value: letter, visible: false });
+      this.entry.push({ value: letter, visible: false, isShown: false });
     }
     this.dividePasswordIntoWords();
   }
 
   incomingRotate(deg) {
-    this.wheelAngle = deg;
-    this.wheel.style.transition =
-      'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
-    this.wheel.addEventListener('transitionend', () => {
-      this.wheel.style.pointerEvents = 'auto';
-      this.wheel.style.transition = 'none';
-      let actualDeg = deg % 360;
-      this.wheelAngle = actualDeg;
-      actualDeg = actualDeg + 15;
-      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
-      if (this.prize === 'BANKRUT') {
-        this.infoWheel = 'BANKRUT';
-      } else {
-        this.infoWheel = 'Kwota: ' + this.prize;
-      }
-    });
+    if (this.turnPlayerName !== this.userName) {
+      this.deg = deg;
+      this.wheelAngle = deg;
+      this.wheel.style.transition =
+        'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
+      this.wheel.addEventListener(
+        'transitionend',
+        this.runWheelAfterIncomingRotateComplete,
+        false
+      );
+    }
   }
+
+  runWheelAfterIncomingRotateComplete = () => {
+    this.wheel.style.pointerEvents = 'auto';
+    this.wheel.style.transition = 'none';
+    let actualDeg = this.deg % 360;
+    this.wheelAngle = actualDeg;
+    actualDeg = actualDeg + 15;
+    this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+    if (this.prize === 'BANKRUT') {
+      this.infoWheel = 'BANKRUT';
+    } else {
+      this.infoWheel = 'Kwota: ' + this.prize;
+    }
+  };
 
   startGame($event) {
     this.waitingForStart = false;
     this.gameService.startGame($event).subscribe(data => {
       // @ts-ignore
-      this.players = data.data.players;
-      // @ts-ignore
-      this.maxGamePoints = data.data.maxPoints;
-      // @ts-ignore
-      const { word, category } = data.data.word;
+      const incomingData = data.data;
+      this.turnPlayerName = incomingData.turn.name;
+      this.players = incomingData.players;
+      this.maxGamePoints = incomingData.maxPoints;
+      const { word, category } = incomingData.word;
       this.incomingWord(category, word);
     });
   }
@@ -286,35 +288,42 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   rotateWheel() {
     if (this.turnPlayerName === this.userName) {
+      this.deg = 720 + Math.floor(Math.random() * 270);
       this.infoKeyboard = 'Wybierz literę';
       this.wheel.style.pointerEvents = 'none';
       this.wheel.style.transition =
         'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
-      const deg = 720 + Math.floor(Math.random() * 270);
-      this.gameService.spin(deg).subscribe();
-      this.wheelAngle = deg;
-      this.wheel.addEventListener('transitionend', () => {
-        this.wheel.style.pointerEvents = 'auto';
-        this.wheel.style.transition = 'none';
-        let actualDeg = deg % 360;
-        this.wheelAngle = deg;
-        actualDeg = actualDeg + 15;
-        this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
-        if (this.prize === 'BANKRUT') {
-          this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
-          const player = this.players.find(
-            player => player.name === this.userName
-          );
-          player.points = 0;
-          this.gameService.points(player.id, player.points).subscribe();
-          console.log('Następy bo bankrut');
-          this.gameService.nextPlayer().subscribe();
-        } else {
-          this.isDivineTour = true;
-        }
-      });
+      this.gameService.spin(this.deg).subscribe();
+      this.wheelAngle = this.deg;
+      this.wheel.addEventListener(
+        'transitionend',
+        this.runWheelAfteraRotateComplete,
+        false
+      );
     }
   }
+
+  runWheelAfteraRotateComplete = () => {
+    if (this.turnPlayerName === this.userName) {
+      this.wheel.style.pointerEvents = 'auto';
+      this.wheel.style.transition = 'none';
+      let actualDeg = this.deg % 360;
+      this.wheelAngle = actualDeg;
+      actualDeg = actualDeg + 15;
+      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+      if (this.prize === 'BANKRUT') {
+        this.infoWheel = 'BANKRUT';
+        const player = this.players.find(
+          player => player.name === this.userName
+        );
+        player.points = 0;
+        this.gameService.points(player.id, player.points).subscribe();
+        this.gameService.nextPlayer().subscribe();
+      } else {
+        this.isDivineTour = true;
+      }
+    }
+  };
 
   isLetterAlreadyClicked(divinedLetter) {
     for (const letter of this.alphabet) {
@@ -329,10 +338,11 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   countLetterInEntry(divinedLetter) {
     let counter = 0;
     const indexes = [];
-    const letterBoxes = document.body.querySelectorAll('.entry_box');
+
     this.entry.forEach((letter, index) => {
       if (letter.value === divinedLetter) {
-        letterBoxes[index].classList.add('entry_letter--active');
+        letter.visible = true;
+        this.letterBoxes[index].classList.add('entry_letter--active');
         indexes.push(index);
         counter++;
       }
@@ -340,10 +350,10 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
     indexes.forEach((value, index) => {
       setTimeout(() => {
-        letterBoxes[value].classList.remove('entry_letter--active');
-        letterBoxes[value].classList.add('flip');
+        this.letterBoxes[value].classList.remove('entry_letter--active');
+        this.letterBoxes[value].classList.add('flip');
         setTimeout(() => {
-          this.entry[value].visible = true;
+          this.entry[value].isShown = true;
         }, 400);
       }, 600 + index * 800);
     });
@@ -370,6 +380,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       if (empty_letter) {
         empty_letter.value = divinedLetter;
         empty_letter.visible = true;
+        empty_letter.isShown = true;
       }
     } else {
       let isVowel = false;
@@ -389,10 +400,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       if (!this.isLetterAlreadyClicked(divinedLetter)) {
         this.gameService.divineLetter(divinedLetter).subscribe();
         const counter = this.countLetterInEntry(divinedLetter);
-
         if (counter > 0) {
           if (!isVowel) {
-            // Dodanie punktów
             player.points += counter * parseInt(this.prize);
             this.gameService.points(player.id, player.points).subscribe();
             this.isDivineTour = false;
@@ -403,14 +412,17 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
               : `Litera ${divinedLetter} występuje ${counter} raz.`;
         } else {
           this.infoWheel = `Brak litery ${divinedLetter}.`;
-          console.log('Następny bo brak litery');
           this.gameService.nextPlayer().subscribe();
           this.isDivineTour = false;
         }
       }
     }
-    if (this.isCompleted()) {
+    if (this.isCompleted() && !this.divinePasswordTour) {
       this.infoWheel = `Gratulację! Twój wynik to ${player.points}`;
+      this.gameService.divineWord(true, player.id).subscribe();
+      this.roundEnd = true;
+      this.checkGameEnd();
+      if(!this.gameEnd) this.newRound();
     }
   }
 
@@ -437,22 +449,21 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       player.points += 1000;
       this.infoKeyboard = `Gratulację! Twój wynik to ${player.points}`;
       player.totalPoints += player.points;
-      this.gameService.points(this.userId, player.points).subscribe();
-      document.body
-        .querySelector('.info_keyboard')
-        .classList.add('info_keyboard--win');
       this.roundEnd = true;
       this.checkGameEnd();
+      if(!this.gameEnd) this.newRound();
     } else {
-      this.infoWheel = `Niestety hasło nie jest prawidłowe. Próbuj dalej.`;
+      this.infoWheel = `Niestety hasło nie jest prawidłowe.`;
+      this.divinePasswordTour = false;
       this.resetGuess();
       this.isDivineTour = false;
     }
-    this.gameService.divineWord(result, player.playerId).subscribe();
+    this.gameService.divineWord(result, player.id).subscribe();
   }
 
   checkGameEnd() {
-    console.log('check');
+    console.log('sprawdzam koniec gry');
+    console.log(this.players);
     if (this.players.some(player => player.totalPoints >= this.maxGamePoints)) {
       this.gameEnd = true;
       this.playersResults = JSON.parse(JSON.stringify(this.players));
@@ -478,19 +489,19 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   newRound() {
     this.entry = [];
-    this.players.forEach(player => (player.points = 0));
-    this.alphabet = this.ALPHABET;
+    this.entryWords = [];
+    this.players.forEach(player => {
+      player.points = 0;
+    });
+    this.alphabet = JSON.parse(JSON.stringify(this.ALPHABET));
     this.divinePasswordTour = false;
-    this.isDivineTour = false;
-    this.infoWheel = 'Zakręć kołem';
-    this.infoKeyboard = 'Wybierz literę';
+    setTimeout(() => {
+      this.isDivineTour = false;
+      this.infoWheel = 'Zakręć kołem';
+      this.infoKeyboard = 'Wybierz literę';
+    }, 3000);
     this.gameEnd = false;
     this.roundEnd = false;
-    this.gameService.newWord().subscribe();
-
     this.gameService.nextPlayer().subscribe();
-    document.body
-      .querySelector('.info_keyboard')
-      .classList.remove('info_keyboard--win');
   }
 }

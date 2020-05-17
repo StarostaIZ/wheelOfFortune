@@ -9,16 +9,16 @@ import { GameComponent } from './game-page/game.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LogInPageComponent } from './log-in-page/log-in-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
-import { LoadingSpinnerComponent} from "./components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
-import { RoomsService} from "./services/rooms.service";
-import { FriendsService} from "./services/friends.service";
+import { RoomsService } from './services/rooms.service';
+import { FriendsService } from './services/friends.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { MyProfilePageComponent } from './my-profile-page/my-profile-page.component';
@@ -29,11 +29,13 @@ import { CreateGamePageComponent } from './create-game-page/create-game-page.com
 import { PlayFriendsPageComponent } from './play-friends-page/play-friends-page.component';
 import { GameFriendsPageComponent } from './game-friends-page/game-friends-page.component';
 import { Page404Component } from './page404/page404.component';
-import {AuthGuardService} from "./services/auth-guard.service";
-import { GameService} from "./services/game.service";
-import {SseService} from "./services/sse-service.service";
+import { AuthGuardService } from './services/auth-guard.service';
+import { GameService } from './services/game.service';
+import { SseService } from './services/sse-service.service';
 import { LoadingSpinnerGameComponent } from './components/loading-spinner-game/loading-spinner-game.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { AdminViewComponent } from './admin-view/admin-view.component';
+import { ManagementService } from './services/management.service';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { ChatComponent } from './components/chat/chat.component';
     LoadingSpinnerComponent,
     LoadingSpinnerGameComponent,
     ChatComponent,
+    AdminViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,9 +65,19 @@ import { ChatComponent } from './components/chat/chat.component';
     HttpClientModule,
     NgxChartsModule,
     BrowserAnimationsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
-  providers: [ValidateService, AuthService, UserService, AuthGuardService, GameService, RoomsService, FriendsService, SseService],
+  providers: [
+    ValidateService,
+    AuthService,
+    UserService,
+    AuthGuardService,
+    GameService,
+    RoomsService,
+    FriendsService,
+    SseService,
+    ManagementService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

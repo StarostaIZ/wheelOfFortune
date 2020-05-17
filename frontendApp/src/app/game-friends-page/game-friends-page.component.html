@@ -14,7 +14,7 @@
             <div class="entry_letter entry_box">
               <div
                 *ngIf="
-                  entry_letter.visible === true;
+                  entry_letter.isShown === true;
                   then visible;
                   else notVisible
                 "
@@ -73,22 +73,19 @@
           </button>
         </ng-template>
         <ng-template #divinePassword>
-          <button class="button" (click)="resetGuess()" [disabled]="gameEnd">
-            Cofnij
-          </button>
-          <button class="button" (click)="saveGuess()" [disabled]="gameEnd">
-            Zapisz
-          </button>
+          <div class="game__board__keyboard__btn">
+            <button class="button" (click)="resetGuess()" [disabled]="gameEnd">
+              Cofnij
+            </button>
+            <button class="button" (click)="saveGuess()" [disabled]="gameEnd">
+              Zapisz
+            </button>
+          </div>
         </ng-template>
       </ng-template>
       <ng-template #wheel>
         <p class="info_wheel">{{ this.infoWheel }}</p>
         <p class="info_wheel_turn">Runda gracza: {{ this.turnPlayerName }}</p>
-        <div *ngIf="roundEnd">
-          <button class="game__labels__btn" (click)="newRound()">
-            Nowe hasło
-          </button>
-        </div>
         <div class="game__board__wheel">
           <div id="arrow_down"></div>
           <button
@@ -105,9 +102,7 @@
         Limit punktów: {{ maxGamePoints }}
       </div>
       <div class="game__board__labels__player" *ngFor="let player of players">
-        <p>
-          {{ player.name }} - {{player.totalPoints}}
-        </p>
+        <p>{{ player.name }} - {{ player.totalPoints }}</p>
         <p>{{ player.points }}</p>
       </div>
       <button class="game__labels__btn" (click)="exitGame()">

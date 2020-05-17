@@ -75,10 +75,10 @@ class PublisherService
 
     }
 
-    public function isWordGuessed(Room $room, $guessed, $end = false)
+    public function isWordGuessed(Room $room, $guessed)
     {
         $topic = self::GAME_TOPIC . $room->getId();
-        $data = ['guessed' => $guessed, 'end' => $end];
+        $data = ['guessed' => $guessed];
         $this->publish($topic, json_encode($data));
 
     }

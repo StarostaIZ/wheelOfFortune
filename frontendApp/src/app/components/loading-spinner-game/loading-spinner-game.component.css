@@ -33,3 +33,12 @@
   font-weight: bolder;
   font-size: .8em;
 }
+
+.menu__error{
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 30px;
+  margin-bottom: 30px;
+  display: none;
+}
