@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ManagementService } from '../services/management.service';
+import { log } from 'util';
+import { ValidateService } from '../services/validate.service';
 
 @Component({
   selector: 'app-admin-view',
@@ -13,49 +15,35 @@ export class AdminViewComponent implements OnInit {
   categories = [];
   newWord: string;
   newCategory: string;
-  newWordCategoryID: number;
+  newWordSelectedCategoryId: number = 0;
   isLoading: boolean = true;
   isAddWordBoxVisible: boolean = false;
+  isAddCategoryBoxVisible: boolean = false;
   type: string = 'users';
 
-  constructor(private managementService: ManagementService) {}
+  constructor(
+    private managementService: ManagementService,
+    private validator: ValidateService
+  ) {}
 
   ngOnInit(): void {
-    this.users = [
-      { id: 1, name: '1' },
-      { id: 2, name: '2' },
-      { id: 3, name: '3' },
-      { id: 4, name: '4' },
-      { id: 5, name: '5' },
-    ];
-    this.rooms = [
-      { id: 1, name: '1' },
-      { id: 2, name: '2' },
-      { id: 3, name: '3' },
-      { id: 4, name: '4' },
-    ];
-    this.words = [
-      { id: 1, name: '1' },
-      { id: 2, name: '2' },
-      { id: 3, name: '3' },
-    ];
+    this.users = [];
+    this.rooms = [];
+    this.words = [];
+    this.categories = [];
 
     this.managementService.getUsers().subscribe(data => {
       // @ts-ignore
-      this.users = data.data;
-      console.log(this.users)
+      this.users = data.data.users;
       this.managementService.getRooms().subscribe(data => {
         // @ts-ignore
-        this.rooms = data.data;
-        console.log(this.rooms)
+        this.rooms = data.data.rooms;
         this.managementService.getWords().subscribe(data => {
           // @ts-ignore
-          this.words = data.data;
-          console.log(this.words)
+          this.words = data.data.words;
           this.managementService.getCategories().subscribe(data => {
             // @ts-ignore
-            this.categories = data.data
-            console.log(this.categories)
+            this.categories = data.data.categories;
             this.isLoading = false;
           });
         });
@@ -63,29 +51,94 @@ export class AdminViewComponent implements OnInit {
     });
   }
 
-  onChangeType($event){
+  onChangeType($event) {
     this.type = $event.target.id;
+    this.isAddWordBoxVisible = false;
+    this.isAddCategoryBoxVisible = false;
+    const menuError: HTMLElement = document.querySelector(
+      '.menu__error'
+    ) as HTMLElement;
+    menuError.style.display = 'none'
   }
 
-  removeUser(userId) {
-    this.managementService.removeRoom(userId).subscribe();
+  getWords() {
+    this.isLoading = true;
+    this.managementService.getWords().subscribe(data => {
+      // @ts-ignore
+      this.words = data.data.words;
+      this.isLoading = false;
+    });
   }
-  removeRoom(roomId) {
-    this.managementService.removeRoom(roomId).subscribe();
+
+  getCategories() {
+    this.isLoading = true;
+    this.managementService.getCategories().subscribe(data => {
+      // @ts-ignore
+      this.categories = data.data.categories;
+      this.isLoading = false;
+    });
   }
-  removeWord(wordId) {
-    this.managementService.removeRoom(wordId).subscribe();
+
+  removeUser(id) {
+    this.managementService.removeUser(id).subscribe();
+    this.users = this.users.filter(user => user.id !== id);
   }
-  removeCategory(categoryId) {
-    this.managementService.removeCategory(categoryId).subscribe();
+  removeRoom(id) {
+    this.managementService.removeRoom(id).subscribe();
+    this.rooms = this.rooms.filter(rooms => rooms.id !== id);
   }
-  addWord () {
-    this.managementService.addWord(this.newWord, this.newWordCategoryID).subscribe();
+  removeWord(id) {
+    this.managementService.removeWord(id).subscribe();
+    this.words = this.words.filter(words => words.wordId !== id);
   }
-  addCategory () {
-    this.managementService.addCategory(this.newCategory).subscribe();
+  removeCategory(id) {
+    this.managementService.removeCategory(id).subscribe();
+    this.categories = this.categories.filter(
+      categories => categories.categoryId !== id
+    );
+  }
+
+  addWord() {
+    const menuError: HTMLElement = document.querySelector(
+      '.menu__error'
+    ) as HTMLElement;
+    const validator = this.validator.validateNewWord(
+      this.newWord,
+      this.newWordSelectedCategoryId,
+      this.words
+    );
+    if (validator.isValid) {
+      console.log('isValid');
+      this.managementService
+        .addWord(this.newWord, this.newWordSelectedCategoryId)
+        .subscribe(() => {
+          this.getWords();
+          menuError.style.display = 'none';
+        });
+    } else {
+      menuError.style.display = 'block';
+      menuError.textContent = validator.msg;
+    }
+  }
+  addCategory() {
+    const menuError: HTMLElement = document.querySelector(
+      '.menu__error'
+    ) as HTMLElement;
+    const validator = this.validator.validateNewCategory(this.newCategory, this.categories);
+    if (validator.isValid) {
+      this.managementService.addCategory(this.newCategory).subscribe(() => {
+        this.getCategories();
+        menuError.style.display = 'none';
+      });
+    } else {
+      menuError.style.display = 'block';
+      menuError.textContent = validator.msg;
+    }
   }
   showAddWordBox() {
     this.isAddWordBoxVisible = !this.isAddWordBoxVisible;
+  }
+  showAddCategoryBox() {
+    this.isAddCategoryBoxVisible = !this.isAddCategoryBoxVisible;
   }
 }

@@ -67,42 +67,74 @@ export class ValidateService {
 
   validateRoom(newRoom) {
     const { name, maxPeople } = newRoom;
-    if (
-      name === undefined ||
-      name.trim().length === 0 ||
-      maxPeople === ''
-    )
+    if (name === undefined || name.trim().length === 0 || maxPeople === '')
       return { isValid: false, msg: 'Podaj nazwę i max liczbę osób' };
     else return { isValid: true, msg: '' };
   }
 
-  validateFriendName(friendName, actualFriends){
-    if (
-      friendName === null ||
-      friendName.trim() === ''
-    ) {
+  validateFriendName(friendName, actualFriends) {
+    if (friendName === null || friendName.trim() === '') {
       actualFriends.forEach(friend => {
-        if(friend.name === friendName){
-          return {isValid: false, msg: 'Masz już tego użytkownika w znajomych'};
+        if (friend.name === friendName) {
+          return {
+            isValid: false,
+            msg: 'Masz już tego użytkownika w znajomych',
+          };
         }
       });
-      return {isValid: false, msg: 'Podaj nazwę użytkownika'};
+      return { isValid: false, msg: 'Podaj nazwę użytkownika' };
     }
     return { isValid: true, msg: '' };
   }
 
   validateRoomPassword(roomPassword, currentRoom) {
     if (currentRoom.password != null) {
-      if (
-        roomPassword === null ||
-        roomPassword.trim() === ''
-      ) {
-        if(currentRoom.password !== roomPassword){
-          return {isValid: false, msg: 'Niepoprawne hasło'};
+      if (roomPassword === null || roomPassword.trim() === '') {
+        if (currentRoom.password !== roomPassword) {
+          return { isValid: false, msg: 'Niepoprawne hasło' };
         }
-        return {isValid: false, msg: 'Podaj hasło'};
+        return { isValid: false, msg: 'Podaj hasło' };
       }
     }
-    return {isValid: true, msg: ''};
+    return { isValid: true, msg: '' };
+  }
+
+  validateNewWord(newWord, categoryId, words) {
+    if (
+      categoryId === 0 ||
+      newWord === undefined ||
+      newWord.trim().length < 3
+    ) {
+      return {
+        isValid: false,
+        msg: 'Podaj poprawną nazwę i wybierz kategorię',
+      }
+    } else{
+      if(words.find(word => word.word === newWord)){
+        return {
+          isValid: false,
+          msg: 'Takie słowo już istnieje',
+        }
+      }
+      else{
+        return { isValid: true, msg: '' };
+      }
+    }
+  }
+
+  validateNewCategory(newCategory, categories) {
+    if (newCategory === undefined || newCategory.trim().length < 3) {
+      return { isValid: false, msg: 'Podaj poprawną nazwę' };
+    } else {
+      if(categories.find(category => category.categoryName === newCategory)){
+        return {
+          isValid: false,
+          msg: 'Takie słowo już istnieje',
+        }
+      }
+      else{
+        return { isValid: true, msg: '' };
+      }
+    }
   }
 }

@@ -40,22 +40,22 @@ export class ManagementService {
 
   removeUser(id) {
     return this.http
-      .post('/admin/removeUser', { id }, { headers: this.header })
+      .delete(`/admin/removeUser/${id}`,  { headers: this.header })
       .pipe();
   }
   removeRoom(id) {
     return this.http
-      .post('/admin/removeRoom', { id }, { headers: this.header })
+      .delete(`/admin/removeRoom/${id}`, { headers: this.header })
       .pipe();
   }
   removeWord(id) {
     return this.http
-      .post('/admin/removeWord', { id }, { headers: this.header })
+      .delete(`/admin/removeWord/${id}`, { headers: this.header })
       .pipe();
   }
   removeCategory(id) {
     return this.http
-      .post('/admin/removeCategory', { id }, { headers: this.header })
+      .delete(`/admin/removeCategory/${id}`, { headers: this.header })
       .pipe();
   }
 }

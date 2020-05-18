@@ -17,28 +17,28 @@
   font-size: 1.1em;
 }
 
-.menu__select{
+.menu__select {
   display: flex;
   justify-content: space-around;
-  background-color: #1CBFBA;
+  background-color: #1cbfba;
   margin-bottom: 20px;
 }
 
-.menu__select__item{
-  padding: 15px 30px;
+.menu__select__item {
+  padding: 15px 0;
   flex: 1;
-  min-width: 180px;
+  min-width: 160px;
   text-align: center;
   border-left: 1px grey solid;
   cursor: pointer;
-  transition: background-color .3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
 }
 
-.menu__select__item:hover{
+.menu__select__item:hover {
   background-color: #17928f;
 }
 
-.menu__select__item:first-child{
+.menu__select__item:first-child {
   border-left: none;
 }
 
@@ -68,12 +68,12 @@
   cursor: pointer;
 }
 
-.menu_admin__buttons{
+.menu_admin__buttons {
   display: flex;
   justify-content: flex-end;
 }
 
-.menu_admin__request_btn{
+.menu_admin__request_btn {
   border: none;
   background-color: #1fbf27;
   color: white;
@@ -82,18 +82,18 @@
   cursor: pointer;
 }
 
-.menu_admin__request_btn--reject{
+.menu_admin__request_btn--reject {
   margin-right: 5px;
   background-color: red;
 }
 
-.menu_admin__name{
+.menu_admin__name {
   margin: 0;
   padding: 0;
 }
 
-.menu__input{
-  border:none;
+.menu__input {
+  border: none;
   border-radius: 30px;
   background-color: #fff;
   color: #000;
@@ -102,30 +102,64 @@
   margin-bottom: 20px;
   font-family: 'Montserrat', sans-serif;
   font-weight: bolder;
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
-.menu__error{
+.menu__error {
   background-color: red;
   color: white;
   border-radius: 5px;
   padding: 10px 30px;
-  margin-bottom: 40px;
   display: none;
 }
 
-.menu_admin_request_box{
+.menu_admin_request_box {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.menu_admin__list_request_box__select {
+  width: 200px;
+}
+
+.menu_admin__list_request_box__select {
+  display: block;
+  font-size: 16px;
+  font-family: sans-serif;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+  padding: 0.6em 1.4em 0.5em 0.8em;
+  box-sizing: border-box;
+  margin: 0;
+  border: 1px solid #aaa;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+  border-radius: 0.5em;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #37c1aa;
+  background-repeat: no-repeat, repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.65em auto, 100%;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.colourName {
+  color: #1cbfba;
+}
+
 @media only screen and (max-width: 1000px) {
-  .menu_admin{
+  .menu_admin {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
   }
 }
-
