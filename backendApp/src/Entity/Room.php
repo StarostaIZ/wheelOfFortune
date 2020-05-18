@@ -35,7 +35,7 @@ class Room
     private $maxPeople;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Game", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Game")
      * @ORM\JoinColumn(nullable=true)
      */
     private $game;

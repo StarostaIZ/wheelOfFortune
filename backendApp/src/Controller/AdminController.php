@@ -154,6 +154,7 @@ class AdminController extends AbstractController
         foreach ($room->getUsersInRoom() as $user){
             $user->setRoom(null);
         }
+
         $this->em->flush();
         $this->em->remove($room);
         $this->em->flush();
