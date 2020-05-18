@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
-import {ValidateService} from "../services/validate.service";
-import {Router} from "@angular/router";
+import { ValidateService } from '../services/validate.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-profile-page',
@@ -22,7 +22,11 @@ export class MyProfilePageComponent implements OnInit {
   disableEmail = true;
   disablePassword = true;
 
-  constructor(private userService: UserService, private validateService: ValidateService, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private validateService: ValidateService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.userService.getUser().subscribe(data => {
@@ -45,14 +49,17 @@ export class MyProfilePageComponent implements OnInit {
   onUserSubmit() {
     const userUpdateData = {
       email: this.email,
-      passwordOld: this.passwordOld,
-      passwordNew: this.passwordNew,
+      passwordOld: this.passwordOld === undefined ? null : this.passwordOld,
+      passwordNew: this.passwordNew === undefined ? null : this.passwordNew,
     };
     const errorLabel: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
 
-    const validateResponse = this.validateService.validateUserUpdate(userUpdateData, this.passwordNewRepeat);
+    const validateResponse = this.validateService.validateUserUpdate(
+      userUpdateData,
+      this.passwordNewRepeat
+    );
 
     if (validateResponse.isValid) {
       this.userService.updateUser(userUpdateData).subscribe(data => {

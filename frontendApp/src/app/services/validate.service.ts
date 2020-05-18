@@ -43,15 +43,15 @@ export class ValidateService {
       return { isValid: false, msg: 'Podaj poprawny adres email' };
     }
     if (
-      (user.passwordOld === undefined && user.passwordNew !== undefined) ||
-      (user.passwordOld !== undefined && user.passwordNew === undefined)
+      (user.passwordOld === null && user.passwordNew !== null) ||
+      (user.passwordOld !== null && user.passwordNew === null)
     ) {
       return {
         isValid: false,
         msg: 'Podaj stare i nowe hasło aby zmienić hasło',
       };
     }
-    if (user.passwordNew !== undefined) {
+    if (user.passwordNew !== null) {
       if (user.passwordNew.length < 5) {
         return {
           isValid: false,

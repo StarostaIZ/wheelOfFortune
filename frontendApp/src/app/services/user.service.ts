@@ -17,6 +17,7 @@ export class UserService {
   }
 
   updateUser(user) {
+    console.log(user)
     return this.http
       .put('/updateUser', user, { headers: this.header })
       .pipe();
