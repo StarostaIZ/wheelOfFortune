@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../services/validate.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-register-page',
@@ -20,6 +21,7 @@ export class RegisterPageComponent implements OnInit {
 
   constructor(
     private validateService: ValidateService,
+    private userService: UserService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -35,14 +37,21 @@ export class RegisterPageComponent implements OnInit {
       '.menu__error'
     ) as HTMLElement;
 
-    const validateResponse = this.validateService.validateRegister(newUser, this.passwordRepeat);
+    const validateResponse = this.validateService.validateRegister(
+      newUser,
+      this.passwordRepeat
+    );
 
     if (validateResponse.isValid) {
       this.authService.register(newUser).subscribe(data => {
         // @ts-ignore
         if (data.data === true) {
-          this.authService.storeUserData(this.username);
-          this.router.navigate(['/']);
+          this.userService.getUser().subscribe(data => {
+            // @ts-ignore
+            const roles = data.data.roles;
+            this.authService.storeUserData(this.username, roles);
+            this.router.navigate(['/']);
+          });
         } else {
           errorLabel.style.display = 'block';
           // @ts-ignore

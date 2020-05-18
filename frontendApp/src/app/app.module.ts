@@ -36,6 +36,7 @@ import { LoadingSpinnerGameComponent } from './components/loading-spinner-game/l
 import { ChatComponent } from './components/chat/chat.component';
 import { AdminViewComponent } from './admin-view/admin-view.component';
 import { ManagementService } from './services/management.service';
+import { RoleGuardService } from './services/role-guard.service';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { ManagementService } from './services/management.service';
     FriendsService,
     SseService,
     ManagementService,
+    RoleGuardService,
   ],
   bootstrap: [AppComponent],
 })

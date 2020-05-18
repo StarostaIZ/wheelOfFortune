@@ -20,9 +20,9 @@ export class AuthService {
     return this.http.post('/login', user, { headers: this.header }).pipe();
   }
 
-  storeUserData(username) {
+  storeUserData(username, roles) {
     localStorage.setItem('username', username);
-    // localStorage.setItem('role', role);
+    localStorage.setItem('roles', roles);
     this.username = username;
   }
 

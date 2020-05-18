@@ -10,8 +10,11 @@ export class AdminViewComponent implements OnInit {
   users = [];
   rooms = [];
   words = [];
+  categories = [];
   newWord: string;
-  isLoading: boolean = false;
+  newCategory: string;
+  newWordCategoryID: number;
+  isLoading: boolean = true;
   isAddWordBoxVisible: boolean = false;
   type: string = 'users';
 
@@ -36,19 +39,28 @@ export class AdminViewComponent implements OnInit {
       { id: 2, name: '2' },
       { id: 3, name: '3' },
     ];
-    // this.managementService.getUsers().subscribe(data => {
-    //   // @ts-ignore
-    //   this.users = data.data;
-    //   this.managementService.getRooms().subscribe(data => {
-    //     // @ts-ignore
-    //     this.rooms = data.data;
-    //     this.managementService.getWords().subscribe(data => {
-    //       // @ts-ignore
-    //       this.words = data.data;
-    //       this.isLoading = false;
-    //     });
-    //   });
-    // });
+
+    this.managementService.getUsers().subscribe(data => {
+      // @ts-ignore
+      this.users = data.data;
+      console.log(this.users)
+      this.managementService.getRooms().subscribe(data => {
+        // @ts-ignore
+        this.rooms = data.data;
+        console.log(this.rooms)
+        this.managementService.getWords().subscribe(data => {
+          // @ts-ignore
+          this.words = data.data;
+          console.log(this.words)
+          this.managementService.getCategories().subscribe(data => {
+            // @ts-ignore
+            this.categories = data.data
+            console.log(this.categories)
+            this.isLoading = false;
+          });
+        });
+      });
+    });
   }
 
   onChangeType($event){
@@ -64,8 +76,14 @@ export class AdminViewComponent implements OnInit {
   removeWord(wordId) {
     this.managementService.removeRoom(wordId).subscribe();
   }
-  addWord() {
-    this.managementService.addWord(this.newWord).subscribe();
+  removeCategory(categoryId) {
+    this.managementService.removeCategory(categoryId).subscribe();
+  }
+  addWord () {
+    this.managementService.addWord(this.newWord, this.newWordCategoryID).subscribe();
+  }
+  addCategory () {
+    this.managementService.addCategory(this.newCategory).subscribe();
   }
   showAddWordBox() {
     this.isAddWordBoxVisible = !this.isAddWordBoxVisible;

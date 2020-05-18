@@ -4,8 +4,15 @@
     <div class="menu__select__item" id="users" (click)="onChangeType($event)">
       Użytkownicy
     </div>
-    <div class="menu__select__item" id="rooms"(click)="onChangeType($event)">
+    <div class="menu__select__item" id="rooms" (click)="onChangeType($event)">
       Pokoje
+    </div>
+    <div
+      class="menu__select__item"
+      id="categories"
+      (click)="onChangeType($event)"
+    >
+      Kategorie
     </div>
     <div class="menu__select__item" id="words" (click)="onChangeType($event)">
       Słowa
@@ -13,6 +20,7 @@
   </div>
   <div *ngIf="type === 'users'; then usersTemp"></div>
   <div *ngIf="type === 'rooms'; then roomsTemp"></div>
+  <div *ngIf="type === 'categories'; then catTemp"></div>
   <div *ngIf="type === 'words'; then wordsTemp"></div>
   <ng-template #usersTemp>
     <p class="menu__subtitle">Użytkownicy</p>
@@ -28,6 +36,30 @@
     <div class="menu_admin__list" *ngFor="let room of rooms">
       <p class="menu_admin__list__name">{{ room.name }}</p>
       <button class="menu_admin__list__btn" (click)="removeRoom(room.id)">
+        X
+      </button>
+    </div>
+  </ng-template>
+  <ng-template #catTemp>
+    <p class="menu__subtitle">Słowa</p>
+    <button class="button" (click)="showAddWordBox()">
+      Dodaj categorię
+    </button>
+    <form [hidden]="!isAddWordBoxVisible" (ngSubmit)="addCategory()">
+      <div class="menu_admin__list_request_box">
+        <input
+          class="menu__input"
+          type="text"
+          [(ngModel)]="newCategory"
+          name="newCategory"
+          placeholder="Podaj nową kategorię..."
+        />
+        <input value="Dodaj" type="submit" class="button" />
+      </div>
+    </form>
+    <div class="menu_admin__list" *ngFor="let cat of categories">
+      <p class="menu_admin__list__name">{{ cat.name }}</p>
+      <button class="menu_admin__list__btn" (click)="removeWord(cat.id)">
         X
       </button>
     </div>

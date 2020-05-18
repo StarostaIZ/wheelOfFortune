@@ -13,6 +13,7 @@ import { Page404Component } from './page404/page404.component';
 import { AdminViewComponent } from './admin-view/admin-view.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuardService } from './services/auth-guard.service';
+import { RoleGuardService } from './services/role-guard.service';
 
 const appRoutes: Routes = [
   { path: 'game', component: GameComponent },
@@ -51,7 +52,7 @@ const appRoutes: Routes = [
   {
     path: 'management',
     component: AdminViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [RoleGuardService],
   },
   { path: '', component: MainPageComponent },
   { path: '**', component: Page404Component },
