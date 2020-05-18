@@ -54,16 +54,18 @@ class UserService
     /**
      * @param $email
      * @param $password
+     * @param $oldPassword
      */
-    public function updateCurrentUser($email, $password){
+    public function updateCurrentUser($email, $password, $oldPassword){
         /** @var User $user */
         $user = $this->security->getUser();
 
         if(!empty($email)){
             $user->setEmail($email);
         }
-        if (!empty($password)){
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+        if (!empty($password) && !empty($oldPassword)){
+            if ($this->passwordEncoder->isPasswordValid($user, $oldPassword))
+                $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
         }
     }
 

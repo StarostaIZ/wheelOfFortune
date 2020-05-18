@@ -149,7 +149,12 @@ class AdminController extends AbstractController
      * @return MyJsonResponse
      */
     public function removeRoom($id){
+        /** @var Room $room */
         $room = $this->em->getRepository(Room::class)->find($id);
+        foreach ($room->getUsersInRoom() as $user){
+            $user->setRoom(null);
+        }
+        $this->em->flush();
         $this->em->remove($room);
         $this->em->flush();
         return new MyJsonResponse(true);
