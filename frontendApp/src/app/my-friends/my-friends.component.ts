@@ -12,14 +12,8 @@ import { FriendsService } from '../services/friends.service';
   ],
 })
 export class MyFriendsComponent implements OnInit {
-  friends = [
-    // { name: 'ja', id: 1 },
-    // { name: 'ty', id: 2 },
-  ];
-  friendRequests = [
-    // { senderName: 'ja', id: 1 },
-    // { senderName: 'ty', id: 2 },
-  ];
+  friends = [];
+  friendRequests = [];
   isSendFriendRequestBoxVisible = false;
   friendName = null;
   isLoading = true;
@@ -33,7 +27,7 @@ export class MyFriendsComponent implements OnInit {
     this.getLists();
   }
 
-  getLists(){
+  getLists() {
     this.friendsService.getFriends().subscribe(data => {
       // @ts-ignore
       this.friends = data.data;
@@ -43,29 +37,29 @@ export class MyFriendsComponent implements OnInit {
       this.friendRequests = data.data;
       this.isLoading = false;
     });
-
   }
 
   removeFriend(id) {
     this.isLoading = true;
     console.log(id);
-    this.friendsService.deleteFriend({ friendId: id }).subscribe(data => {
-    });
+    this.friendsService.deleteFriend({ friendId: id }).subscribe(data => {});
     this.getLists();
   }
 
   acceptFriendRequest(id) {
     this.isLoading = true;
     console.log(id);
-    this.friendsService.acceptFriendRequest({ friendRequestId: id }).subscribe(data => {
-    });
+    this.friendsService
+      .acceptFriendRequest({ friendRequestId: id })
+      .subscribe(data => {});
     this.getLists();
   }
 
   rejectFriendRequest(id) {
-    console.log(id)
-    this.friendsService.rejectFriendRequest({ friendRequestId: id }).subscribe(data => {
-    });
+    console.log(id);
+    this.friendsService
+      .rejectFriendRequest({ friendRequestId: id })
+      .subscribe(data => {});
     this.getLists();
   }
 
@@ -74,25 +68,29 @@ export class MyFriendsComponent implements OnInit {
     const errorLabel: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
-    const validator = this.validateService.validateFriendName(this.friendName, this.friends);
-    console.log(validator)
+    const validator = this.validateService.validateFriendName(
+      this.friendName,
+      this.friends
+    );
+    console.log(validator);
     if (validator.isValid) {
       errorLabel.style.display = 'none';
-      this.friendsService.sendFriendRequest({friendName: this.friendName}).subscribe(data => {
-        // @ts-ignore
-        if (data.data === true) {
-          errorLabel.style.display = 'block';
+      this.friendsService
+        .sendFriendRequest({ friendName: this.friendName })
+        .subscribe(data => {
           // @ts-ignore
-          errorLabel.style.backgroundColor = '#1fbf27';
-          errorLabel.textContent = 'Wysłano zaproszenie';
-        } else {
-          errorLabel.style.backgroundColor = 'red';
-          // @ts-ignore
-          errorLabel.textContent = data.error;
-        }
-      });
-    }
-    else{
+          if (data.data === true) {
+            errorLabel.style.display = 'block';
+            // @ts-ignore
+            errorLabel.style.backgroundColor = '#1fbf27';
+            errorLabel.textContent = 'Wysłano zaproszenie';
+          } else {
+            errorLabel.style.backgroundColor = 'red';
+            // @ts-ignore
+            errorLabel.textContent = data.error;
+          }
+        });
+    } else {
       errorLabel.style.display = 'block';
       errorLabel.style.backgroundColor = 'red';
       errorLabel.textContent = validator.msg;

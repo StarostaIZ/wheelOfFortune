@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../services/validate.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-log-in-page',
@@ -18,6 +19,7 @@ export class LogInPageComponent implements OnInit {
 
   constructor(
     private validateService: ValidateService,
+    private userService: UserService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -38,15 +40,18 @@ export class LogInPageComponent implements OnInit {
       this.authService.logIn(user).subscribe(data => {
         const result = data.toString();
         if (result === 'true') {
-          this.authService.storeUserData(this.username);
-          this.router.navigate(['/']);
+          this.userService.getUser().subscribe(data => {
+            // @ts-ignore
+            const roles = data.data.roles;
+            this.authService.storeUserData(this.username, roles);
+            this.router.navigate(['/']);
+          });
         } else {
           errorLabel.style.display = 'block';
           errorLabel.textContent = result;
         }
       });
-    }
-    else{
+    } else {
       errorLabel.style.display = 'block';
       errorLabel.textContent = validateResponse.msg;
     }

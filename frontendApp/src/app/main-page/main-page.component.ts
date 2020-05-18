@@ -15,6 +15,8 @@ export class MainPageComponent implements DoCheck {
 
   ngDoCheck(): void {
     this.isLogged = localStorage.getItem('username') !== null;
-    // this.isAdmin = localStorage.getItem('role') === 'admin';
+    if (localStorage.getItem('roles')) {
+      this.isAdmin = localStorage.getItem('roles').includes('ROLE_ADMIN');
+    }
   }
 }
