@@ -36,13 +36,14 @@ export class LogInPageComponent implements OnInit {
 
     if (validateResponse.isValid) {
       this.authService.logIn(user).subscribe(data => {
-        const result = data.toString();
-        if (result === 'true') {
-          this.authService.storeUserData(this.username);
+        // @ts-ignore
+        const token = data.token;
+        if (token) {
+          this.authService.storeUserData(this.username, token);
           this.router.navigate(['/']);
         } else {
           errorLabel.style.display = 'block';
-          errorLabel.textContent = result;
+          errorLabel.textContent = 'Nieprawidłowe dane';
         }
       });
     }

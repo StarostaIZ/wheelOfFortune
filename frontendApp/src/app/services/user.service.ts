@@ -8,7 +8,9 @@ import { environment } from '../../environments/environment';
 export class UserService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
   });
+
   private API_URL: string = environment.API_URL;
   constructor(private http: HttpClient) {}
 
