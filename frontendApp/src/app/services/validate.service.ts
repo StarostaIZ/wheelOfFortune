@@ -108,15 +108,16 @@ export class ValidateService {
       return {
         isValid: false,
         msg: 'Podaj poprawną nazwę i wybierz kategorię',
-      }
-    } else{
-      if(words.find(word => word.word === newWord)){
+      };
+    } else {
+      if (
+        words.find(word => word.word.toUpperCase() === newWord.toUpperCase())
+      ) {
         return {
           isValid: false,
           msg: 'Takie słowo już istnieje',
-        }
-      }
-      else{
+        };
+      } else {
         return { isValid: true, msg: '' };
       }
     }
@@ -126,13 +127,17 @@ export class ValidateService {
     if (newCategory === undefined || newCategory.trim().length < 3) {
       return { isValid: false, msg: 'Podaj poprawną nazwę' };
     } else {
-      if(categories.find(category => category.categoryName === newCategory)){
+      if (
+        categories.find(
+          category =>
+            category.categoryName.toUpperCase() === newCategory.toUpperCase()
+        )
+      ) {
         return {
           isValid: false,
-          msg: 'Takie słowo już istnieje',
-        }
-      }
-      else{
+          msg: 'Taka kategoria już istnieje',
+        };
+      } else {
         return { isValid: true, msg: '' };
       }
     }

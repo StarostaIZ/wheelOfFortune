@@ -19,7 +19,9 @@ export class AdminViewComponent implements OnInit {
   isLoading: boolean = true;
   isAddWordBoxVisible: boolean = false;
   isAddCategoryBoxVisible: boolean = false;
+  isConfirmBoxVisible: boolean = false;
   type: string = 'users';
+  deleteElementID: number = 0;
 
   constructor(
     private managementService: ManagementService,
@@ -55,10 +57,33 @@ export class AdminViewComponent implements OnInit {
     this.type = $event.target.id;
     this.isAddWordBoxVisible = false;
     this.isAddCategoryBoxVisible = false;
+    this.isConfirmBoxVisible = false;
+    this.clearErrorLabel();
+  }
+
+  clearErrorLabel() {
     const menuError: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
-    menuError.style.display = 'none'
+    menuError.style.display = 'none';
+  }
+
+  getPositiveLabel(msg) {
+    const menuError: HTMLElement = document.querySelector(
+      '.menu__error'
+    ) as HTMLElement;
+    menuError.style.backgroundColor = 'green';
+    menuError.textContent = msg;
+    menuError.style.display = 'block';
+  }
+
+  getNegativeLabel(msg) {
+    const menuError: HTMLElement = document.querySelector(
+      '.menu__error'
+    ) as HTMLElement;
+    menuError.style.backgroundColor = 'red';
+    menuError.textContent = msg;
+    menuError.style.display = 'block';
   }
 
   getWords() {
@@ -79,23 +104,61 @@ export class AdminViewComponent implements OnInit {
     });
   }
 
-  removeUser(id) {
-    this.managementService.removeUser(id).subscribe();
-    this.users = this.users.filter(user => user.id !== id);
+  removeElement(deleteElementID) {
+    this.isConfirmBoxVisible = true;
+    this.deleteElementID = deleteElementID;
   }
-  removeRoom(id) {
-    this.managementService.removeRoom(id).subscribe();
-    this.rooms = this.rooms.filter(rooms => rooms.id !== id);
+
+  confirmRemoveElement() {
+    switch (this.type) {
+      case 'users':
+        this.removeUser();
+        break;
+      case 'rooms':
+        this.removeRoom();
+        break;
+      case 'words':
+        this.removeWord();
+        break;
+      case 'categories':
+        this.removeCategory();
+        break;
+    }
+    this.isConfirmBoxVisible = false;
   }
-  removeWord(id) {
-    this.managementService.removeWord(id).subscribe();
-    this.words = this.words.filter(words => words.wordId !== id);
+
+  resignRemoveElement(){
+    this.isConfirmBoxVisible = false;
   }
-  removeCategory(id) {
-    this.managementService.removeCategory(id).subscribe();
-    this.categories = this.categories.filter(
-      categories => categories.categoryId !== id
+
+  removeUser() {
+    this.managementService.removeUser(this.deleteElementID).subscribe();
+    this.users = this.users.filter(user => user.id !== this.deleteElementID);
+    this.clearErrorLabel();
+  }
+  removeRoom() {
+    this.managementService.removeRoom(this.deleteElementID).subscribe();
+    this.rooms = this.rooms.filter(rooms => rooms.id !== this.deleteElementID);
+    this.clearErrorLabel();
+  }
+  removeWord() {
+    this.managementService.removeWord(this.deleteElementID).subscribe();
+    this.words = this.words.filter(
+      words => words.wordId !== this.deleteElementID
     );
+    this.clearErrorLabel();
+  }
+  removeCategory() {
+    this.managementService
+      .removeCategory(this.deleteElementID)
+      .subscribe(() => {
+        this.getWords();
+      });
+    this.categories = this.categories.filter(
+      categories => categories.categoryId !== this.deleteElementID
+    );
+    this.clearErrorLabel();
+    this.newWordSelectedCategoryId = 0;
   }
 
   addWord() {
@@ -108,31 +171,31 @@ export class AdminViewComponent implements OnInit {
       this.words
     );
     if (validator.isValid) {
-      console.log('isValid');
       this.managementService
         .addWord(this.newWord, this.newWordSelectedCategoryId)
         .subscribe(() => {
           this.getWords();
-          menuError.style.display = 'none';
+          this.getPositiveLabel('Pomyślnie dodano');
         });
     } else {
-      menuError.style.display = 'block';
-      menuError.textContent = validator.msg;
+      this.getNegativeLabel(validator.msg);
     }
   }
   addCategory() {
     const menuError: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
-    const validator = this.validator.validateNewCategory(this.newCategory, this.categories);
+    const validator = this.validator.validateNewCategory(
+      this.newCategory,
+      this.categories
+    );
     if (validator.isValid) {
       this.managementService.addCategory(this.newCategory).subscribe(() => {
         this.getCategories();
-        menuError.style.display = 'none';
+        this.getPositiveLabel('Pomyślnie dodano');
       });
     } else {
-      menuError.style.display = 'block';
-      menuError.textContent = validator.msg;
+      this.getNegativeLabel(validator.msg);
     }
   }
   showAddWordBox() {

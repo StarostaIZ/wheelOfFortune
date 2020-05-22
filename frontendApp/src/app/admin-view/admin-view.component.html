@@ -27,7 +27,7 @@
     <p class="menu__subtitle">Użytkownicy</p>
     <div class="menu_admin__list" *ngFor="let user of users">
       <p class="menu_admin__list__name">{{ user.username }}</p>
-      <button class="menu_admin__list__btn" (click)="removeUser(user.id)">
+      <button class="menu_admin__list__btn" (click)="removeElement(user.id)">
         X
       </button>
     </div>
@@ -36,7 +36,7 @@
     <p class="menu__subtitle">Pokoje</p>
     <div class="menu_admin__list" *ngFor="let room of rooms">
       <p class="menu_admin__list__name">{{ room.name }}</p>
-      <button class="menu_admin__list__btn" (click)="removeRoom(room.id)">
+      <button class="menu_admin__list__btn" (click)="removeElement(room.id)">
         X
       </button>
     </div>
@@ -66,7 +66,7 @@
       <p class="menu_admin__list__name">{{ category.categoryName }}</p>
       <button
         class="menu_admin__list__btn"
-        (click)="removeCategory(category.categoryId)"
+        (click)="removeElement(category.categoryId)"
       >
         X
       </button>
@@ -90,7 +90,11 @@
           name="newWord"
           placeholder="Podaj nowe słowo..."
         />
-        <select class="menu_admin__list_request_box__select" name="selectCategory" [(ngModel)]="newWordSelectedCategoryId">
+        <select
+          class="menu_admin__list_request_box__select"
+          name="selectCategory"
+          [(ngModel)]="newWordSelectedCategoryId"
+        >
           <option value="0">Wybierz kategorię</option>
           <option
             name="optionCategory"
@@ -104,14 +108,29 @@
     </form>
     <div class="menu_admin__list" *ngFor="let word of words">
       <div>
-      <p class="menu_admin__list__name colourName">{{ word.category }}</p>
-      <p class="menu_admin__list__name">{{ word.word }}</p>
+        <p class="menu_admin__list__name colourName">{{ word.category }}</p>
+        <p class="menu_admin__list__name">{{ word.word }}</p>
       </div>
-      <button class="menu_admin__list__btn" (click)="removeWord(word.wordId)">
+      <button
+        class="menu_admin__list__btn"
+        (click)="removeElement(word.wordId)"
+      >
         X
       </button>
     </div>
   </ng-template>
+</div>
+
+<div [hidden]="!isConfirmBoxVisible">
+  <div class="confirm_box">
+    <p>
+      Czy na pewno chcesz usunąć element z bazy? Operacja jest nieodwracalna.
+    </p>
+    <div class="confirm_box__buttons">
+      <button class="button" (click)="confirmRemoveElement()">TAK</button>
+      <button class="button" (click)="resignRemoveElement()">NIE</button>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="isLoading === true">

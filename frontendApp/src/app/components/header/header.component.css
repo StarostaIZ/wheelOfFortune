@@ -9,6 +9,7 @@
   justify-content: flex-start;
   align-items: center;
   background-color: #031263;
+  z-index: 12;
 }
 
 .header__logo{

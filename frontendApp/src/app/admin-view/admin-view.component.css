@@ -5,6 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 2%;
 }
 
 .menu__title {
@@ -155,11 +156,43 @@
   color: #1cbfba;
 }
 
+.confirm_box{
+  position: fixed;
+  z-index: 101;
+  width: 60%;
+  height: 30%;
+  top: 60%;
+  left: 50%;
+  padding: 10px 20px;
+  transform: translate(-50%, -100%);
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm_box__buttons{
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+
 @media only screen and (max-width: 1000px) {
   .menu_admin {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+  }
+
+  .confirm_box{
+    width: 80%;
+  }
+
+  .confirm_box__buttons{
+    flex-direction: column;
   }
 }
