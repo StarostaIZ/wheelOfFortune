@@ -38,6 +38,20 @@ import { AdminViewComponent } from './admin-view/admin-view.component';
 import { ManagementService } from './services/management.service';
 import { RoleGuardService } from './services/role-guard.service';
 
+import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
+import {  FacebookLoginProvider } from "angularx-social-login";
+
+let config = new AuthServiceConfig([
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider("1688326587992436")
+  }
+]);
+
+export function provideConfig() {
+  return config;
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,8 +81,13 @@ import { RoleGuardService } from './services/role-guard.service';
     NgxChartsModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
+    SocialLoginModule,
   ],
   providers: [
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
+    },
     ValidateService,
     AuthService,
     UserService,

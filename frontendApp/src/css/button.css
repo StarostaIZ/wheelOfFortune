@@ -3,6 +3,7 @@
   border-radius: 30px;
   background-color: #1CBFBA;
   color: #fff;
+  transition: color .2s ease-in-out, background-color.2s ease-in-out;
   padding: 12px 0px;
   min-width: 200px;
   margin: 10px;
@@ -12,4 +13,9 @@
   cursor: pointer;
   text-align: center;
   z-index: 11;
+}
+
+.button:hover{
+  color: #1CBFBA;
+  background-color: #fff;
 }

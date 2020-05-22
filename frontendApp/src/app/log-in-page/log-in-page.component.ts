@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 
+
 @Component({
   selector: 'app-log-in-page',
   templateUrl: './log-in-page.component.html',
@@ -21,7 +22,8 @@ export class LogInPageComponent implements OnInit {
     private validateService: ValidateService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+
   ) {}
 
   onLoginSubmit() {
@@ -55,6 +57,10 @@ export class LogInPageComponent implements OnInit {
       errorLabel.style.display = 'block';
       errorLabel.textContent = validateResponse.msg;
     }
+  }
+
+  signInWithFB(): void {
+    this.authService.signInWithFB()
   }
 
   ngOnInit(): void {}

@@ -1,8 +1,25 @@
 <img routerLink="/" class="logo" src="../assets/img/logo.png" alt="Logo" />
 
-<form (submit)="onLoginSubmit()" class="menu">
+<div class="menu">
+  <form (submit)="onLoginSubmit()">
     <div class="menu__error"></div>
-    <input class="menu__input" type="text" [(ngModel)]="username" name="username" placeholder="Nazwa użytkownika">
-    <input class="menu__input" type="password" [(ngModel)]="password" name="password" placeholder="Hasło">
-    <input class="button" type='submit' value="Zaloguj się"/>
-</form>
+    <input
+      class="menu__input"
+      type="text"
+      [(ngModel)]="username"
+      name="username"
+      placeholder="Nazwa użytkownika"
+    />
+    <input
+      class="menu__input"
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      placeholder="Hasło"
+    />
+    <input class="button" type="submit" value="Zaloguj się" />
+  </form>
+  <a class="button_fb" (click)="signInWithFB()">
+    <span>Logowanie przez FB</span>
+  </a>
+</div>
