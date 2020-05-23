@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -7,22 +8,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class FriendsService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
   });
+  private API_URL: string = environment.API_URL;
   constructor(private http: HttpClient) {}
 
   getFriends() {
-    return this.http.get('http://localhost:8000/friendList').pipe();
+    return this.http.get(`${this.API_URL}/friendList`).pipe();
   }
 
   addFriend(friend) {
     return this.http
-      .post('http://localhost:8000/addFriend', friend, { headers: this.header })
+      .post(`${this.API_URL}/addFriend`, friend, { headers: this.header })
       .pipe();
   }
 
   deleteFriend(friend) {
     return this.http
-      .post('http://localhost:8000/removeFriend', friend, {
+      .post(`${this.API_URL}/removeFriend`, friend, {
         headers: this.header,
       })
       .pipe();
@@ -30,13 +33,13 @@ export class FriendsService {
 
   getFriendRequest() {
     return this.http
-      .get('http://localhost:8000/friendRequestList', { headers: this.header })
+      .get(`${this.API_URL}/friendRequestList`, { headers: this.header })
       .pipe();
   }
 
   acceptFriendRequest(friend) {
     return this.http
-      .post('http://localhost:8000/acceptFriendRequest', friend, {
+      .post(`${this.API_URL}/acceptFriendRequest`, friend, {
         headers: this.header,
       })
       .pipe();
@@ -44,7 +47,7 @@ export class FriendsService {
 
   sendFriendRequest(friend) {
     return this.http
-      .post('http://localhost:8000/sendFriendRequest', friend, {
+      .post(`${this.API_URL}/sendFriendRequest`, friend, {
         headers: this.header,
       })
       .pipe();
@@ -52,7 +55,7 @@ export class FriendsService {
 
   rejectFriendRequest(friend) {
     return this.http
-      .post('http://localhost:8000/rejectFriendRequest', friend, {
+      .post(`${this.API_URL}/rejectFriendRequest`, friend, {
         headers: this.header,
       })
       .pipe();

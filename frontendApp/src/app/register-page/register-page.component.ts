@@ -45,17 +45,12 @@ export class RegisterPageComponent implements OnInit {
     if (validateResponse.isValid) {
       this.authService.register(newUser).subscribe(data => {
         // @ts-ignore
-        if (data.data === true) {
-          this.userService.getUser().subscribe(data => {
-            // @ts-ignore
-            const roles = data.data.roles;
-            this.authService.storeUserData(this.username, roles);
-            this.router.navigate(['/']);
-          });
+        const token = data.token;
+        if (token) {
+          this.authService.auth(token);
         } else {
           errorLabel.style.display = 'block';
-          // @ts-ignore
-          errorLabel.textContent = data.error;
+          errorLabel.textContent = 'Nieprawidłowe dane';
         }
       });
     } else {

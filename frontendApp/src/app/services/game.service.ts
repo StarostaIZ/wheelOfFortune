@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SseService } from './sse-service.service';
-import { loadConfigurationFromPath } from 'tslint/lib/configuration';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,9 @@ import { loadConfigurationFromPath } from 'tslint/lib/configuration';
 export class GameService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   });
+  private API_URL: string = environment.API_URL;
 
   constructor(
     private http: HttpClient,
@@ -35,14 +37,16 @@ export class GameService {
   }
 
   drawWord() {
-    return this.http.get('/drawWord', { headers: this.header }).pipe();
+    return this.http
+      .get(`${this.API_URL}/drawWord`, { headers: this.header })
+      .pipe();
   }
 
   startGame(maxPoints) {
     const roomID = localStorage.getItem('roomID');
     return this.http
       .post(
-        `/room/${roomID}/startGame`,
+        `${this.API_URL}/room/${roomID}/startGame`,
         { maxPoints: maxPoints },
         {
           headers: this.header,
@@ -55,7 +59,7 @@ export class GameService {
     const roomID = localStorage.getItem('roomID');
     const body = { angle: angle };
     return this.http
-      .post(`/room/${roomID}/spin`, body, {
+      .post(`${this.API_URL}/room/${roomID}/spin`, body, {
         headers: this.header,
       })
       .pipe();
@@ -65,7 +69,7 @@ export class GameService {
     const roomID = localStorage.getItem('roomID');
     const body = { letter: letter };
     return this.http
-      .post(`/room/${roomID}/letter`, body, {
+      .post(`${this.API_URL}/room/${roomID}/letter`, body, {
         headers: this.header,
       })
       .pipe();
@@ -76,27 +80,25 @@ export class GameService {
     const body = { playerId: playerId, points: points };
     console.log(points);
     return this.http
-      .post(`/room/${roomID}/points`, body, {
+      .post(`${this.API_URL}/room/${roomID}/points`, body, {
         headers: this.header,
       })
       .pipe();
   }
 
   divineWord(guessed, playerId) {
-    console.log(playerId);
-    console.log(guessed);
     const roomID = localStorage.getItem('roomID');
     if (guessed) {
       const body = { guessed: guessed, playerId: playerId };
       return this.http
-        .post(`/room/${roomID}/guess`, body, {
+        .post(`${this.API_URL}/room/${roomID}/guess`, body, {
           headers: this.header,
         })
         .pipe();
     } else {
-      const body = { guessed: guessed};
+      const body = { guessed: guessed };
       return this.http
-        .post(`/room/${roomID}/guess`, body, {
+        .post(`${this.API_URL}/room/${roomID}/guess`, body, {
           headers: this.header,
         })
         .pipe();
@@ -104,11 +106,10 @@ export class GameService {
   }
 
   nextPlayer() {
-    console.log('kolejny gracz');
     const roomID = localStorage.getItem('roomID');
     return this.http
       .post(
-        `/room/${roomID}/nextPlayer`,
+        `${this.API_URL}/room/${roomID}/nextPlayer`,
         {},
         {
           headers: this.header,
@@ -120,7 +121,7 @@ export class GameService {
   newWord() {
     const roomID = localStorage.getItem('roomID');
     return this.http
-      .post(`/room/${roomID}/newWord`, {
+      .post(`${this.API_URL}/room/${roomID}/newWord`, {
         headers: this.header,
       })
       .pipe();

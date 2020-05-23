@@ -17,3 +17,7 @@ To start Mercure in Powershell (better):
 To start Mercure in cmd:
 
 ``` mercure/mercure --jwt-key='WheelOfFortune' --addr='localhost:3000' --allow-anonymous --cors-allowed-origins='*'```
+
+To use prod URL type 
+```ng build --env=prod```
+while build

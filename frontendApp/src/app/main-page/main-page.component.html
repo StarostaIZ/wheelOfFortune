@@ -7,7 +7,7 @@
       Zagraj z innymi
     </button>
     <button class="button" routerLink="/createGame">Stwórz grę</button>
-    <button class="button" routerLink="/profile">Twój profil</button>
+    <div *ngIf="!isFacebookUser"><button class="button" routerLink="/profile">Twój profil</button></div>
     <div *ngIf="isAdmin"><button class="button" routerLink="/management">Panel administratora</button></div>
   </ng-template>
   <ng-template #guestBlock>

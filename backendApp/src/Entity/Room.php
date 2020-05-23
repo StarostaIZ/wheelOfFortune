@@ -45,6 +45,8 @@ class Room
      */
     private $usersInRoom;
 
+
+
     public function __construct()
     {
         $this->usersInRoom = new ArrayCollection();

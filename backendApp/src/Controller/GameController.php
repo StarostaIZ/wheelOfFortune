@@ -135,7 +135,7 @@ class GameController extends AbstractController
                 return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
             }
 
-
+            return new MyJsonResponse(['end' => true]);
         }
         return new MyJsonResponse(true);
     }

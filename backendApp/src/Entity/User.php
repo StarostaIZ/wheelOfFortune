@@ -81,6 +81,9 @@ class User implements UserInterface
      */
     private $isRoomAdmin = false;
 
+
+
+
     public function __construct()
     {
         $this->myFriends = new ArrayCollection();

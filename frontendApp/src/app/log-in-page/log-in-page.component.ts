@@ -4,7 +4,6 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 
-
 @Component({
   selector: 'app-log-in-page',
   templateUrl: './log-in-page.component.html',
@@ -22,8 +21,7 @@ export class LogInPageComponent implements OnInit {
     private validateService: ValidateService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router,
-
+    private router: Router
   ) {}
 
   onLoginSubmit() {
@@ -40,17 +38,13 @@ export class LogInPageComponent implements OnInit {
 
     if (validateResponse.isValid) {
       this.authService.logIn(user).subscribe(data => {
-        const result = data.toString();
-        if (result === 'true') {
-          this.userService.getUser().subscribe(data => {
-            // @ts-ignore
-            const roles = data.data.roles;
-            this.authService.storeUserData(this.username, roles);
-            this.router.navigate(['/']);
-          });
+        // @ts-ignore
+        const token = data.token;
+        if (token) {
+          this.authService.auth(token);
         } else {
           errorLabel.style.display = 'block';
-          errorLabel.textContent = result;
+          errorLabel.textContent = 'Nieprawidłowe dane';
         }
       });
     } else {
@@ -60,7 +54,7 @@ export class LogInPageComponent implements OnInit {
   }
 
   signInWithFB(): void {
-    this.authService.signInWithFB()
+    this.authService.signInWithFB();
   }
 
   ngOnInit(): void {}
