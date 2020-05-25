@@ -10,6 +10,7 @@ use App\Service\UserService;
 use App\Utils\Response\MyJsonResponse;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,7 +38,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", methods={"POST"})
+     * @Route("/logout", methods={"POST", "GET"})
      */
     public function logout(){
 
@@ -49,7 +50,7 @@ class SecurityController extends AbstractController
      * @param UserService $userService
      * @param GuardAuthenticatorHandler $guardAuthenticatorHandler
      * @param UserAuthenticator $authenticator
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function register(Request $request, UserService $userService, GuardAuthenticatorHandler $guardAuthenticatorHandler, UserAuthenticator $authenticator){
 
@@ -75,7 +76,11 @@ class SecurityController extends AbstractController
                 'main'
                 );
 
-        return new MyJsonResponse(true);
+
+        return $this->redirectToRoute('user_login', [
+            'username' => $user->getUsername(),
+            'password' => $user->getPassword()
+        ], 307);
 
     }
 
