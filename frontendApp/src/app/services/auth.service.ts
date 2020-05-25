@@ -77,9 +77,8 @@ export class AuthService {
   logOut() {
     if (localStorage.getItem('roles') === 'ROLE_USER_FACEBOOK') {
       this.signOutWithFB();
-    } else {
-      this.http.post(`${this.API_URL}/logout`, {});
     }
+    this.http.post(`${this.API_URL}/logout`, {}, { headers: this.header}).subscribe();
     localStorage.clear();
     this.router.navigate(['login']);
     this.username = null;
