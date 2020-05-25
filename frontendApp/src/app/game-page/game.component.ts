@@ -86,7 +86,6 @@ export class GameComponent implements OnInit, AfterViewChecked {
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word;
-      console.log(this.password);
       for (const letter of this.password) {
         this.entry.push({ value: letter, visible: false });
       }
@@ -171,7 +170,9 @@ export class GameComponent implements OnInit, AfterViewChecked {
   }
 
   divine(event) {
-    if (this.gameEnd) { return; }
+    if (this.gameEnd) {
+      return;
+    }
     const divinedLetter = event.target.textContent.trim();
     if (this.divinePasswordTour) {
       const empty_letter = this.entry.find(letter => {
@@ -225,7 +226,6 @@ export class GameComponent implements OnInit, AfterViewChecked {
 
   saveGuess() {
     let guess = '';
-    console.log(this.entry);
     this.entry.forEach(letter => {
       if (letter.visible === true) {
         guess += letter.value;
@@ -234,7 +234,6 @@ export class GameComponent implements OnInit, AfterViewChecked {
         guess += ' ';
       }
     });
-    console.log(guess);
     if (guess.toUpperCase() === this.password) {
       this.infoKeyboard = `Gratulację! Twój wynik to ${this.player.score}`;
       document.body
@@ -261,6 +260,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
       for (const letter of this.password) {
         this.entry.push({ value: letter, visible: false });
       }
+      this.dividePasswordIntoWords();
       // @ts-ignore
       this.category = data.data.category;
     });
@@ -271,12 +271,12 @@ export class GameComponent implements OnInit, AfterViewChecked {
     this.infoWheel = 'Zakręć kołem';
     this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
-    document.body
-      .querySelector('.info_keyboard')
-      .classList.remove('info_keyboard--win');
+    const infoLabel = document.body.querySelector('.info_keyboard');
+    if (infoLabel) infoLabel.classList.remove('info_keyboard--win');
   }
 
   dividePasswordIntoWords() {
+    this.entryWords = []
     const wordsArray = this.password.split(' ');
     let index = 0;
     for (let i = 0; i < wordsArray.length; i++) {

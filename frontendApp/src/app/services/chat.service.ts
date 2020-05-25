@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 export class ChatService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
   });
   constructor(private http: HttpClient, private router: Router) {}
 

@@ -162,7 +162,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       .subscribe(data => {
         // @ts-ignore
         const incomingData = JSON.parse(data.data);
-        console.log(incomingData)
         if (incomingData.points !== undefined) {
           this.incomingPlayersListWithPoints(incomingData.points);
         }

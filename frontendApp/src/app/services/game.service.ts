@@ -10,7 +10,11 @@ import { environment } from '../../environments/environment';
 export class GameService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+  });
+
+  headerWithNoToken = new HttpHeaders({
+    'Content-Type': 'application/json',
   });
   private API_URL: string = environment.API_URL;
 
@@ -38,7 +42,7 @@ export class GameService {
 
   drawWord() {
     return this.http
-      .get(`${this.API_URL}/drawWord`, { headers: this.header })
+      .get(`${this.API_URL}/drawWord`, { headers: this.headerWithNoToken })
       .pipe();
   }
 
@@ -78,7 +82,6 @@ export class GameService {
   points(playerId, points) {
     const roomID = localStorage.getItem('roomID');
     const body = { playerId: playerId, points: points };
-    console.log(points);
     return this.http
       .post(`${this.API_URL}/room/${roomID}/points`, body, {
         headers: this.header,

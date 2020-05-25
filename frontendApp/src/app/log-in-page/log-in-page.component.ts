@@ -21,7 +21,6 @@ export class LogInPageComponent implements OnInit {
     private validateService: ValidateService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
   ) {}
 
   onLoginSubmit() {
@@ -52,10 +51,5 @@ export class LogInPageComponent implements OnInit {
       errorLabel.textContent = validateResponse.msg;
     }
   }
-
-  signInWithFB(): void {
-    this.authService.signInWithFB();
-  }
-
   ngOnInit(): void {}
 }

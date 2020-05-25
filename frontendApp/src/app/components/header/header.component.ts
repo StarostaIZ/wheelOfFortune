@@ -20,6 +20,6 @@ export class HeaderComponent implements OnInit, DoCheck {
   }
 
   onLogOutClick() {
-    this.authService.logOut();
+    this.authService.logOut().subscribe(data => {});
   }
 }

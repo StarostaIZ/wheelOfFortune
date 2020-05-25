@@ -59,8 +59,6 @@ export class MyProfileStatisticsComponent implements OnInit {
       this.totalGuessedWords = incommingData.totalGuessedWords;
       const avg = (this.totalPointsCount / this.totalGamesCount).toFixed(2);
       this.averagePoints = avg === 'NaN' ? 0 : parseInt(avg);
-      console.log(this.totalGamesCount);
-      console.log(this.totalPointsCount);
       const date = new Date();
       let yesterday = new Date();
       yesterday.setDate(date.getDate() - 1);

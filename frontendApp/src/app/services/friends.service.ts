@@ -14,7 +14,7 @@ export class FriendsService {
   constructor(private http: HttpClient) {}
 
   getFriends() {
-    return this.http.get(`${this.API_URL}/friendList`).pipe();
+    return this.http.get(`${this.API_URL}/friendList`, { headers: this.header }).pipe();
   }
 
   addFriend(friend) {
