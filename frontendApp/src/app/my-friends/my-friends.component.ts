@@ -41,14 +41,12 @@ export class MyFriendsComponent implements OnInit {
 
   removeFriend(id) {
     this.isLoading = true;
-    console.log(id);
     this.friendsService.deleteFriend({ friendId: id }).subscribe(data => {});
     this.getLists();
   }
 
   acceptFriendRequest(id) {
     this.isLoading = true;
-    console.log(id);
     this.friendsService
       .acceptFriendRequest({ friendRequestId: id })
       .subscribe(data => {});
@@ -56,7 +54,6 @@ export class MyFriendsComponent implements OnInit {
   }
 
   rejectFriendRequest(id) {
-    console.log(id);
     this.friendsService
       .rejectFriendRequest({ friendRequestId: id })
       .subscribe(data => {});
@@ -64,7 +61,6 @@ export class MyFriendsComponent implements OnInit {
   }
 
   sendFriendRequest() {
-    console.log(this.friendName);
     const errorLabel: HTMLElement = document.querySelector(
       '.menu__error'
     ) as HTMLElement;
@@ -72,7 +68,6 @@ export class MyFriendsComponent implements OnInit {
       this.friendName,
       this.friends
     );
-    console.log(validator);
     if (validator.isValid) {
       errorLabel.style.display = 'none';
       this.friendsService

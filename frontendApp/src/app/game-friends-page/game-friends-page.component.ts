@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { RoomsService } from '../services/rooms.service';
 import { UserService } from '../services/user.service';
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: 'app-game-friends-page',
@@ -127,7 +128,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   initWebSocketRoom() {
     this.gameService
       .getServerSendEvent(
-        `http://localhost:3000/.well-known/mercure?topic=roomInfo/${this.roomID}`
+        `${environment.MERCURE_URL}/.well-known/mercure?topic=roomInfo/${this.roomID}`
       )
       .subscribe(data => {
         // @ts-ignore
@@ -157,7 +158,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   initWebSocketGame() {
     this.gameService
       .getServerSendEvent(
-        `http://localhost:3000/.well-known/mercure?topic=gameInfo/${this.roomID}`
+        `${environment.MERCURE_URL}/.well-known/mercure?topic=gameInfo/${this.roomID}`
       )
       .subscribe(data => {
         // @ts-ignore

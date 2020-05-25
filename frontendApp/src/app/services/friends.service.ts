@@ -17,12 +17,6 @@ export class FriendsService {
     return this.http.get(`${this.API_URL}/friendList`, { headers: this.header }).pipe();
   }
 
-  addFriend(friend) {
-    return this.http
-      .post(`${this.API_URL}/addFriend`, friend, { headers: this.header })
-      .pipe();
-  }
-
   deleteFriend(friend) {
     return this.http
       .post(`${this.API_URL}/removeFriend`, friend, {

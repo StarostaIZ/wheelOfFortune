@@ -50,7 +50,8 @@ export class RegisterPageComponent implements OnInit {
           this.authService.auth(token);
         } else {
           errorLabel.style.display = 'block';
-          errorLabel.textContent = 'Nieprawidłowe dane';
+          // @ts-ignore
+          errorLabel.textContent = data.error;
         }
       });
     } else {
