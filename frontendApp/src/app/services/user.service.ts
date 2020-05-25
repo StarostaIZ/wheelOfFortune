@@ -8,16 +8,26 @@ import { environment } from '../../environments/environment';
 export class UserService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   });
 
   private API_URL: string = environment.API_URL;
   constructor(private http: HttpClient) {}
 
-  getUser() {
-    return this.http
-      .get(`${this.API_URL}/getUser`, { headers: this.header })
-      .pipe();
+  getUser(token = undefined) {
+    const headerGetUser = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    if (token !== undefined) {
+      return this.http
+        .get(`${this.API_URL}/getUser`, { headers: headerGetUser })
+        .pipe();
+    } else {
+      return this.http
+        .get(`${this.API_URL}/getUser`, { headers: this.header })
+        .pipe();
+    }
   }
 
   updateUser(user) {
@@ -26,9 +36,9 @@ export class UserService {
       .pipe();
   }
 
-  getStats(){
+  getStats() {
     return this.http
-      .get(`${this.API_URL}/getStats`,  { headers: this.header })
+      .get(`${this.API_URL}/getStats`, { headers: this.header })
       .pipe();
   }
 }

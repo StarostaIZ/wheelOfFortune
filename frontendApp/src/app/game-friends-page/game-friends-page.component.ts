@@ -462,8 +462,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   }
 
   checkGameEnd() {
-    console.log('sprawdzam koniec gry');
-    console.log(this.players);
     if (this.players.some(player => player.totalPoints >= this.maxGamePoints)) {
       this.gameEnd = true;
       this.playersResults = JSON.parse(JSON.stringify(this.players));

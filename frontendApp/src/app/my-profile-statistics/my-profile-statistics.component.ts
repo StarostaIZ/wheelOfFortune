@@ -43,6 +43,7 @@ export class MyProfileStatisticsComponent implements OnInit {
       value: 0,
     },
   ];
+  averagePoints = 0;
 
   constructor(private userService: UserService) {}
 
@@ -55,11 +56,16 @@ export class MyProfileStatisticsComponent implements OnInit {
       this.totalPointsCount = incommingData.totalPointsCount;
       this.totalGuessedWords = incommingData.totalGuessedWords;
       this.totalWonGames = incommingData.totalWonGames;
+      this.totalGuessedWords = incommingData.totalGuessedWords;
+      const avg = (this.totalPointsCount / this.totalGamesCount).toFixed(2);
+      this.averagePoints = avg === 'NaN' ? 0 : parseInt(avg);
+      console.log(this.totalGamesCount);
+      console.log(this.totalPointsCount);
       const date = new Date();
-      let yesterday = new Date()
-      yesterday.setDate(date.getDate() -1);
-      let twoDaysAgo = new Date()
-      twoDaysAgo.setDate(date.getDate() -2);
+      let yesterday = new Date();
+      yesterday.setDate(date.getDate() - 1);
+      let twoDaysAgo = new Date();
+      twoDaysAgo.setDate(date.getDate() - 2);
       this.dataset = [
         {
           name: twoDaysAgo,

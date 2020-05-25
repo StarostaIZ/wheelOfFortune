@@ -37,20 +37,17 @@ export class AuthService {
   }
 
   logIn(user) {
-    console.log('logowanie');
     return this.http
       .post(`${this.API_URL}/login`, user, { headers: this.headerWithNoToken })
       .pipe();
   }
 
   signInWithFB() {
-    console.log('logowanieFB');
     this.socialAuthService
       .signIn(FacebookLoginProvider.PROVIDER_ID)
       .then(user => {
-        console.log(user);
         if (user !== null) {
-          this.logInFacebook(user)//.subscribe();
+          this.logInFacebook(user).subscribe();
           this.storeUserData(user.name, 'ROLE_USER_FACEBOOK');
           this.router.navigate(['/']);
         }
@@ -58,14 +55,13 @@ export class AuthService {
   }
 
   logInFacebook(user) {
-    console.log({ id: user.id, username: user.name, emial: user.email })
-    // return this.http
-    //   .post(
-    //     `${this.API_URL}/loginFacebook `,
-    //     { id: user.id, username: user.name, emial: user.email },
-    //     { headers: this.headerWithNoToken }
-    //   )
-    //   .pipe();
+    return this.http
+      .post(
+        `${this.API_URL}/loginFacebook `,
+        { id: user.id, username: user.name, emial: user.email },
+        { headers: this.headerWithNoToken }
+      )
+      .pipe();
   }
 
   signOutWithFB(): void {
@@ -91,7 +87,7 @@ export class AuthService {
 
   auth(token) {
     this.storeToken(token, () => {
-      this.getUser();
+      this.getUser(token);
     });
   }
 
@@ -100,8 +96,8 @@ export class AuthService {
     callback();
   }
 
-  getUser() {
-    this.userService.getUser().subscribe(data => {
+  getUser(token) {
+    this.userService.getUser(token).subscribe(data => {
       // @ts-ignore
       const roles = data.data.roles;
       this.storeUserData(this.username, roles);
