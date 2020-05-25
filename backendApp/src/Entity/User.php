@@ -81,6 +81,11 @@ class User implements UserInterface
      */
     private $isRoomAdmin = false;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $facebookId;
+
 
 
 
@@ -320,6 +325,18 @@ class User implements UserInterface
     public function setIsRoomAdmin(bool $isRoomAdmin): self
     {
         $this->isRoomAdmin = $isRoomAdmin;
+
+        return $this;
+    }
+
+    public function getFacebookId(): ?string
+    {
+        return $this->facebookId;
+    }
+
+    public function setFacebookId(?string $facebookId): self
+    {
+        $this->facebookId = $facebookId;
 
         return $this;
     }

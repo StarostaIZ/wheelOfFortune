@@ -10,6 +10,7 @@ use App\Service\UserService;
 use App\Utils\Response\MyJsonResponse;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -77,6 +78,22 @@ class SecurityController extends AbstractController
 
         return new MyJsonResponse(true);
 
+    }
+
+    /**
+     * After going to Facebook, you're redirected back here
+     * because this is the "redirect_route" you configured
+     * in config/packages/knpu_oauth2_client.yaml
+     *
+     * @param Request $request
+     * @param ClientRegistry $clientRegistry
+     *
+     * @return MyJsonResponse
+     * @Route("/facebookLogin", name="connect_facebook_check")
+     */
+    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
+    {
+        return new MyJsonResponse(true);
     }
 
 }
