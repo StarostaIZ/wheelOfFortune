@@ -74,7 +74,7 @@ class RoomController extends AbstractController
         $this->em->flush();
         if ($response){
             $this->publisherService->updatePeopleInRoom($room);
-            return new MyJsonResponse($response);
+            return new MyJsonResponse(['enter' => $response, 'isRunning' => is_null($room->getGame()) ? false : $room->getGame()->getIsRunning()]);
         }else{
             return new MyJsonResponse(null, "Pokój jest pełny");
         }

@@ -122,7 +122,7 @@ class GameController extends AbstractController
         $content = json_decode($request->getContent());
         $room = $this->getRoom($id);
         $guessed = $content->guessed;
-            $this->publisherService->isWordGuessed($room, $guessed, true);
+            $this->publisherService->isWordGuessed($room, $guessed);
         if ($guessed){
             $playerId = $content->playerId;
             $isEnd = $this->gameService->finalizeRound($room, $playerId);

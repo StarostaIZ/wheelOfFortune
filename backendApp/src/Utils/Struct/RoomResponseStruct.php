@@ -26,6 +26,9 @@ class RoomResponseStruct
     /** @var int */
     public $adminId;
 
+    /** @var bool */
+    public $isRunning;
+
     /** @var array  */
     public $usersInRoom = [];
 
@@ -42,6 +45,12 @@ class RoomResponseStruct
             if ($user->getIsRoomAdmin()){
                 $struct->adminId = $user->getId();
             }
+        }
+        if (!empty($room->getGame()))
+        {
+            $struct->isRunning = $room->getGame()->getIsRunning();
+        }else{
+            $struct->isRunning = false;
         }
         return $struct;
     }
