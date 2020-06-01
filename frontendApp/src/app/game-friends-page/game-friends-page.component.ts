@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { RoomsService } from '../services/rooms.service';
 import { UserService } from '../services/user.service';
-import { environment } from "../../environments/environment";
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-game-friends-page',
@@ -70,20 +70,20 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     '1000',
     'BANKRUT',
   ];
-  isDivineTour = false;
+  isDivineTour: boolean = false;
   category = 'SPORT';
   players = [];
   prize = '0';
-  divinePasswordTour = false;
+  divinePasswordTour: boolean = false;
   infoWheel = 'Zakręć kołem';
   infoKeyboard = 'Wybierz literę';
   password = '';
-  gameEnd = false;
-  roundEnd = false;
+  gameEnd: boolean = false;
+  roundEnd: boolean = false;
   roomID;
   wheel = null;
   entryWords = [];
-  waitingForStart = true;
+  waitingForStart: boolean = true;
   isGameAdmin = null;
   wheelAngle = 0;
   userId = null;
@@ -104,10 +104,14 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.roomID = localStorage.getItem('roomID');
     this.userName = localStorage.getItem('username');
     let adminId;
-
     this.roomsService.getRoomData(this.roomID).subscribe(data => {
+      console.log(data);
       // @ts-ignore
       this.playersListQueue = data.data.usersInRoom.users;
+      // @ts-ignore
+      if (data.data.isRunning) {
+        this.getWord();
+      }
       // @ts-ignore
       adminId = data.data.adminId;
       this.userService.getUser().subscribe(data => {
@@ -163,6 +167,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       .subscribe(data => {
         // @ts-ignore
         const incomingData = JSON.parse(data.data);
+        console.log(incomingData);
         if (incomingData.points !== undefined) {
           this.incomingPlayersListWithPoints(incomingData.points);
         }
@@ -184,9 +189,22 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       });
   }
 
+  getWord() {
+    this.gameService.getWord(this.roomID).subscribe(data => {
+      console.log(data)
+      // @ts-ignore
+      const incommingData = data.data;
+      this.incomingWord(incommingData.category, incommingData.word);
+      if(incommingData.letters.length > 0) this.initDiscoverLetters(incommingData.letters);
+      this.waitingForStart = false;
+    });
+  }
+
   incomingNewWord(newWord) {
     const { word, category } = newWord;
-    this.incomingWord(category, word);
+    this.category = category;
+    this.password = word;
+    this.newRound();
   }
 
   incomingTurn(turn) {
@@ -195,12 +213,12 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   incomingPlayersListWithPoints(playersList) {
     this.players = playersList;
-    this.checkGameEnd()
+    this.checkGameEnd();
   }
 
   incomingGuess(isGuessed) {
     if (isGuessed) {
-      this.infoWheel = `Hasło odgadnięte!`;
+      this.infoWheel = `Hasło odgadnięte! Za chwilę pojawi się nowe hasło`;
       this.entry.forEach(letter => {
         letter.visible = true;
         letter.isShown = true;
@@ -230,6 +248,20 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       this.entry.push({ value: letter, visible: false, isShown: false });
     }
     this.dividePasswordIntoWords();
+  }
+
+  initDiscoverLetters(letters){
+    this.entry.forEach(letter => {
+      if(letters.includes(letter.value)){
+        letter.visible = true;
+        letter.isShown = true;
+      }
+    });
+    this.alphabet.forEach(letter => {
+      if(letters.includes(letter.value)){
+        letter.clicked = true;
+      }
+    })
   }
 
   incomingRotate(deg) {
@@ -274,6 +306,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   }
 
   dividePasswordIntoWords() {
+    this.entryWords = [];
     const wordsArray = this.password.split(' ');
     let index = 0;
     for (let i = 0; i < wordsArray.length; i++) {
@@ -422,7 +455,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       this.gameService.divineWord(true, player.id).subscribe();
       this.roundEnd = true;
       this.checkGameEnd();
-      if(!this.gameEnd) this.newRound();
+      if (!this.gameEnd) this.newRound();
     }
   }
 
@@ -451,14 +484,14 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       player.totalPoints += player.points;
       this.roundEnd = true;
       this.checkGameEnd();
-      if(!this.gameEnd) this.newRound();
+      if (!this.gameEnd) this.drawNewWord();
     } else {
       this.infoWheel = `Niestety hasło nie jest prawidłowe.`;
       this.divinePasswordTour = false;
       this.resetGuess();
-      this.gameService.nextPlayer().subscribe();
       this.isDivineTour = false;
     }
+    this.gameService.nextPlayer().subscribe();
     this.gameService.divineWord(result, player.id).subscribe();
   }
 
@@ -476,31 +509,37 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  drawNewWord() {
+    setTimeout(() => {
+      this.gameService.drawWord();
+    }, 5000);
+  }
+
   resetGuess() {
     this.entry = JSON.parse(JSON.stringify(this.entry_copy));
-    this.entryWords = [];
     this.dividePasswordIntoWords();
   }
 
   exitGame() {
-    this.roomsService.exitRoom().subscribe(data => {});
+    this.roomsService.exitRoom().subscribe();
+    this.gameService.closeServerSendEvents();
   }
 
   newRound() {
     this.entry = [];
-    this.entryWords = [];
+    for (const letter of this.password) {
+      this.entry.push({ value: letter, visible: false, isShown: false });
+    }
+    this.dividePasswordIntoWords();
     this.players.forEach(player => {
       player.points = 0;
     });
     this.alphabet = JSON.parse(JSON.stringify(this.ALPHABET));
     this.divinePasswordTour = false;
-    setTimeout(() => {
-      this.isDivineTour = false;
-      this.infoWheel = 'Zakręć kołem';
-      this.infoKeyboard = 'Wybierz literę';
-    }, 3000);
+    this.isDivineTour = false;
+    this.infoWheel = 'Zakręć kołem';
+    this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
     this.roundEnd = false;
-    this.gameService.nextPlayer().subscribe();
   }
 }
