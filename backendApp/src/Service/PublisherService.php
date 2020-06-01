@@ -27,7 +27,7 @@ class PublisherService
     }
 
 
-    private function publish($topic, $json)
+    public function publish($topic, $json)
     {
         $publisher = $this->publisher;
         $publisher(new Update($topic, $json));
