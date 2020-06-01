@@ -1,7 +1,7 @@
 .game {
   z-index: 1;
   width: 100%;
-  margin: 6% auto 0 auto;
+  margin: 8% auto 0 auto;
 }
 
 .game__password {
@@ -248,7 +248,7 @@
 
 @media only screen and (max-width: 600px) {
   .game {
-    margin: 20% auto 0 auto;
+    margin: 25% auto 0 auto;
   }
 
   .game__board {
