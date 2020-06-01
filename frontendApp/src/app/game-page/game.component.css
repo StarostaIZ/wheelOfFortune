@@ -1,7 +1,7 @@
 .game {
   z-index: 1;
   width: 100%;
-  margin: 8% auto 0 auto;
+  margin: 6% auto 0 auto;
 }
 
 .game__password {
@@ -243,5 +243,24 @@
   .game__board__label__btn {
     margin: 5px 0;
     font-size: 0.8em;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .game {
+    margin: 20% auto 0 auto;
+  }
+
+  .game__board {
+    grid-template-columns: none;
+    grid-template-rows: 0 1fr 1fr;
+  }
+
+  .game__board__left{
+    height: 0;
+  }
+
+  .game__board__label{
+    justify-content: flex-start;
   }
 }

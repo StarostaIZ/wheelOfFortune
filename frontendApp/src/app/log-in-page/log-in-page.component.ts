@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../services/validate.service';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -45,7 +44,10 @@ export class LogInPageComponent implements OnInit {
           errorLabel.style.display = 'block';
           errorLabel.textContent = 'Nieprawidłowe dane';
         }
-      });
+      }, (error) => {
+        errorLabel.style.display = 'block';
+        errorLabel.textContent = 'Nieprawidłowe dane';
+      })
     } else {
       errorLabel.style.display = 'block';
       errorLabel.textContent = validateResponse.msg;

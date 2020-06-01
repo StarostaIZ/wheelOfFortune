@@ -10,15 +10,13 @@ import { Component, Input, DoCheck } from '@angular/core';
   ],
 })
 export class MainPageComponent implements DoCheck {
-  @Input() isLogged: boolean;
+  @Input() isLogged: boolean = false;
   isAdmin: boolean = false;
-  isFacebookUser: boolean = false
 
   ngDoCheck(): void {
     this.isLogged = localStorage.getItem('username') !== null;
     if (localStorage.getItem('roles')) {
       this.isAdmin = localStorage.getItem('roles').includes('ROLE_ADMIN');
-      this.isFacebookUser = localStorage.getItem('roles').includes('ROLE_USER_FACEBOOK');
     }
   }
 }

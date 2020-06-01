@@ -51,7 +51,7 @@
   <button class="button" (click)="showFriendRequestBox()">
     Dodaj znajomego
   </button>
-  <form
+  <form class="menu__friend_request_form"
     [hidden]="!isSendFriendRequestBoxVisible"
     (ngSubmit)="sendFriendRequest()"
   >
