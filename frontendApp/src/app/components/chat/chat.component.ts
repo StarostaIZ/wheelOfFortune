@@ -1,6 +1,7 @@
 import { AfterViewChecked, Component, OnInit, Input } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { GameService } from '../../services/game.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chat',
@@ -30,7 +31,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   initWebSocketChat() {
     this.gameService
       .getServerSendEvent(
-        `http://localhost:3000/.well-known/mercure?topic=chat/${this.roomID}`
+        `${environment.MERCURE_URL}/.well-known/mercure?topic=chat/${this.roomID}`
       )
       .subscribe(data => {
         // @ts-ignore
