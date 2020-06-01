@@ -5,6 +5,7 @@
   margin: 0 auto 30px auto;
   padding-top: 5%;
   cursor: pointer;
+  z-index: 100000000;
 }
 
 .logo:focus {

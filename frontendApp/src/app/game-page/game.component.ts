@@ -51,7 +51,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
     { value: 'Ź', clicked: false },
     { value: 'Ż', clicked: false },
   ];
-  alphabet = this.ALPHABET;
+  alphabet = JSON.parse(JSON.stringify(this.ALPHABET));
   PRIZES = [
     '2500',
     '800',
@@ -110,10 +110,12 @@ export class GameComponent implements OnInit, AfterViewChecked {
     const deg = 720 + Math.floor(Math.random() * 270);
     this.wheel.style.transition = 'transform 5s cubic-bezier(.22,.99,.23,.99)';
     this.wheel.style.transform = `rotate(${deg}deg)`;
+    this.wheelAngle = deg;
     this.wheel.addEventListener('transitionend', () => {
       this.wheel.style.pointerEvents = 'auto';
       this.wheel.style.transition = 'none';
       let actualDeg = deg % 360;
+      this.wheelAngle = actualDeg;
       this.wheel.style.transform = `rotate(${actualDeg}deg`;
       actualDeg = actualDeg + 15;
       this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
@@ -235,6 +237,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
       }
     });
     if (guess.toUpperCase() === this.password) {
+      this.player.score += 1000;
       this.infoKeyboard = `Gratulację! Twój wynik to ${this.player.score}`;
       document.body
         .querySelector('.info_keyboard')
@@ -242,18 +245,21 @@ export class GameComponent implements OnInit, AfterViewChecked {
       this.gameEnd = true;
     } else {
       this.infoWheel = `Niestety hasło nie jest prawidłowe. Próbuj dalej.`;
-      this.resetGuess();
       this.isDivineTour = false;
+      this.resetGuess();
     }
   }
 
   resetGuess() {
     this.entry = JSON.parse(JSON.stringify(this.entry_copy));
+    this.entryWords = [];
+    this.divinePasswordTour = false;
+    this.dividePasswordIntoWords();
   }
 
   newGame() {
     this.entry = [];
-    this.alphabet = this.ALPHABET;
+    this.alphabet = JSON.parse(JSON.stringify(this.ALPHABET));
     this.gameService.drawWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word.toUpperCase();

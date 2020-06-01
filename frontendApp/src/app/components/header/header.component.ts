@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, DoCheck {
-  @Input() isLogged: boolean;
+  @Input() isLogged: boolean = false;
   link: string;
 
   constructor(private authService: AuthService, public router: Router) {}

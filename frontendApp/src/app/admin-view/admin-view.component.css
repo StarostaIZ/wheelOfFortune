@@ -23,12 +23,13 @@
   justify-content: space-around;
   background-color: #1cbfba;
   margin-bottom: 20px;
+  width: 70%;
 }
 
 .menu__select__item {
-  padding: 15px 0;
+  padding: 20px 0;
   flex: 1;
-  min-width: 160px;
+  width: 25%;
   text-align: center;
   border-left: 1px grey solid;
   cursor: pointer;
@@ -194,5 +195,19 @@
 
   .confirm_box__buttons{
     flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .menu__select {
+    width: 97%;
+  }
+
+  .menu__select__item {
+    padding: 10px 0;
+  }
+
+  .menu__select__item {
+    font-size: 0.9em;
   }
 }

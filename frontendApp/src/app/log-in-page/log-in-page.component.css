@@ -30,7 +30,8 @@
   background-color: #fff;
   color: #000;
   padding: 16px 14px;
-  min-width: 400px;
+  width: 40%;
+  min-width: 200px;
   margin-bottom: 20px;
   font-family: 'Montserrat', sans-serif;
   font-weight: bolder;
@@ -83,8 +84,18 @@
   color: rgb(255, 255, 255);
 }
 
-@media only screen and (max-width: 1000px) {
-  .button_fb {
-    width: 80%;
+@media only screen and (max-width: 1100px) {
+  .menu__input {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width:600px){
+  .menu__input{
+    width: 100%;
+  }
+
+  .menu__title{
+    font-size: 3em;
   }
 }
