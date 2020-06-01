@@ -9,6 +9,7 @@ use App\Service\GameService;
 use App\Service\PublisherService;
 use App\Utils\Response\MyJsonResponse;
 use App\Utils\Struct\PlayerResponseStruct;
+use App\Utils\Struct\WordInGameResponseStruct;
 use App\Utils\Struct\WordResponseStruct;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -149,6 +150,7 @@ class GameController extends AbstractController
         $room = $this->getRoom($id);
         $word = $this->gameService->drawWord();
         $room->getGame()->setWord($word);
+        $room->getGame()->setLetters([]);
         $this->getDoctrine()->getManager()->flush();
         $this->publisherService->updateWord($room, WordResponseStruct::mapFromWord($word));
         return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
@@ -167,6 +169,15 @@ class GameController extends AbstractController
         return new MyJsonResponse(PlayerResponseStruct::mapFromPlayer($nextPlayer));
     }
 
+    /**
+     * @Route("/room/{id}/getWord")
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function getWord($id){
+        $room = $this->getRoom($id);
+        return new MyJsonResponse(WordInGameResponseStruct::mapFromWordGame($room->getGame()));
+    }
 
 
 
