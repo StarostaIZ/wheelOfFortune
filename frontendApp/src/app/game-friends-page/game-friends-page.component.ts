@@ -456,6 +456,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       this.infoWheel = `Niestety hasło nie jest prawidłowe.`;
       this.divinePasswordTour = false;
       this.resetGuess();
+      this.gameService.nextPlayer().subscribe();
       this.isDivineTour = false;
     }
     this.gameService.divineWord(result, player.id).subscribe();
