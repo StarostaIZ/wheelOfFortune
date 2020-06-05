@@ -20,6 +20,8 @@ class GameResponseStruct
 
     public $turn;
 
+    public $maxPoints;
+
     public static function mapFromGame(Game $game)
     {
         $struct = new GameResponseStruct();
@@ -30,6 +32,7 @@ class GameResponseStruct
             $struct->players[] = PlayerResponseStruct::mapFromPlayer($player);
         }
         $struct->turn = PlayerResponseStruct::mapFromPlayer($game->getTurn());
+        $struct->maxPoints = $game->getMaxPoints();
         return $struct;
     }
 
