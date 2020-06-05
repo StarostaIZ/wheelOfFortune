@@ -10,12 +10,9 @@ import { environment } from '../../environments/environment';
 export class GameService {
   header = new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   });
 
-  headerWithNoToken = new HttpHeaders({
-    'Content-Type': 'application/json',
-  });
   private API_URL: string = environment.API_URL;
 
   constructor(
@@ -40,9 +37,19 @@ export class GameService {
     });
   }
 
+  closeServerSendEvents() {
+    this.sseService.closeEventSources();
+  }
+
   drawWord() {
     return this.http
-      .get(`${this.API_URL}/drawWord`, { headers: this.headerWithNoToken })
+      .get(`${this.API_URL}/drawWord`, { headers: this.header })
+      .pipe();
+  }
+
+  getWord(roomID) {
+    return this.http
+      .get(`${this.API_URL}/room/${roomID}/getWord`, { headers: this.header })
       .pipe();
   }
 

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RoomsService } from '../services/rooms.service';
-import { log } from 'util';
 import { ValidateService } from '../services/validate.service';
 import { Router } from '@angular/router';
 
@@ -50,7 +49,7 @@ export class PlayFriendsPageComponent implements OnInit {
       .enterRoom({ roomId: this.currentRoomId })
       .subscribe(data => {
         // @ts-ignore
-        if (data.data !== true) {
+        if (data.data.enter !== true) {
           this.errorLabel.style.display = 'block';
           // @ts-ignore
           this.errorLabel.textContent = 'Brak miejsca w pokoju';
