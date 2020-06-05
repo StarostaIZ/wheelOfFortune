@@ -8,6 +8,7 @@ use App\Entity\Room;
 use App\Service\GameService;
 use App\Service\PublisherService;
 use App\Utils\Response\MyJsonResponse;
+use App\Utils\Struct\GameResponseStruct;
 use App\Utils\Struct\PlayerResponseStruct;
 use App\Utils\Struct\WordInGameResponseStruct;
 use App\Utils\Struct\WordResponseStruct;
@@ -74,6 +75,8 @@ class GameController extends AbstractController
         $content = json_decode($request->getContent());
         $angle = $content->angle;
         $room = $this->getRoom($id);
+        $room->getGame()->setAngle(($room->getGame()->getAngle()+$angle)%360);
+        $this->getDoctrine()->getManager()->flush();
         $this->publisherService->updateWheel($room, $angle);
         return new MyJsonResponse(true);
     }
@@ -177,6 +180,17 @@ class GameController extends AbstractController
     public function getWord($id){
         $room = $this->getRoom($id);
         return new MyJsonResponse(WordInGameResponseStruct::mapFromWordGame($room->getGame()));
+    }
+
+    /**
+     * @Route("/room/{id}/getGame")
+     * @param $id
+     * @return MyJsonResponse
+     */
+    public function getGameInfo($id){
+        $room = $this->getRoom($id);
+        $game = $room->getGame();
+        return new MyJsonResponse(GameResponseStruct::mapFromGame($game));
     }
 
 

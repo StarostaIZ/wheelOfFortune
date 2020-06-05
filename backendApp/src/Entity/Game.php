@@ -45,6 +45,11 @@ class Game
      */
     private $letters = [];
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $angle;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
@@ -146,5 +151,17 @@ class Game
             }
         }
         return null;
+    }
+
+    public function getAngle(): ?int
+    {
+        return $this->angle;
+    }
+
+    public function setAngle(?int $angle): self
+    {
+        $this->angle = $angle;
+
+        return $this;
     }
 }
