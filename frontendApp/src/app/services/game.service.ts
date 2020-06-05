@@ -47,12 +47,6 @@ export class GameService {
       .pipe();
   }
 
-  getWord(roomID) {
-    return this.http
-      .get(`${this.API_URL}/room/${roomID}/getWord`, { headers: this.header })
-      .pipe();
-  }
-
   startGame(maxPoints) {
     const roomID = localStorage.getItem('roomID');
     return this.http
@@ -128,12 +122,11 @@ export class GameService {
       .pipe();
   }
 
-  newWord() {
+  getGame(){
     const roomID = localStorage.getItem('roomID');
     return this.http
-      .post(`${this.API_URL}/room/${roomID}/newWord`, {
+      .get(`${this.API_URL}/room/${roomID}/getGame`, {
         headers: this.header,
       })
-      .pipe();
   }
 }

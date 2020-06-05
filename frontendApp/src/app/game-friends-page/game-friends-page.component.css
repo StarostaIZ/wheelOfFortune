@@ -195,7 +195,9 @@
 }
 
 .info_keyboard,
+.info_whee,
 .info_wheel_turn {
+  width: 100%;
   text-align: center;
 }
 

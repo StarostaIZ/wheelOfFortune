@@ -105,19 +105,23 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.userName = localStorage.getItem('username');
     let adminId;
     this.roomsService.getRoomData(this.roomID).subscribe(data => {
-      console.log(data);
       // @ts-ignore
       this.playersListQueue = data.data.usersInRoom.users;
       // @ts-ignore
-      if (data.data.isRunning) {
-        this.getWord();
+      const isRunning = data.data.isRunning;
+      if (isRunning) {
+        this.gameService.getGame().subscribe(data => {
+          // @ts-ignore
+          this.getRunningGameData(data.data);
+          this.waitingForStart = false;
+        });
       }
       // @ts-ignore
       adminId = data.data.adminId;
       this.userService.getUser().subscribe(data => {
         // @ts-ignore
         this.userId = data.data.id;
-        this.isGameAdmin = adminId === this.userId;
+        this.isGameAdmin = isRunning ? false : adminId === this.userId;
       });
     });
     this.initWebSocketRoom();
@@ -127,6 +131,22 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked(): void {
     this.wheel = document.querySelector('#wheel');
     this.letterBoxes = document.body.querySelectorAll('.entry_box');
+  }
+
+  getRunningGameData(data) {
+    const word = data.word;
+    this.incomingWord(word.category, word.word);
+    if (data.angle !== null) {
+      this.wheelAngle = data.angle;
+    }
+    if (data.letters.length > 0) {
+      this.initDiscoverLetters(data.letters);
+    }
+    if (data.players.length > 0) {
+      this.players = data.players;
+    }
+    this.incomingTurn(data.turn);
+    this.maxGamePoints = data.maxPoints;
   }
 
   initWebSocketRoom() {
@@ -167,7 +187,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       .subscribe(data => {
         // @ts-ignore
         const incomingData = JSON.parse(data.data);
-        console.log(incomingData);
         if (incomingData.points !== undefined) {
           this.incomingPlayersListWithPoints(incomingData.points);
         }
@@ -189,16 +208,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       });
   }
 
-  getWord() {
-    this.gameService.getWord(this.roomID).subscribe(data => {
-      console.log(data)
-      // @ts-ignore
-      const incommingData = data.data;
-      this.incomingWord(incommingData.category, incommingData.word);
-      if(incommingData.letters.length > 0) this.initDiscoverLetters(incommingData.letters);
-      this.waitingForStart = false;
-    });
-  }
 
   incomingNewWord(newWord) {
     const { word, category } = newWord;
@@ -250,24 +259,24 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.dividePasswordIntoWords();
   }
 
-  initDiscoverLetters(letters){
+  initDiscoverLetters(letters) {
     this.entry.forEach(letter => {
-      if(letters.includes(letter.value)){
+      if (letters.includes(letter.value)) {
         letter.visible = true;
         letter.isShown = true;
       }
     });
     this.alphabet.forEach(letter => {
-      if(letters.includes(letter.value)){
+      if (letters.includes(letter.value)) {
         letter.clicked = true;
       }
-    })
+    });
   }
 
   incomingRotate(deg) {
     if (this.turnPlayerName !== this.userName) {
       this.deg = deg;
-      this.wheelAngle = deg;
+      this.wheelAngle =  this.wheelAngle + deg;
       this.wheel.style.transition =
         'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
       this.wheel.addEventListener(
@@ -281,10 +290,9 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   runWheelAfterIncomingRotateComplete = () => {
     this.wheel.style.pointerEvents = 'auto';
     this.wheel.style.transition = 'none';
-    let actualDeg = this.deg % 360;
+    let actualDeg = this.wheelAngle % 360;
     this.wheelAngle = actualDeg;
-    actualDeg = actualDeg + 15;
-    this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+    this.setPrize(actualDeg);
     if (this.prize === 'BANKRUT') {
       this.infoWheel = 'BANKRUT';
     } else {
@@ -327,7 +335,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       this.wheel.style.transition =
         'transform 5s cubic-bezier(0.22, 0.99, 0.23, 0.99)';
       this.gameService.spin(this.deg).subscribe();
-      this.wheelAngle = this.deg;
+      this.wheelAngle = this.wheelAngle + this.deg;
       this.wheel.addEventListener(
         'transitionend',
         this.runWheelAfteraRotateComplete,
@@ -340,10 +348,9 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     if (this.turnPlayerName === this.userName) {
       this.wheel.style.pointerEvents = 'auto';
       this.wheel.style.transition = 'none';
-      let actualDeg = this.deg % 360;
+      let actualDeg = this.wheelAngle % 360;
       this.wheelAngle = actualDeg;
-      actualDeg = actualDeg + 15;
-      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+      this.setPrize(actualDeg);
       if (this.prize === 'BANKRUT') {
         this.infoWheel = 'BANKRUT';
         const player = this.players.find(
@@ -357,6 +364,14 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       }
     }
   };
+
+  setPrize(actualDeg){
+    actualDeg = actualDeg + 15;
+    const prizeIndex = Math.floor(actualDeg / 30);
+    console.log(prizeIndex)
+    if(prizeIndex > 11) this.prize = this.PRIZES[0];
+    else this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+  }
 
   isLetterAlreadyClicked(divinedLetter) {
     for (const letter of this.alphabet) {
@@ -455,7 +470,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       this.gameService.divineWord(true, player.id).subscribe();
       this.roundEnd = true;
       this.checkGameEnd();
-      if (!this.gameEnd) this.newRound();
+      // if (!this.gameEnd) this.newRound();
     }
   }
 
@@ -484,7 +499,7 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
       player.totalPoints += player.points;
       this.roundEnd = true;
       this.checkGameEnd();
-      if (!this.gameEnd) this.drawNewWord();
+      // if (!this.gameEnd) this.drawNewWord();
     } else {
       this.infoWheel = `Niestety hasło nie jest prawidłowe.`;
       this.divinePasswordTour = false;
@@ -526,6 +541,8 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   }
 
   newRound() {
+    setTimeout(()=>{
+
     this.entry = [];
     for (const letter of this.password) {
       this.entry.push({ value: letter, visible: false, isShown: false });
@@ -541,5 +558,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
     this.infoKeyboard = 'Wybierz literę';
     this.gameEnd = false;
     this.roundEnd = false;
+    }, 3000)
   }
 }

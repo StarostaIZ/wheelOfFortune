@@ -7,44 +7,67 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class RoomsService {
-  header = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
-  });
+  private API_URL: string = environment.API_URL;
 
-  private API_URL: string = environment.API_URL
-
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-  ) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   getAllRooms() {
     return this.http
-      .get(`${this.API_URL}/roomList`, { headers: this.header })
+      .get(`${this.API_URL}/roomList`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .pipe();
   }
 
   createRoom(room) {
     return this.http
-      .post(`${this.API_URL}/createRoom`, room, { headers: this.header })
+      .post(`${this.API_URL}/createRoom`, room, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .pipe();
   }
 
-  enterRoom(room){
+  enterRoom(room) {
     return this.http
-      .post(`${this.API_URL}/enterRoom`, room, { headers: this.header })
+      .post(`${this.API_URL}/enterRoom`, room, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .pipe();
   }
 
   getRoomData(roomId) {
-    return this.http.get(`${this.API_URL}/room/${roomId}`, { headers: this.header }).pipe();
+    return this.http
+      .get(`${this.API_URL}/room/${roomId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .pipe();
   }
 
   exitRoom() {
     this.router.navigate(['/']);
     return this.http
-      .post(`${this.API_URL}/exitRoom`, {}, { headers: this.header })
+      .post(
+        `${this.API_URL}/exitRoom`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
       .pipe();
   }
 }
