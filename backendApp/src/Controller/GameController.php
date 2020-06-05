@@ -134,6 +134,7 @@ class GameController extends AbstractController
             if (!$isEnd) {
                 $word = $this->gameService->drawWord();
                 $room->getGame()->setWord($word);
+                $room->getGame()->setLetters([]);
                 $this->getDoctrine()->getManager()->flush();
                 $this->publisherService->updateWord($room, WordResponseStruct::mapFromWord($word));
                 return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
@@ -144,20 +145,6 @@ class GameController extends AbstractController
         return new MyJsonResponse(true);
     }
 
-    /**
-     * @Route("/room/{id}/newWord")
-     * @param $id
-     * @return MyJsonResponse
-     */
-    public function newWord($id){
-        $room = $this->getRoom($id);
-        $word = $this->gameService->drawWord();
-        $room->getGame()->setWord($word);
-        $room->getGame()->setLetters([]);
-        $this->getDoctrine()->getManager()->flush();
-        $this->publisherService->updateWord($room, WordResponseStruct::mapFromWord($word));
-        return new MyJsonResponse(WordResponseStruct::mapFromWord($word));
-    }
 
     /**
      * @Route("/room/{id}/nextPlayer")
