@@ -12,6 +12,7 @@ export class AuthService {
     'Content-Type': 'application/json',
   });
   username = null;
+  TTL: number = 7200000;
   private API_URL: string = environment.API_URL;
   constructor(
     private http: HttpClient,
@@ -49,8 +50,8 @@ export class AuthService {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).tokenValue}`,
+        }
       }
     );
   }
@@ -61,8 +62,23 @@ export class AuthService {
     });
   }
 
+  checkIsLogged(){
+    const tokenString = localStorage.getItem('token');
+    if (!tokenString) {
+      return false;
+    }
+    const token = JSON.parse(tokenString)
+    const nowTime = new Date()
+    if (nowTime.getTime() > token.expiryTime) {
+      localStorage.removeItem('token')
+      return false
+    }
+    return true;
+  }
+
   storeToken(token, callback) {
-    localStorage.setItem('token', token);
+    const tokenObj = {tokenValue: token, expiryTime: new Date().getTime() + this.TTL}
+    localStorage.setItem('token', JSON.stringify(tokenObj));
     callback();
   }
 

@@ -138,6 +138,10 @@
   outline: none;
 }
 
+#wheel::-moz-focus-inner {
+  border: 0;
+}
+
 .game__board__keyboard {
   margin: 20px 0 60px 0;
   display: grid;

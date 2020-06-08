@@ -368,7 +368,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
   setPrize(actualDeg){
     actualDeg = actualDeg + 15;
     const prizeIndex = Math.floor(actualDeg / 30);
-    console.log(prizeIndex)
     if(prizeIndex > 11) this.prize = this.PRIZES[0];
     else this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
   }
@@ -542,7 +541,6 @@ export class GameFriendsPageComponent implements OnInit, AfterViewChecked {
 
   newRound() {
     setTimeout(()=>{
-
     this.entry = [];
     for (const letter of this.password) {
       this.entry.push({ value: letter, visible: false, isShown: false });

@@ -1,4 +1,5 @@
 import { Component, DoCheck } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +9,10 @@ import { Component, DoCheck } from '@angular/core';
 export class AppComponent implements DoCheck {
   isLogged: boolean = false;
 
-  constructor() {}
+
+  constructor(private authService: AuthService) {}
 
   ngDoCheck(): void {
-    this.isLogged = localStorage.getItem('username') !== null;
+    this.isLogged = this.authService.checkIsLogged();
   }
 }
