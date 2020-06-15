@@ -117,8 +117,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
       let actualDeg = deg % 360;
       this.wheelAngle = actualDeg;
       this.wheel.style.transform = `rotate(${actualDeg}deg`;
-      actualDeg = actualDeg + 15;
-      this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
+      this.setPrize(actualDeg);
       if (this.prize === 'BANKRUT') {
         this.infoWheel = 'BANKRUT. Zakręć jeszcze raz';
         this.player.score = 0;
@@ -126,6 +125,13 @@ export class GameComponent implements OnInit, AfterViewChecked {
         this.isDivineTour = true;
       }
     });
+  }
+
+  setPrize(actualDeg){
+    actualDeg = actualDeg + 15;
+    const prizeIndex = Math.floor(actualDeg / 30);
+    if(prizeIndex > 11) this.prize = this.PRIZES[0];
+    else this.prize = this.PRIZES[Math.floor(actualDeg / 30)];
   }
 
   isLetterAlreadyClicked(divinedLetter) {

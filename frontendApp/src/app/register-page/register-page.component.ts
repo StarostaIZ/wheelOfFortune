@@ -23,7 +23,6 @@ export class RegisterPageComponent implements OnInit {
     private validateService: ValidateService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
   ) {}
 
   onRegisterSubmit() {

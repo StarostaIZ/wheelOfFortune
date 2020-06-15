@@ -25,8 +25,8 @@ export class UserService {
         .get(`${this.API_URL}/getUser`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).tokenValue}`,
+          }
         })
         .pipe();
     }
@@ -37,8 +37,8 @@ export class UserService {
       .put(`${this.API_URL}/updateUser`, user, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).tokenValue}`,
+        }
       })
       .pipe();
   }
@@ -48,8 +48,8 @@ export class UserService {
       .get(`${this.API_URL}/getStats`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).tokenValue}`,
+        }
       })
       .pipe();
   }

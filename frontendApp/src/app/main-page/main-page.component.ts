@@ -1,4 +1,5 @@
 import { Component, Input, DoCheck } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-main-page',
@@ -13,8 +14,10 @@ export class MainPageComponent implements DoCheck {
   @Input() isLogged: boolean = false;
   isAdmin: boolean = false;
 
+  constructor(private authService: AuthService) {}
+
   ngDoCheck(): void {
-    this.isLogged = localStorage.getItem('username') !== null;
+    this.isLogged = this.authService.checkIsLogged();
     if (localStorage.getItem('roles')) {
       this.isAdmin = localStorage.getItem('roles').includes('ROLE_ADMIN');
     }
