@@ -124,6 +124,7 @@ class Room
         return $this;
     }
 
+
     public function removeUsersInRoom(User $usersInRoom): self
     {
         if ($this->usersInRoom->contains($usersInRoom)) {
