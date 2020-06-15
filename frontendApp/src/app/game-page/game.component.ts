@@ -83,7 +83,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
-    this.gameService.drawWord().subscribe(data => {
+    this.gameService.drawOfflineWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word;
       for (const letter of this.password) {
@@ -266,7 +266,7 @@ export class GameComponent implements OnInit, AfterViewChecked {
   newGame() {
     this.entry = [];
     this.alphabet = JSON.parse(JSON.stringify(this.ALPHABET));
-    this.gameService.drawWord().subscribe(data => {
+    this.gameService.drawOfflineWord().subscribe(data => {
       // @ts-ignore
       this.password = data.data.word.toUpperCase();
       for (const letter of this.password) {

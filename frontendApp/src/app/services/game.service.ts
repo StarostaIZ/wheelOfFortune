@@ -8,11 +8,6 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class GameService {
-  header = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')).tokenValue}`,
-  });
-
   private API_URL: string = environment.API_URL;
 
   constructor(
@@ -41,9 +36,26 @@ export class GameService {
     this.sseService.closeEventSources();
   }
 
+  drawOfflineWord() {
+    return this.http
+      .get(`${this.API_URL}/drawWord`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .pipe();
+  }
+
   drawWord() {
     return this.http
-      .get(`${this.API_URL}/drawWord`, { headers: this.header })
+      .get(`${this.API_URL}/drawWord`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('token')).tokenValue
+          }`,
+        },
+      })
       .pipe();
   }
 
@@ -54,7 +66,12 @@ export class GameService {
         `${this.API_URL}/room/${roomID}/startGame`,
         { maxPoints: maxPoints },
         {
-          headers: this.header,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem('token')).tokenValue
+            }`,
+          },
         }
       )
       .pipe();
@@ -65,7 +82,12 @@ export class GameService {
     const body = { angle: angle };
     return this.http
       .post(`${this.API_URL}/room/${roomID}/spin`, body, {
-        headers: this.header,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('token')).tokenValue
+          }`,
+        },
       })
       .pipe();
   }
@@ -75,7 +97,12 @@ export class GameService {
     const body = { letter: letter };
     return this.http
       .post(`${this.API_URL}/room/${roomID}/letter`, body, {
-        headers: this.header,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('token')).tokenValue
+          }`,
+        },
       })
       .pipe();
   }
@@ -85,7 +112,12 @@ export class GameService {
     const body = { playerId: playerId, points: points };
     return this.http
       .post(`${this.API_URL}/room/${roomID}/points`, body, {
-        headers: this.header,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('token')).tokenValue
+          }`,
+        },
       })
       .pipe();
   }
@@ -96,14 +128,24 @@ export class GameService {
       const body = { guessed: guessed, playerId: playerId };
       return this.http
         .post(`${this.API_URL}/room/${roomID}/guess`, body, {
-          headers: this.header,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem('token')).tokenValue
+            }`,
+          },
         })
         .pipe();
     } else {
       const body = { guessed: guessed };
       return this.http
         .post(`${this.API_URL}/room/${roomID}/guess`, body, {
-          headers: this.header,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem('token')).tokenValue
+            }`,
+          },
         })
         .pipe();
     }
@@ -116,17 +158,26 @@ export class GameService {
         `${this.API_URL}/room/${roomID}/nextPlayer`,
         {},
         {
-          headers: this.header,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem('token')).tokenValue
+            }`,
+          },
         }
       )
       .pipe();
   }
 
-  getGame(){
+  getGame() {
     const roomID = localStorage.getItem('roomID');
-    return this.http
-      .get(`${this.API_URL}/room/${roomID}/getGame`, {
-        headers: this.header,
-      })
+    return this.http.get(`${this.API_URL}/room/${roomID}/getGame`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('token')).tokenValue
+        }`,
+      },
+    });
   }
 }
